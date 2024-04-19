@@ -1,0 +1,43 @@
+.MainLayout {
+  background-color: gray;
+}
+
+.dark .MainLayout {
+  background-color: #2c3531;
+}
+
+.listTemplates {
+  background-color: white;
+}
+
+.dark .listTemplates {
+  background-color: #001529;
+}
+
+.GridMainTrack {
+  background-color: white;
+}
+
+.dark .GridMainTrack {
+  background-color: #001529;
+}
+
+.CardGrid {
+  background-color: white;
+}
+
+.darl .CardGrid {
+  background-color: #2c3531;
+}
+
+.headerMain {
+  background-color: white;
+  padding: 5px;
+}
+
+.radioMain {
+  height: 30px;
+}
+
+.soundMainIcon {
+}

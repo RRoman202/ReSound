@@ -1,0 +1,219 @@
+body {
+  background-color: whitesmoke;
+}
+.dark body {
+  background-color: #2c3531;
+}
+.gridWhite {
+  background-color: lightblue;
+  width: 140px;
+  height: 40px;
+  color: black;
+  font-weight: bold;
+  border-color: black;
+  border-bottom-left-radius: 0%;
+  border-top-left-radius: 0%;
+  z-index: 5;
+}
+.gridBlack {
+  background-color: black;
+  width: 140px;
+  height: 40px;
+  color: white;
+  font-weight: bold;
+  border-color: black;
+  border-bottom-left-radius: 0%;
+  border-top-left-radius: 0%;
+  z-index: 2;
+}
+.pianoCol {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  background-color: transparent;
+  margin-top: 15px;
+}
+.selectSound {
+  margin-left: 80px;
+}
+.btnUp {
+  position: absolute;
+  left: 0;
+  margin-left: 55px;
+}
+.btnPiano {
+  height: 40px;
+  width: 40px;
+  border: 1px solid black;
+  background-color: #26252d;
+}
+.btnPianoWhite {
+  height: 40px;
+  width: 40px;
+  border: 1px solid black;
+  background-color: gray;
+}
+.gridPiano {
+  background-color: #26252d;
+}
+
+.layoutPiano {
+  background-color: gray;
+  height: 100vh;
+}
+.dark .layoutPiano {
+  background-color: #26252d;
+}
+
+.play-btn {
+  margin: 0 auto;
+}
+.divMenuPiano {
+  display: flex;
+  justify-content: flex-start;
+}
+.play-button {
+  margin-right: 10px;
+}
+.choose-sound-button {
+  margin-left: 100px;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  width: "100%";
+  display: flex;
+  align-items: center;
+  background-color: whitesmoke;
+}
+.dark .header {
+  background-color: #001529;
+}
+.soundicon {
+  font-size: 25px;
+  position: absolute;
+  right: 0;
+  margin-right: 170px;
+  margin-top: 4px;
+}
+.slider-sound {
+  width: 100px;
+  position: absolute;
+  right: 0;
+  margin-right: 55px;
+}
+.footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  width: "100%";
+  display: flex;
+  align-items: center;
+  background-color: whitesmoke;
+  height: 64px;
+}
+.dark .footer {
+  background-color: #001529;
+}
+.grid-canvas {
+  overflow: auto;
+  display: flex;
+  flex-direction: row;
+}
+
+body::-webkit-scrollbar {
+  width: 0px;
+  background-color: gray;
+}
+.dark body::-webkit-scrollbar {
+  background-color: #2c3531;
+}
+::-webkit-scrollbar {
+  width: 15px;
+  background-color: gray;
+}
+.dark ::-webkit-scrollbar {
+  background-color: #2c3531;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 5px;
+  background-color: #1677ff;
+}
+::-webkit-scrollbar-corner {
+  background-color: gray;
+}
+.dark ::-webkit-scrollbar-corner {
+  background-color: #2c3531;
+}
+.bpm-input {
+  margin-left: 20px;
+}
+.pause-button {
+  margin-right: 10px;
+}
+.slider-panner {
+  margin-left: 20px;
+  width: 200%;
+}
+
+.record-button {
+  margin-left: 20px;
+}
+.signature {
+  border-radius: 5px;
+  background-color: #1677ff;
+  height: 15px;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.addColsButton {
+  border-radius: 5px;
+  position: sticky;
+  top: 40vh;
+
+  margin-left: 5px;
+
+  z-index: 1;
+}
+.bpm-input .ant-input-number-group-addon {
+  color: white;
+  background-color: #1677ff;
+}
+.delete-button {
+  margin-left: 75px;
+}
+.contentLayout {
+  overflow: auto;
+}
+.pianoTilesContainer {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+}
+.pencil-button {
+  margin-left: 80px;
+}
+.select-button {
+  margin-left: 10px;
+}
+canvas {
+  cursor: url(pencil-fill.svg), auto;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Высота экрана */
+}
+
+.save-btn {
+  margin-left: 20px;
+}
+
+.load-btn {
+  margin-left: 20px;
+}

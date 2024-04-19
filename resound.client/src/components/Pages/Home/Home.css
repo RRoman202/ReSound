@@ -1,0 +1,47 @@
+body {
+  background-color: white;
+}
+
+.dark body {
+  background-color: #2c3531;
+}
+
+.dark .sidebar {
+  background-color: #2c3531;
+}
+
+.light .sidebar {
+  background-color: white;
+}
+
+.dark .sidemenu {
+  background-color: #2c3531;
+}
+
+.light .sidemenu {
+  background-color: white;
+}
+
+.creatediv {
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #f0f0f0;
+  text-align: center;
+}
+
+.listprojects {
+  margin-top: 20px;
+  min-height: 100vh;
+}
+
+.card-project {
+  min-width: 200px;
+}
+
+.layoutHome {
+  background-color: #f5f5f5;
+}
+
+.dark .layoutHome {
+  background-color: gray;
+}

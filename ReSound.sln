@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34607.119
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReSound.Server", "ReSound.Server\ReSound.Server.csproj", "{CEFCBAF9-7C85-4728-89BB-7C5C08CFFB7D}"
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "resound.client", "resound.client\resound.client.esproj", "{AED22C2A-4C93-4AF9-BC7F-5C6ED0E33983}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CEFCBAF9-7C85-4728-89BB-7C5C08CFFB7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEFCBAF9-7C85-4728-89BB-7C5C08CFFB7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEFCBAF9-7C85-4728-89BB-7C5C08CFFB7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEFCBAF9-7C85-4728-89BB-7C5C08CFFB7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AED22C2A-4C93-4AF9-BC7F-5C6ED0E33983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AED22C2A-4C93-4AF9-BC7F-5C6ED0E33983}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AED22C2A-4C93-4AF9-BC7F-5C6ED0E33983}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{AED22C2A-4C93-4AF9-BC7F-5C6ED0E33983}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AED22C2A-4C93-4AF9-BC7F-5C6ED0E33983}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AED22C2A-4C93-4AF9-BC7F-5C6ED0E33983}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CF1D3724-1E7A-41CA-B842-A62A1F0DC4FF}
+	EndGlobalSection
+EndGlobal
