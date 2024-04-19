@@ -19,8 +19,8 @@ function ChooseSoundFunction() {
         break;
       }
       case "piano": {
-        url = "https://tonejs.github.io/audio/salamander/";
-        filename = "C4.mp3";
+        url = "https://localhost:7262/audio/";
+        filename = "piano.mp3";
         break;
       }
       case "bang": {

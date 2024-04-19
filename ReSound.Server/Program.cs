@@ -1,5 +1,9 @@
+using Microsoft.EntityFrameworkCore;
+using ReSound.Server.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddDbContext<ReSoundContext>(e => e.UseNpgsql(builder.Configuration.GetConnectionString("ReSoundDb")));
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -8,6 +12,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+builder.Services.AddCors();
+
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
@@ -22,6 +29,10 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseStaticFiles();
+
+app.UseCors(opts => opts.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 app.MapControllers();
 
