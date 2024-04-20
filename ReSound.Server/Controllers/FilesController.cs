@@ -15,13 +15,15 @@ namespace ReSound.Server.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetFiles()
+        public IActionResult GetFileNames()
         {
             var folderPath = Path.Combine(_env.WebRootPath, "sounds");
 
-            var files = System.IO.Directory.GetFiles(folderPath);
+            var fileNames = Directory.GetFiles(folderPath)
+                .Select(Path.GetFileName)
+                .ToList();
 
-            return Ok(files);
+            return Ok(fileNames);
         }
 
         [HttpGet("{fileName}")]
