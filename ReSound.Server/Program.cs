@@ -46,6 +46,7 @@ builder.Services.AddCors();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
+app.UseCors(opts => opts.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -66,7 +67,7 @@ app.UseEndpoints(endpoints =>
     endpoints.MapControllers();
 });
 
-app.UseCors(opts => opts.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
 
 app.MapControllers();
 

@@ -37,6 +37,8 @@ namespace ReSound.Server.Controllers
             else
             {
                 userModel.Password = BCrypt.Net.BCrypt.HashPassword(userModel.Password);
+                userModel.DateCreated = DateTime.UtcNow;
+                userModel.DateUpdated = DateTime.UtcNow;
                 _context.Users.Add(userModel);
                 await _context.SaveChangesAsync();
 
@@ -69,7 +71,7 @@ namespace ReSound.Server.Controllers
 
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id)
+        public async Task<ActionResult<User>> GetUser(Guid id)
         {
             var userModel = await _context.Users.FindAsync(id);
 

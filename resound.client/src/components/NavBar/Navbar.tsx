@@ -1,11 +1,37 @@
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-
-import { Button, Space } from "antd";
+import { Button, Space, Avatar } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 import changeTheme from "./changeTheme";
 import "./Navbar.css";
 import logo from "./logo.png";
+import RegisterModal from "./Modals/RegisterModal";
+import AuthModal from "./Modals/AuthModal";
 
-export default function NavBar() {
+interface NavBarProps {
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
+  isLoggedIn: boolean;
+}
+
+export default function NavBar({ setIsLoggedIn, isLoggedIn }: NavBarProps) {
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("userid");
+    setIsLoggedIn(false);
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    console.log("isLoggedIn:", isLoggedIn);
+  }, [isLoggedIn]);
+
   return (
     <nav className="navbar-container" id="navbar">
       <div className="nav-menu">
@@ -30,9 +56,29 @@ export default function NavBar() {
               <path d="M8 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6m0 1a4 4 0 1 0 0-8 4 4 0 0 0 0 8M8 0a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 0m0 13a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-1 0v-2A.5.5 0 0 1 8 13m8-5a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2a.5.5 0 0 1 .5.5M3 8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 1 0-1h2A.5.5 0 0 1 3 8m10.657-5.657a.5.5 0 0 1 0 .707l-1.414 1.415a.5.5 0 1 1-.707-.708l1.414-1.414a.5.5 0 0 1 .707 0m-9.193 9.193a.5.5 0 0 1 0 .707L3.05 13.657a.5.5 0 0 1-.707-.707l1.414-1.414a.5.5 0 0 1 .707 0m9.193 2.121a.5.5 0 0 1-.707 0l-1.414-1.414a.5.5 0 0 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .707M4.464 4.465a.5.5 0 0 1-.707 0L2.343 3.05a.5.5 0 1 1 .707-.707l1.414 1.414a.5.5 0 0 1 0 .708" />
             </svg>
           </Button>
-          <Button type="primary" className="auth-btn">
-            Войти
-          </Button>
+          {isLoggedIn ? (
+            <Space wrap className="auth-button">
+              <Avatar icon={<UserOutlined />}></Avatar>
+              <p
+                style={{
+                  color: "white",
+                  fontSize: "20px",
+                  marginTop: "15px",
+                  marginRight: "5px",
+                }}
+              >
+                {localStorage.getItem("user")}
+              </p>
+              <Button onClick={handleLogout} type="primary">
+                Выход
+              </Button>
+            </Space>
+          ) : (
+            <>
+              <AuthModal setIsLoggedIn={setIsLoggedIn}></AuthModal>
+              <RegisterModal setIsLoggedIn={setIsLoggedIn}></RegisterModal>
+            </>
+          )}
         </Space>
       </div>
     </nav>
