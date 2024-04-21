@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { Button, Space, Avatar } from "antd";
+import { Button, Space, Avatar, Dropdown } from "antd";
+import type { MenuProps } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import changeTheme from "./changeTheme";
+import { useNavigate } from "react-router-dom";
 import "./Navbar.css";
 import logo from "./logo.png";
 import RegisterModal from "./Modals/RegisterModal";
@@ -14,11 +16,16 @@ interface NavBarProps {
 }
 
 export default function NavBar({ setIsLoggedIn, isLoggedIn }: NavBarProps) {
+  const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("userid");
     setIsLoggedIn(false);
+  };
+
+  const LandingPage = () => {
+    navigate("/");
   };
 
   useEffect(() => {
@@ -32,15 +39,40 @@ export default function NavBar({ setIsLoggedIn, isLoggedIn }: NavBarProps) {
     console.log("isLoggedIn:", isLoggedIn);
   }, [isLoggedIn]);
 
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <a target="_blank" rel="noopener noreferrer">
+          Профиль
+        </a>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <a target="_blank" rel="noopener noreferrer" onClick={handleLogout}>
+          Выход
+        </a>
+      ),
+    },
+  ];
+
   return (
     <nav className="navbar-container" id="navbar">
       <div className="nav-menu">
-        <img src={logo} alt="Логотип" className="logo" />
+        <img src={logo} alt="Логотип" className="logo" onClick={LandingPage} />
 
         <div className="divMenu">
-          <NavLink to="/home" className="navbar-link">
-            Главная
-          </NavLink>
+          {isLoggedIn ? (
+            <>
+              <NavLink to="/home" className="navbar-link">
+                Профиль
+              </NavLink>
+            </>
+          ) : (
+            <></>
+          )}
         </div>
       </div>
       <div className="nav-btn">
@@ -57,22 +89,13 @@ export default function NavBar({ setIsLoggedIn, isLoggedIn }: NavBarProps) {
             </svg>
           </Button>
           {isLoggedIn ? (
-            <Space wrap className="auth-button">
-              <Avatar icon={<UserOutlined />}></Avatar>
-              <p
-                style={{
-                  color: "white",
-                  fontSize: "20px",
-                  marginTop: "15px",
-                  marginRight: "5px",
-                }}
-              >
-                {localStorage.getItem("user")}
-              </p>
-              <Button onClick={handleLogout} type="primary">
-                Выход
-              </Button>
-            </Space>
+            <Dropdown menu={{ items }}>
+              <a onClick={(e) => e.preventDefault()}>
+                <Button type="primary" icon={<UserOutlined />}>
+                  {localStorage.getItem("user")}
+                </Button>
+              </a>
+            </Dropdown>
           ) : (
             <>
               <AuthModal setIsLoggedIn={setIsLoggedIn}></AuthModal>
