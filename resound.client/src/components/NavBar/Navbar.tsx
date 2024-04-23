@@ -18,9 +18,11 @@ interface NavBarProps {
 export default function NavBar({ setIsLoggedIn, isLoggedIn }: NavBarProps) {
   const navigate = useNavigate();
   const handleLogout = () => {
+    localStorage.removeItem("userfull");
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("userid");
+    navigate("/");
     setIsLoggedIn(false);
   };
 
@@ -35,21 +37,57 @@ export default function NavBar({ setIsLoggedIn, isLoggedIn }: NavBarProps) {
     }
   }, []);
 
-  useEffect(() => {
-    console.log("isLoggedIn:", isLoggedIn);
-  }, [isLoggedIn]);
-
   const items: MenuProps["items"] = [
     {
       key: "1",
       label: (
-        <a target="_blank" rel="noopener noreferrer">
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => navigate("/home")}
+        >
           Профиль
         </a>
       ),
     },
     {
       key: "2",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => navigate("/home")}
+        >
+          Мои проекты
+        </a>
+      ),
+    },
+    {
+      key: "3",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => navigate("/home")}
+        >
+          Любимое
+        </a>
+      ),
+    },
+    {
+      key: "4",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => navigate("/home")}
+        >
+          Статистика
+        </a>
+      ),
+    },
+    {
+      key: "5",
       label: (
         <a target="_blank" rel="noopener noreferrer" onClick={handleLogout}>
           Выход
@@ -68,6 +106,12 @@ export default function NavBar({ setIsLoggedIn, isLoggedIn }: NavBarProps) {
             <>
               <NavLink to="/home" className="navbar-link">
                 Профиль
+              </NavLink>
+              <NavLink to="/feed" className="navbar-link">
+                Лента
+              </NavLink>
+              <NavLink to="/" className="navbar-link">
+                Интересное
               </NavLink>
             </>
           ) : (

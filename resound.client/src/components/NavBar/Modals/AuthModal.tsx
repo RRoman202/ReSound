@@ -2,12 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Modal, Button, Space, Spin, message } from "antd";
 import { Form, Input } from "antd";
+import { useStore } from "zustand";
 import RegisterModal from "./RegisterModal";
 import { getUser } from "../FetchData/GetUser";
+import App from "../../../App";
 
 interface AuthModalProps {
   setIsLoggedIn: (isLoggedIn: boolean) => void;
 }
+
+const rootElement = document.getElementById("root");
 
 const AuthModal: React.FC<AuthModalProps> = ({ setIsLoggedIn }) => {
   const url = "https://localhost:7262/Users/login";
@@ -40,11 +44,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ setIsLoggedIn }) => {
       console.log(token);
       localStorage.setItem("token", token);
       localStorage.setItem("user", newUser.login);
+      localStorage.setItem("userfull", JSON.stringify(newUser));
       setAuthModal(false);
       setIsLoggedIn(true);
-      navigate("/home");
 
       await getUser(token);
+
+      navigate("/home");
     } else {
       const errorResponse = await result.text();
       error(errorResponse);

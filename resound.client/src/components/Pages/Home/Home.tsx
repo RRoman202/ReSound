@@ -68,6 +68,8 @@ const menu = (
   </Menu>
 );
 
+const user = JSON.parse(localStorage.getItem("userfull")!);
+
 const UserPanel = () => (
   <div
     style={{
@@ -79,8 +81,8 @@ const UserPanel = () => (
     }}
   >
     <Avatar size={50} icon={<UserOutlined />} />
-    <p>Roman202</p>
-    <p>romanrrr2005rrr@gmail.com</p>
+    <p>{user.login}</p>
+    <p>{user.email}</p>
     <Dropdown overlay={menu}>
       <Button>
         <SettingOutlined />
