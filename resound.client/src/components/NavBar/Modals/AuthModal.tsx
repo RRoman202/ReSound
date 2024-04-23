@@ -50,7 +50,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ setIsLoggedIn }) => {
 
       await getUser(token);
 
-      navigate("/home");
+      //navigate("/home");
     } else {
       const errorResponse = await result.text();
       error(errorResponse);

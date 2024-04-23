@@ -1,6 +1,17 @@
 import React, { useState } from "react";
-import { Card, Image, Button, Row, Col, Typography } from "antd";
+import { Card, Image, Button, Row, Col, Typography, Rate } from "antd";
 import AudioPlayer from "react-audio-player";
+import {
+  CaretUpOutlined,
+  CaretRightOutlined,
+  CaretDownOutlined,
+  SoundTwoTone,
+  BorderOutlined,
+  PauseCircleOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  HeartOutlined,
+} from "@ant-design/icons";
 
 interface MusicCardProps {
   title: string;
@@ -22,7 +33,7 @@ const MusicCard: React.FC<MusicCardProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
 
   return (
-    <Card style={{ marginTop: "20px" }}>
+    <Card style={{ marginTop: "20px", backgroundColor: "lightblue" }}>
       <Row gutter={16}>
         <Col span={8}>
           <Image
@@ -36,7 +47,7 @@ const MusicCard: React.FC<MusicCardProps> = ({
           <Typography.Title level={4}>{title}</Typography.Title>
           <Typography.Text type="secondary">{artist}</Typography.Text>
 
-          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <div style={{ display: "flex", justifyContent: "flex-start" }}>
             <AudioPlayer
               style={{ marginTop: "10px" }}
               src={audioSrc}
@@ -47,11 +58,10 @@ const MusicCard: React.FC<MusicCardProps> = ({
 
           <Row justify="space-between" style={{ marginTop: "35px" }}>
             <Col>
-              <Typography.Text>Понравилось: {likes}</Typography.Text>
+              <Button shape="circle" icon={<HeartOutlined />}></Button>
+              <Rate style={{ marginLeft: "20px" }}></Rate>
             </Col>
-            <Col>
-              <Typography.Text>Рейтинг: {rating}</Typography.Text>
-            </Col>
+            <Col></Col>
           </Row>
         </Col>
       </Row>

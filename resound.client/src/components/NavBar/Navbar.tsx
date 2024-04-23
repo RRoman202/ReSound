@@ -108,7 +108,7 @@ export default function NavBar({ setIsLoggedIn, isLoggedIn }: NavBarProps) {
                 Профиль
               </NavLink>
               <NavLink to="/feed" className="navbar-link">
-                Лента
+                Треки
               </NavLink>
               <NavLink to="/" className="navbar-link">
                 Интересное
