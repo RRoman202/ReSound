@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Card, Image, Button, Row, Col, Typography, Rate } from "antd";
+import { Card, Image, Button, Row, Col, Typography, Rate, Input } from "antd";
 import AudioPlayer from "react-audio-player";
 import {
   CaretUpOutlined,
@@ -12,6 +12,8 @@ import {
   EditOutlined,
   HeartOutlined,
 } from "@ant-design/icons";
+
+const { Search } = Input;
 
 interface MusicCardProps {
   title: string;

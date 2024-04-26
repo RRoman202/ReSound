@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using ReSound.Server;
 using ReSound.Server.Data;
 using System.Text;
 
@@ -9,7 +10,9 @@ IConfiguration config = builder.Configuration;
 
 builder.Services.AddDbContext<ReSoundContext>(e => e.UseNpgsql(builder.Configuration.GetConnectionString("ReSoundDb")));
 // Add services to the container.
-
+builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddServicesAndRepositories();
+//builder.Services.AddBusinessLogic();
 builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -36,6 +39,8 @@ builder.Services.AddAuthentication(x =>
 });
 builder.Services.AddAuthorization();
 
+
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -47,6 +52,8 @@ builder.Services.AddCors();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 app.UseCors(opts => opts.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

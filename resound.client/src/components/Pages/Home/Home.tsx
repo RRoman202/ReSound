@@ -92,6 +92,12 @@ const UserPanel = () => (
 );
 
 const Home = () => {
+  const [sequencers, setSequencers] = useState([]);
+  useEffect(() => {
+    fetch("https://localhost:7262/api/Sequencers")
+      .then((response) => response.json())
+      .then((data) => setSequencers(data));
+  }, []);
   return (
     <Layout>
       <Sider
@@ -138,23 +144,19 @@ const Home = () => {
           <List
             className="listprojects"
             grid={{ gutter: 16, column: 3 }}
-            dataSource={projects}
-            renderItem={(item) => (
+            dataSource={sequencers}
+            renderItem={(sequencer) => (
               <List.Item>
                 <Card className="card-project" hoverable>
                   <div style={{ display: "flex" }}>
                     <div style={{ flex: 1 }}>
-                      <Image
-                        alt={item.title}
-                        src={item.image}
-                        style={{ objectFit: "cover", height: 50 }}
-                      />
+                      {/* Display sequencer name or other relevant information */}
+                      <Title level={5}>{sequencer.name}</Title>
                     </div>
                     <div style={{ flex: 2, paddingLeft: 16 }}>
-                      <Card.Meta
-                        title={item.title}
-                        description={item.description}
-                      />
+                      {/* Display additional sequencer details or actions */}
+                      <p>{sequencer.description}</p>
+                      <Button type="primary">Открыть</Button>
                     </div>
                   </div>
                 </Card>

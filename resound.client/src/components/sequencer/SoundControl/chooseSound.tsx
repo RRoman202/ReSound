@@ -4,7 +4,7 @@ import * as Tone from "tone";
 import { getSounds } from "./FetchData/GetSounds";
 
 export let url: string = "https://localhost:7262/audio/";
-export let filename: string = "piano.mp3";
+export let filename: string = "Piano.mp3";
 
 function playExample(url: string, filename: string) {
   const player = new Tone.Player(url + filename).toDestination();
@@ -18,8 +18,8 @@ function ChooseSoundFunction() {
   const ChooseSound = (sound: string) => {
     if (sound) {
       url = "https://localhost:7262/audio/";
-      filename = sound;
-      playExample(url, sound);
+      filename = sound + ".mp3";
+      playExample(url, sound + ".mp3");
     } else {
       console.warn(`Sound "${sound}" is invalid or missing a filename.`);
     }

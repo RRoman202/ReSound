@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Mediator;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ReSound.Server.ApiQueries.GetFilesNames;
 
 namespace ReSound.Server.Controllers
 {
@@ -23,7 +25,14 @@ namespace ReSound.Server.Controllers
                 .Select(Path.GetFileName)
                 .ToList();
 
-            return Ok(fileNames);
+            var fileNamesNoMp3 = new List<string>();
+
+            foreach (var file in fileNames)
+            {
+                fileNamesNoMp3.Add(file.Replace(".mp3", ""));
+            }
+
+            return Ok(fileNamesNoMp3);
         }
 
         [HttpGet("{fileName}")]
