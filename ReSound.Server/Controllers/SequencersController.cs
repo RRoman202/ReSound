@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using ReSound.Server.Data.Models;
 using ReSound.Server.Data;
 using ReSound.Server.DTO;
+using ReSound.Server.Services.Sequencers;
 
 namespace ReSound.Server.Controllers
 {
@@ -10,20 +11,20 @@ namespace ReSound.Server.Controllers
     [ApiController]
     public class SequencersController : ControllerBase
     {
+        private readonly ISequencersService _sequencersService;
         private readonly ReSoundContext _context;
 
-        public SequencersController(ReSoundContext context)
+        public SequencersController(ReSoundContext context, ISequencersService sequencersService)
         {
             _context = context;
+            _sequencersService = sequencersService;
         }
 
         // GET: api/Sequencer
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Sequencer>>> GetSequencers()
+        public async Task<IEnumerable<Sequencer>> GetSequencers()
         {
-            return await _context.Sequencers
-                .Include(s => s.SettingsSequencer) // Eagerly load SettingsSequencer
-                .ToListAsync();
+            return await _sequencersService.GetSequencers();
         }
 
         // GET: api/Sequencer/5

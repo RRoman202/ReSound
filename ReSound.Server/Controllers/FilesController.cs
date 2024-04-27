@@ -1,7 +1,6 @@
 ﻿using Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ReSound.Server.ApiQueries.GetFilesNames;
 
 namespace ReSound.Server.Controllers
 {

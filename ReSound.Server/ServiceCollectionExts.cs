@@ -1,5 +1,5 @@
-﻿using ReSound.Server.Repositories.Files;
-using ReSound.Server.Services.Files;
+﻿using ReSound.Server.Repositories.Sequencers;
+using ReSound.Server.Services.Sequencers;
 
 namespace ReSound.Server
 {
@@ -7,8 +7,8 @@ namespace ReSound.Server
     {
         public static IServiceCollection AddServicesAndRepositories(this IServiceCollection services)
         {
-            services.AddScoped<IFilesRepository, FilesRepository>();
-            services.AddScoped<IFilesService, FilesService>();
+            services.AddScoped<ISequencersRepository, SequencersRepository>();
+            services.AddScoped<ISequencersService, SequencersService>();
 
             return services;
         }

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using ReSound.Server;
 using ReSound.Server.Data;
+using ReSound.Server.Repositories.Sequencers;
+using ReSound.Server.Services.Sequencers;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,8 +13,7 @@ IConfiguration config = builder.Configuration;
 builder.Services.AddDbContext<ReSoundContext>(e => e.UseNpgsql(builder.Configuration.GetConnectionString("ReSoundDb")));
 // Add services to the container.
 builder.Services.AddEndpointsApiExplorer();
-//builder.Services.AddServicesAndRepositories();
-//builder.Services.AddBusinessLogic();
+
 builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -43,6 +44,9 @@ builder.Services.AddAuthorization();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddServicesAndRepositories();
+builder.Services.AddBusinessLogic();
 
 var app = builder.Build();
 

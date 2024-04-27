@@ -43,10 +43,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ApiCommand\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\sounds\Piano.mp3" />
   </ItemGroup>
 
