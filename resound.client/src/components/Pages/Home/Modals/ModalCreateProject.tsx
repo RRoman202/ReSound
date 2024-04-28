@@ -1,7 +1,7 @@
 import { Modal, Button, Form, Input, Checkbox, Spin } from "antd";
 import { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { hideNav, viewNav } from "../../MainTrack/HiddenNavbar";
 
 type FieldType = {
@@ -48,7 +48,7 @@ function ModalChooseSound() {
             if (response.ok) {
               // Success: Close modal, navigate, and show success message
               setIsModalOpen(false);
-              navigate("/main");
+
               // Add success message here (e.g., using a notification or toast)
             } else {
               // Error: Handle API error

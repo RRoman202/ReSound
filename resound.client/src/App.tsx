@@ -30,7 +30,7 @@ function App() {
               <Route path="/" element={<Main />} />
               <Route path="/piano" element={<Piano />} />
               <Route path="/home" element={<Home />} />
-              <Route path="/main" element={<MainTrack />} />
+              <Route path="/maintrack/:sequencer" element={<MainTrack />} />
               <Route path="/feed" element={<Tape />} />
             </>
           ) : (

@@ -3,6 +3,7 @@ import VolumeSlider from "../../sequencer/SoundControl/VolumeSoundControl";
 import ModalChooseSound from "../../sequencer/SoundControl/Modals/ModalChooseSound";
 import BpmInput from "../../sequencer/SoundControl/chooseBPM";
 import CanvasTimeSignature from "../../sequencer/ui/TimeSignatureBar";
+import { hideNav, viewNav } from "../MainTrack/HiddenNavbar";
 import { ClearCanv } from "../../Canvas/ClearCanvasBtn";
 import { RecordCanvas } from "../../sequencer/SoundControl/SaveAudio";
 import "../../sequencer/SoundControl/SaveAudio";
@@ -57,6 +58,7 @@ export const Prog: React.FC<ProgressBarProps> = ({
   return null;
 };
 const Piano = observer(() => {
+  hideNav();
   const [loading, setLoading] = useState(true);
   const [cols, setCols] = useState(48);
   const [widthTime, setWidthTime] = useState(1920);

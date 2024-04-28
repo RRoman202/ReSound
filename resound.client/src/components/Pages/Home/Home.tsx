@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useReducer } from "react";
 import ModalCreateProject from "./Modals/ModalCreateProject";
+import { useNavigate, Link } from "react-router-dom";
 import changeTheme from "../../NavBar/changeTheme";
 import { hideNav, viewNav } from "../MainTrack/HiddenNavbar";
+import type { MenuProps } from "antd";
 import {
   UploadOutlined,
   UserOutlined,
@@ -12,6 +14,7 @@ import {
   BarChartOutlined,
   PlusOutlined,
   QuestionCircleOutlined,
+  MoreOutlined,
 } from "@ant-design/icons";
 import {
   Layout,
@@ -28,6 +31,7 @@ import {
   Input,
 } from "antd";
 import "./Home.css";
+import axios from "axios";
 
 const { Search } = Input;
 const { Header, Content, Footer, Sider } = Layout;
@@ -37,29 +41,11 @@ const { Meta } = Card;
 const customLabels = ["Проекты", "Любимое", "Статистика"];
 const customIcons = [FormOutlined, LikeOutlined, BarChartOutlined];
 
-const items = customLabels.map((label, index) => ({
+const itemsMenu = customLabels.map((label, index) => ({
   key: String(index + 1),
   icon: React.createElement(customIcons[index]),
   label: label,
 }));
-
-const projects = [
-  {
-    title: "Проект1",
-    image: "https://via.placeholder.com/50",
-    description: "Описание 1",
-  },
-  {
-    title: "Проект2",
-    image: "https://via.placeholder.com/50",
-    description: "Описание 1",
-  },
-  {
-    title: "Проект3",
-    image: "https://via.placeholder.com/50",
-    description: "Описание 1",
-  },
-];
 
 const menu = (
   <Menu>
@@ -92,12 +78,31 @@ const UserPanel = () => (
 );
 
 const Home = () => {
+  viewNav();
   const [sequencers, setSequencers] = useState([]);
   useEffect(() => {
-    fetch("https://localhost:7262/api/Sequencers")
-      .then((response) => response.json())
-      .then((data) => setSequencers(data));
+    const fetchSequencers = async () => {
+      const response = await axios.get(
+        "https://localhost:7262/api/Sequencers?iduser=" +
+          localStorage.getItem("userid")
+      );
+      setSequencers(response.data);
+    };
+    fetchSequencers();
   }, []);
+
+  const handleDeleteSequencer = async (id: string) => {
+    try {
+      await axios.delete(`https://localhost:7262/api/Sequencers/${id}`);
+      const updatedSequencers = sequencers.filter(
+        (sequencer) => sequencer.idSequencer !== id
+      );
+      setSequencers(updatedSequencers);
+    } catch (error) {
+      console.error("Error deleting sequencer:", error);
+    }
+  };
+
   return (
     <Layout>
       <Sider
@@ -118,23 +123,19 @@ const Home = () => {
           theme="light"
           mode="inline"
           defaultSelectedKeys={["4"]}
-          items={items}
+          items={itemsMenu}
         />
       </Sider>
       <Layout className="layoutHome">
         <Content
           style={{
-            margin: "24px 16px 0",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
+            padding: "20px",
           }}
         >
-          <div className="creatediv">
+          <Card className="creatediv">
             <Title level={2}>Создать музыку</Title>
             <ModalCreateProject></ModalCreateProject>
-          </div>
+          </Card>
           <Title level={4}>Мои музыкальные произведения</Title>
           <Search
             style={{ marginTop: 20 }}
@@ -143,22 +144,57 @@ const Home = () => {
           />
           <List
             className="listprojects"
-            grid={{ gutter: 16, column: 3 }}
+            grid={{ gutter: 12, column: 3 }}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-start",
+            }}
             dataSource={sequencers}
             renderItem={(sequencer) => (
               <List.Item>
-                <Card className="card-project" hoverable>
-                  <div style={{ display: "flex" }}>
-                    <div style={{ flex: 1 }}>
-                      {/* Display sequencer name or other relevant information */}
-                      <Title level={5}>{sequencer.name}</Title>
-                    </div>
-                    <div style={{ flex: 2, paddingLeft: 16 }}>
-                      {/* Display additional sequencer details or actions */}
-                      <p>{sequencer.description}</p>
-                      <Button type="primary">Открыть</Button>
-                    </div>
-                  </div>
+                <Card
+                  className="card-project"
+                  title={sequencer.name}
+                  extra={
+                    <Dropdown
+                      overlay={
+                        <Menu>
+                          <Menu.Item key="1">
+                            <Link to={`/maintrack/${sequencer.idSequencer}`}>
+                              Открыть
+                            </Link>
+                          </Menu.Item>
+                          <Menu.Item key="2">
+                            <a target="_blank" rel="noopener noreferrer">
+                              Редактировать
+                            </a>
+                          </Menu.Item>
+                          <Menu.Item key="3" danger>
+                            <a
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={() =>
+                                handleDeleteSequencer(sequencer.idSequencer)
+                              }
+                            >
+                              Удалить
+                            </a>
+                          </Menu.Item>
+                        </Menu>
+                      }
+                    >
+                      <Button icon={<MoreOutlined></MoreOutlined>}></Button>
+                    </Dropdown>
+                  }
+                  hoverable
+                >
+                  <p>{sequencer.description}</p>
+                  <Button type="primary">
+                    <Link to={`/maintrack/${sequencer.idSequencer}`}>
+                      Открыть
+                    </Link>
+                  </Button>
                 </Card>
               </List.Item>
             )}

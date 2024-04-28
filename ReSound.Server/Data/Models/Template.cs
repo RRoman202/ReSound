@@ -10,8 +10,8 @@ namespace ReSound.Server.Data.Models
 
         public int Volume { get; set; }
 
-        [Column(TypeName = "jsonb")]
-        public bool[][]? Notes { get; set; }
+        
+        public string? Notes { get; set; }
 
         public Guid IdSound { get; set; }
 

@@ -10,9 +10,7 @@ body {
 }
 
 .creatediv {
-  border-radius: 8px;
-  padding: 20px;
-  background-color: #f0f0f0;
+  background-color: white;
   text-align: center;
 }
 
@@ -31,4 +29,15 @@ body {
 
 .dark .layoutHome {
   background-color: gray;
+}
+
+.sidebar {
+  border-top-left-radius: 25px;
+  border-top-right-radius: 25px;
+  margin-top: 20px;
+}
+
+.ant-layout-sider-children {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
 }

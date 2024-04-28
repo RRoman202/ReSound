@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import TemplateList from "./TemplateList";
 import AudioTrackGrid from "./TemplateGrid";
 import { hideNav, viewNav } from "./HiddenNavbar";
-import { Layout, Tooltip, Button, Drawer, Space, Flex } from "antd";
+import { Layout, Tooltip, Button, Drawer, Space, Flex, Spin } from "antd";
 import BpmInput from "../../sequencer/SoundControl/chooseBPM";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 
 import {
   CaretUpOutlined,
@@ -30,6 +32,23 @@ interface Template {
 }
 
 const MainTrack: React.FC = () => {
+  hideNav();
+  console.log(useParams());
+  const { sequencer } = useParams<{ sequencer: string }>();
+
+  const [sequencerData, setSequencerData] = useState<Sequencer | null>(null);
+  console.log(sequencerData);
+
+  useEffect(() => {
+    const fetchSequencer = async () => {
+      const response = await axios.get(
+        `https://localhost:7262/api/Sequencers/${sequencer}?iduser=` +
+          localStorage.getItem("userid")
+      );
+      setSequencerData(response.data);
+    };
+    fetchSequencer();
+  }, [sequencer]);
   const [templates, setTemplates] = useState<Template[]>([
     { id: 1, name: "Шаблон 1" },
     { id: 2, name: "Шаблон 2" },
@@ -61,11 +80,15 @@ const MainTrack: React.FC = () => {
     setTemplates([...templates, newTemplate]);
   };
 
+  if (!sequencerData) {
+    return <Spin size="large" fullscreen></Spin>; // Display loading message while data is fetched
+  }
+
   return (
     <DndProvider backend={HTML5Backend}>
       <Drawer title="Файл" placement="left" onClose={onClose} open={openDrawer}>
         <Space direction="vertical">
-          <h2>Название проекта</h2>
+          <h2>{sequencerData.name}</h2>
           <Flex vertical gap="small" style={{ width: "300px" }}>
             <Button type="primary">Сохранить</Button>
             <Button type="primary">Сохранить как</Button>
