@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using ReSound.Server.Data;
 using ReSound.Server.Data.Models;
@@ -45,6 +46,18 @@ namespace ReSound.Server.Repositories.Sequencers
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<Template>> GetTemplates(Guid idsequencer)
+        {
+            var templates = await _context.SequencersTemplates
+                .Include(st => st.Template)
+                .Where(st => st.IdSequencer == idsequencer)
+                .Select(st => st.Template)
+                .ToListAsync();
+
+
+            return templates;
+        }
+
         public async Task<Sequencer> PostSequencer([FromBody] SequencerDTO sequencerDTO)
         {
             var sequencer = new Sequencer
@@ -74,7 +87,8 @@ namespace ReSound.Server.Repositories.Sequencers
                 IdSound = Guid.NewGuid(),
                 IdTemplate = Guid.NewGuid(),
                 Volume = 100,
-                Notes = "null"
+                Notes = "null",
+                Name = "Новый шаблон"
             };
             _context.Templates.Add(template);
             _context.Sequencers.Add(sequencer);
@@ -83,6 +97,8 @@ namespace ReSound.Server.Repositories.Sequencers
                 Id = Guid.NewGuid(),
                 IdTemplate = template.IdTemplate,
                 IdSequencer = sequencer.IdSequencer,
+            
+                Template = template,
                 
             });
             await _context.SaveChangesAsync();

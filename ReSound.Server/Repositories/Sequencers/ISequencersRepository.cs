@@ -11,5 +11,6 @@ namespace ReSound.Server.Repositories.Sequencers
         Task PutSequencer(Guid id, Sequencer sequencer);
         Task<Sequencer> PostSequencer([FromBody] SequencerDTO sequencerDTO);
         Task DeleteSequencer(Guid id);
+        Task<IEnumerable<Template>> GetTemplates(Guid idsequencer);
     }
 }

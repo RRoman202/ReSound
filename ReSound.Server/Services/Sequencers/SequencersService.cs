@@ -29,6 +29,11 @@ namespace ReSound.Server.Services.Sequencers
             return await _sequencersRepository.GetSequencers(iduser);
         }
 
+        public async Task<IEnumerable<Template>> GetTemplates(Guid idsequencer)
+        {
+            return await _sequencersRepository.GetTemplates(idsequencer);
+        }
+
         public async Task<Sequencer> PostSequencer([FromBody] SequencerDTO sequencerDTO)
         {
             return await _sequencersRepository.PostSequencer(sequencerDTO);

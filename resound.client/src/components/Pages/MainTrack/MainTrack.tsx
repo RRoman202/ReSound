@@ -8,6 +8,7 @@ import { Layout, Tooltip, Button, Drawer, Space, Flex, Spin } from "antd";
 import BpmInput from "../../sequencer/SoundControl/chooseBPM";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { BpmValue } from "../../../player/playCanvas";
 import axios from "axios";
 
 import {
@@ -38,6 +39,7 @@ const MainTrack: React.FC = () => {
 
   const [sequencerData, setSequencerData] = useState<Sequencer | null>(null);
   console.log(sequencerData);
+  const [templates, setTemplates] = useState([]);
 
   useEffect(() => {
     const fetchSequencer = async () => {
@@ -47,13 +49,23 @@ const MainTrack: React.FC = () => {
       );
       setSequencerData(response.data);
     };
+
     fetchSequencer();
   }, [sequencer]);
-  const [templates, setTemplates] = useState<Template[]>([
-    { id: 1, name: "Шаблон 1" },
-    { id: 2, name: "Шаблон 2" },
-    { id: 3, name: "Шаблон 3" },
-  ]);
+
+  useEffect(() => {
+    const fetchTemplates = async () => {
+      console.log("er");
+      if (sequencerData) {
+        const response = await axios.get(
+          `https://localhost:7262/api/Sequencers/templates?idsequencer=` +
+            sequencerData.idSequencer
+        );
+        setTemplates(response.data);
+      }
+    };
+    fetchTemplates();
+  }, [sequencerData]);
 
   const navigate = useNavigate();
 

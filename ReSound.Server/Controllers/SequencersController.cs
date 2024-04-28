@@ -24,6 +24,12 @@ namespace ReSound.Server.Controllers
             return await _sequencersService.GetSequencers(iduser);
         }
 
+        [HttpGet("templates")]
+        public async Task<IEnumerable<Template>> GetTemplates(Guid idsequencer)
+        {
+            return await _sequencersService.GetTemplates(idsequencer);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<Sequencer>> GetSequencer(Guid id, Guid iduser)
         {

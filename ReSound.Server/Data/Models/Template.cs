@@ -10,6 +10,8 @@ namespace ReSound.Server.Data.Models
 
         public int Volume { get; set; }
 
+        public string? Name { get; set; }
+
         
         public string? Notes { get; set; }
 
