@@ -39,7 +39,7 @@ body {
 .btnUp {
   position: absolute;
   left: 0;
-  margin-left: 55px;
+  margin-left: 15px;
 }
 .btnPiano {
   height: 40px;
@@ -75,9 +75,9 @@ body {
 .play-button {
   margin-right: 10px;
 }
-.choose-sound-button {
+/* .choose-sound-button {
   margin-left: 100px;
-}
+} */
 
 .header {
   position: sticky;
@@ -93,15 +93,10 @@ body {
 }
 .soundicon {
   font-size: 25px;
-  position: absolute;
-  right: 0;
-  margin-right: 170px;
-  margin-top: 4px;
 }
 .slider-sound {
   width: 100px;
-  position: absolute;
-  right: 0;
+
   margin-right: 55px;
 }
 .footer {
@@ -147,9 +142,9 @@ body::-webkit-scrollbar {
 .dark ::-webkit-scrollbar-corner {
   background-color: #2c3531;
 }
-.bpm-input {
+/* .bpm-input {
   margin-left: 20px;
-}
+} */
 .pause-button {
   margin-right: 10px;
 }
@@ -158,9 +153,9 @@ body::-webkit-scrollbar {
   width: 200%;
 }
 
-.record-button {
+/* .record-button {
   margin-left: 20px;
-}
+} */
 .signature {
   border-radius: 5px;
   background-color: #1677ff;
@@ -182,9 +177,9 @@ body::-webkit-scrollbar {
   color: white;
   background-color: #1677ff;
 }
-.delete-button {
+/* .delete-button {
   margin-left: 75px;
-}
+} */
 .contentLayout {
   overflow: auto;
 }
@@ -193,9 +188,9 @@ body::-webkit-scrollbar {
   display: flex;
   justify-content: flex-start;
 }
-.pencil-button {
+/* .pencil-button {
   margin-left: 80px;
-}
+} */
 .select-button {
   margin-left: 10px;
 }
@@ -214,6 +209,7 @@ canvas {
   margin-left: 20px;
 }
 
-.load-btn {
+/* .load-btn {
   margin-left: 20px;
-}
+  width: 250px;
+} */

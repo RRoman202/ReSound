@@ -113,10 +113,12 @@ const MainTrack: React.FC = () => {
       </Drawer>
       <Layout className="MainLayout">
         <Header className="header">
-          <Button type="primary" onClick={showDrawer}>
-            Файл
-          </Button>
-          <BpmInput></BpmInput>
+          <Flex gap="middle">
+            <Button type="primary" onClick={showDrawer}>
+              Файл
+            </Button>
+            <BpmInput></BpmInput>
+          </Flex>
         </Header>
         <div style={{ display: "flex", marginTop: "40px" }}>
           <div style={{ flex: 1, marginLeft: "10px" }}>

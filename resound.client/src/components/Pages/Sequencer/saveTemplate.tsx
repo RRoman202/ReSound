@@ -17,9 +17,5 @@ export default function SaveTemplateNotes({ cols }: { cols: number }) {
     }
   };
 
-  return (
-    <Button className="save-btn" onClick={saveNotes}>
-      Сохранить
-    </Button>
-  );
+  return <a onClick={saveNotes}>Сохранить как</a>;
 }

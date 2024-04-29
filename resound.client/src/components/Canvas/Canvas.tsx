@@ -144,7 +144,7 @@ export const GridCanvas: React.FC<GridCanvasProps> = (props) => {
         console.log(e);
       }
     }
-  }, [visibleGrid]);
+  }, [props.matrix]);
 
   function handleClick(row: number, col: number) {
     const newGrid = [...grid];

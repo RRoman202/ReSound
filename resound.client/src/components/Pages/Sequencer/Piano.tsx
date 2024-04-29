@@ -16,12 +16,23 @@ import SaveTemplateNotes from "./saveTemplate";
 import LoadTemplateNotes, { LoadTempCols } from "./loadTemplate";
 import { PlayCanv } from "../../../player/playCanvas";
 import "../../sequencer/SoundControl/SaveAudio";
-import { Button } from "antd";
+import { Button, Menu } from "antd";
+import { useNavigate } from "react-router-dom";
 import "./Piano.css";
 import { url, filename } from "../../sequencer/SoundControl/chooseSound";
 import { backDown, backUp } from "../../sequencer/Helpers/scrollFunction";
 import "../../../handlers/keyboardHandler";
-import { Row, Layout, Tooltip, Radio, Spin } from "antd";
+import {
+  Row,
+  Layout,
+  Tooltip,
+  Radio,
+  Spin,
+  Dropdown,
+  Drawer,
+  Space,
+  Flex,
+} from "antd";
 import axios from "axios";
 
 import {
@@ -62,8 +73,22 @@ export const Prog: React.FC<ProgressBarProps> = ({
 };
 const Piano = observer(() => {
   hideNav();
+  const navigate = useNavigate();
   const { template } = useParams<{ template: string }>();
   const [templateData, setTemplateData] = useState<Template | null>(null);
+  const [openDrawer, setOpenDrawer] = useState(false);
+
+  const showDrawer = () => {
+    setOpenDrawer(true);
+  };
+
+  const onClose = () => {
+    setOpenDrawer(false);
+  };
+
+  const closePage = () => {
+    navigate(`/maintrack/${localStorage.getItem("sequencerid")}`);
+  };
   console.log(templateData);
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -145,58 +170,96 @@ const Piano = observer(() => {
 
   return (
     <>
+      <Drawer
+        title="Файл шаблона"
+        placement="left"
+        onClose={onClose}
+        open={openDrawer}
+      >
+        <Space direction="vertical">
+          <h2>{templateData.name}</h2>
+          <Flex vertical gap="small" style={{ width: "300px" }}>
+            <Button type="primary">
+              <a onClick={() => updateTemplateNotes(m)}>Сохранить</a>
+            </Button>
+            <Button type="primary">
+              <SaveTemplateNotes cols={cols}></SaveTemplateNotes>
+            </Button>
+            <Button type="primary">Экспорт</Button>
+            <Button type="primary" onClick={closePage}>
+              Назад
+            </Button>
+          </Flex>
+        </Space>
+      </Drawer>
       <Layout className="layoutPiano">
         <Header className="header">
-          <div className="divMenuPiano">
-            <Button onClick={() => updateTemplateNotes(m)}>Сохранить</Button>
-            <Tooltip title="Вверх" className="btnUp">
-              <Button
-                icon={<CaretUpOutlined />}
-                type="primary"
-                onClick={backUp}
-              />
-            </Tooltip>
-            <ModalChooseSound></ModalChooseSound>
-            <BpmInput></BpmInput>
-            <Button
-              onClick={RecordCanvas}
-              type="primary"
-              className="record-button"
+          <Flex gap="middle" align="start">
+            <Flex
+              style={{ width: "100%" }}
+              justify="space-between"
+              align="flex-start"
+              gap="middle"
             >
-              Записать
-            </Button>
-            <Tooltip title="Очистить">
+              <Button type="primary" onClick={showDrawer}>
+                Файл шаблона
+              </Button>
+              <ModalChooseSound></ModalChooseSound>
+              <BpmInput></BpmInput>
               <Button
-                className="delete-button"
+                onClick={RecordCanvas}
                 type="primary"
-                shape="circle"
-                icon={<DeleteOutlined />}
-                onClick={ClearCanv}
-              ></Button>
-            </Tooltip>
+                className="record-button"
+              >
+                Записать
+              </Button>
+              <Tooltip title="Очистить">
+                <Button
+                  className="delete-button"
+                  type="primary"
+                  shape="circle"
+                  icon={<DeleteOutlined />}
+                  onClick={ClearCanv}
+                ></Button>
+              </Tooltip>
 
-            <SaveTemplateNotes cols={cols}></SaveTemplateNotes>
-            <LoadTemplateNotes></LoadTemplateNotes>
-            <Radio.Group
-              defaultValue="a"
-              buttonStyle="solid"
-              className="pencil-button"
+              {/* <Dropdown
+              overlay={
+                <Menu>
+                  <Menu.Item key="1">
+                    <a onClick={() => updateTemplateNotes(m)}>Сохранить</a>
+                  </Menu.Item>
+                  <Menu.Item key="2">
+                    <SaveTemplateNotes cols={cols}></SaveTemplateNotes>
+                  </Menu.Item>
+                </Menu>
+              }
             >
-              <Radio.Button value="a">
-                <Tooltip title="Карандаш">
-                  <EditOutlined></EditOutlined>
-                </Tooltip>
-              </Radio.Button>
-              <Radio.Button value="b">
-                <Tooltip title="Выделение">
-                  <RadiusUprightOutlined />
-                </Tooltip>
-              </Radio.Button>
-            </Radio.Group>
+              <Button style={{ marginLeft: "20px" }}>Сохранение</Button>
+            </Dropdown> */}
 
-            <SoundTwoTone className="soundicon" />
-            <VolumeSlider></VolumeSlider>
-          </div>
+              <LoadTemplateNotes></LoadTemplateNotes>
+              <Radio.Group
+                defaultValue="a"
+                buttonStyle="solid"
+                className="pencil-button"
+              >
+                <Radio.Button value="a">
+                  <Tooltip title="Карандаш">
+                    <EditOutlined></EditOutlined>
+                  </Tooltip>
+                </Radio.Button>
+                <Radio.Button value="b">
+                  <Tooltip title="Выделение">
+                    <RadiusUprightOutlined />
+                  </Tooltip>
+                </Radio.Button>
+              </Radio.Group>
+
+              <SoundTwoTone className="soundicon" />
+              <VolumeSlider></VolumeSlider>
+            </Flex>
+          </Flex>
         </Header>
         <Content id="contentLayout" className="contentLayout">
           <div className="pianoDiv">
@@ -237,13 +300,23 @@ const Piano = observer(() => {
           </div>
         </Content>
         <Footer className="footer">
-          <Tooltip title="Вниз" className="btnUp">
-            <Button
-              icon={<CaretDownOutlined />}
-              type="primary"
-              onClick={backDown}
-            />
-          </Tooltip>
+          {/* <div>
+            <Tooltip title="Вниз" className="btnUp">
+              <Button
+                icon={<CaretDownOutlined />}
+                type="primary"
+                onClick={backDown}
+              />
+            </Tooltip>
+            <Tooltip title="Вверх">
+              <Button
+                icon={<CaretUpOutlined />}
+                type="primary"
+                onClick={backUp}
+              />
+            </Tooltip>
+          </div> */}
+
           <div className="play-btn">
             <Tooltip title="Пауза">
               <Button

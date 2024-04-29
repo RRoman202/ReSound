@@ -1,8 +1,8 @@
 import React from "react";
-import { Button, List, Card, Slider } from "antd";
+import { Button, List, Card, Slider, Dropdown, Menu } from "antd";
 import { useDrag } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { hideNav } from "./HiddenNavbar";
 import "./MainTrack.css";
 import {
@@ -15,6 +15,18 @@ import {
   DeleteOutlined,
   EditOutlined,
   RadiusUprightOutlined,
+} from "@ant-design/icons";
+import {
+  UploadOutlined,
+  UserOutlined,
+  VideoCameraOutlined,
+  SettingOutlined,
+  FormOutlined,
+  LikeOutlined,
+  BarChartOutlined,
+  PlusOutlined,
+  QuestionCircleOutlined,
+  MoreOutlined,
 } from "@ant-design/icons";
 import ModalCreateTemplate from "./Modals/ModalCreateTemplate";
 
@@ -66,8 +78,30 @@ const TemplateList: React.FC<TemplateListProps> = ({
                   backgroundColor: "lightblue",
                   width: "300px",
                   textAlign: "center",
+                  position: "relative",
                 }}
+                hoverable
               >
+                <Dropdown
+                  overlay={
+                    <Menu>
+                      <Menu.Item key="1">Открыть</Menu.Item>
+                      <Menu.Item key="2">
+                        <a target="_blank" rel="noopener noreferrer">
+                          Редактировать
+                        </a>
+                      </Menu.Item>
+                      <Menu.Item key="3" danger>
+                        Удалить
+                      </Menu.Item>
+                    </Menu>
+                  }
+                >
+                  <Button
+                    icon={<MoreOutlined></MoreOutlined>}
+                    style={{ position: "absolute", top: "10px", right: "10px" }}
+                  ></Button>
+                </Dropdown>
                 {item.name}
               </Card>
             </div>

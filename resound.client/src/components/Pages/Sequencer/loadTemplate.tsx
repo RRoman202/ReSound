@@ -2,7 +2,7 @@ import * as Tone from "tone";
 import { sampler } from "../../../player/playSound";
 import { m } from "../../../player/playCanvas";
 import GetNotes from "../../../player/Notes";
-import { Button } from "antd";
+import { Button, Input } from "antd";
 import { useState, useEffect } from "react";
 
 interface LoadTempalteProps {

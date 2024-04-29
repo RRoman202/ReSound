@@ -102,6 +102,9 @@ const Home = () => {
       console.error("Error deleting sequencer:", error);
     }
   };
+  const openSequencer = async (id: string) => {
+    localStorage.setItem("sequencerid", id);
+  };
 
   return (
     <Layout>
@@ -161,7 +164,12 @@ const Home = () => {
                       overlay={
                         <Menu>
                           <Menu.Item key="1">
-                            <Link to={`/maintrack/${sequencer.idSequencer}`}>
+                            <Link
+                              to={`/maintrack/${sequencer.idSequencer}`}
+                              onClick={() =>
+                                openSequencer(sequencer.idSequencer)
+                              }
+                            >
                               Открыть
                             </Link>
                           </Menu.Item>
@@ -190,8 +198,14 @@ const Home = () => {
                   hoverable
                 >
                   <p>{sequencer.description}</p>
-                  <Button type="primary">
-                    <Link to={`/maintrack/${sequencer.idSequencer}`}>
+                  <Button
+                    type="primary"
+                    onClick={() => openSequencer(sequencer.idSequencer)}
+                  >
+                    <Link
+                      to={`/maintrack/${sequencer.idSequencer}`}
+                      onClick={() => openSequencer(sequencer.idSequencer)}
+                    >
                       Открыть
                     </Link>
                   </Button>
