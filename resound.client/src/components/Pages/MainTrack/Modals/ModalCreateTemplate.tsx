@@ -4,17 +4,14 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate, Link } from "react-router-dom";
 import { hideNav, viewNav } from "../../MainTrack/HiddenNavbar";
 
-type FieldType = {
-  name?: string;
-  description?: string;
-  private?: boolean;
-};
+interface Sequencer {
+  idsequencer: string;
+}
 
-function ModalChooseSound() {
+const ModalCreateTemplate: React.FC<Sequencer> = ({ idsequencer }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
-  const navigate = useNavigate();
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -26,7 +23,6 @@ function ModalChooseSound() {
       .validateFields()
       .then((values) => {
         // Get user ID from localStorage
-        const userId = localStorage.getItem("userid");
 
         // Check if name is filled
         if (!values.name) {
@@ -37,12 +33,12 @@ function ModalChooseSound() {
         }
 
         // Create sequencer with user ID
-        fetch("https://localhost:7262/api/Sequencers", {
+        fetch("https://localhost:7262/api/Sequencers/templates", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ ...values, idUser: userId }),
+          body: JSON.stringify({ ...values, idSequencer: idsequencer }),
         })
           .then((response) => {
             if (response.ok) {
@@ -73,13 +69,11 @@ function ModalChooseSound() {
 
   return (
     <>
-      <Button
-        type="primary"
-        onClick={showModal}
-        icon={<PlusOutlined />}
-      ></Button>
+      <Button type="primary" onClick={showModal}>
+        Создать шаблон
+      </Button>
       <Modal
-        title="Создание проекта"
+        title="Создание шаблона"
         open={isModalOpen}
         okText="Создать"
         cancelText="Отмена"
@@ -108,29 +102,11 @@ function ModalChooseSound() {
             >
               <Input />
             </Form.Item>
-
-            <Form.Item
-              name="description"
-              id="description"
-              label="Описание"
-              rules={[{ required: false }]}
-            >
-              <Input.TextArea rows={4} />
-            </Form.Item>
-
-            <Form.Item
-              id="private"
-              name="private"
-              valuePropName="checked"
-              wrapperCol={{ offset: 2, span: 16 }}
-            >
-              <Checkbox>Приватность</Checkbox>
-            </Form.Item>
           </Form>
         )}
       </Modal>
     </>
   );
-}
+};
 
-export default ModalChooseSound;
+export default ModalCreateTemplate;

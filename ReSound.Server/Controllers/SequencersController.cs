@@ -24,10 +24,22 @@ namespace ReSound.Server.Controllers
             return await _sequencersService.GetSequencers(iduser);
         }
 
+        [HttpGet("template")]
+        public async Task<Template> GetTemplate(Guid id)
+        {
+            return await _sequencersService.GetTemplate(id);
+        }
+
         [HttpGet("templates")]
         public async Task<IEnumerable<Template>> GetTemplates(Guid idsequencer)
         {
             return await _sequencersService.GetTemplates(idsequencer);
+        }
+
+        [HttpPost("templates")]
+        public async Task<ActionResult<Template>> PostTemplate([FromBody] TemplateDTO templateDTO)
+        {
+            return await _sequencersService.PostTemplate(templateDTO);
         }
 
         [HttpGet("{id}")]
@@ -43,7 +55,13 @@ namespace ReSound.Server.Controllers
             await _sequencersService.PutSequencer(id, sequencer);
         }
 
-        
+        [HttpPatch("template")]
+        public async Task PatchTemplate([FromBody] TemplatePatchDTO templatePatchDTO)
+        {
+            await _sequencersService.PatchTemplate(templatePatchDTO);
+        }
+
+
         [HttpPost]
         public async Task<ActionResult<Sequencer>> PostSequencer([FromBody] SequencerDTO sequencerDTO)
         {

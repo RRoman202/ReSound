@@ -39,6 +39,18 @@ namespace ReSound.Server.Repositories.Sequencers
             return sequencer;
         }
 
+        public async Task<Template> GetTemplate(Guid id)
+        {
+            var template = await _context.Templates.Where(s => s.IdTemplate == id).FirstOrDefaultAsync();
+
+            if (template == null)
+            {
+                return null;
+            }
+
+            return template;
+        }
+
         public async Task<IEnumerable<Sequencer>> GetSequencers(Guid iduser)
         {
             return await _context.Sequencers.Where(s => s.IdUser == iduser)
@@ -106,6 +118,29 @@ namespace ReSound.Server.Repositories.Sequencers
             return sequencer;
         }
 
+        public async Task<Template> PostTemplate([FromBody] TemplateDTO templateDTO)
+        {
+            var template = new Template
+            {
+                IdTemplate = Guid.NewGuid(),
+                IdSound = Guid.NewGuid(),
+                Name = templateDTO.Name,
+                Notes = "null",
+                Volume = 100,
+            };
+            _context.Templates.Add(template);
+            _context.SequencersTemplates.Add(new SequencerTemplate
+            {
+                Id = Guid.NewGuid(),
+                IdTemplate = template.IdTemplate,
+                IdSequencer = templateDTO.IdSequencer,
+                Template = template
+            });
+            await _context.SaveChangesAsync();
+
+            return template;
+        }
+
         public async Task PutSequencer(Guid id, Sequencer sequencer)
         {
             if (id != sequencer.IdSequencer)
@@ -114,6 +149,17 @@ namespace ReSound.Server.Repositories.Sequencers
             }
 
             _context.Entry(sequencer).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return;
+        }
+
+        public async Task PatchTemplate([FromBody] TemplatePatchDTO templatePatchDTO)
+        {
+            var template = await _context.Templates.SingleAsync(x => x.IdTemplate == templatePatchDTO.IdTemplate);
+
+            template.Notes = templatePatchDTO.Notes;
+
             await _context.SaveChangesAsync();
 
             return;

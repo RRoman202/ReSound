@@ -5,11 +5,13 @@ import { Matrix } from "../../player/playCanvas";
 import { Canv } from "./ClearCanvasBtn";
 import findNote from "./TextNoteCanvas";
 import { LoadTemp } from "../../components/Pages/Sequencer/loadTemplate";
+import { stringToBooleanArray } from "./StrToBoolArray";
 
 interface GridCanvasProps {
   rows: number;
   cols: number;
   cellSize: number;
+  matrix: string;
 }
 
 const notes = Getnotes();
@@ -129,6 +131,19 @@ export const GridCanvas: React.FC<GridCanvasProps> = (props) => {
 
   useEffect(() => {
     drawCells();
+    console.log(grid);
+  }, [visibleGrid]);
+
+  useEffect(() => {
+    if (props.matrix) {
+      try {
+        const data = JSON.parse(props.matrix);
+        console.log(data);
+        setGrid(data.notes);
+      } catch (e) {
+        console.log(e);
+      }
+    }
   }, [visibleGrid]);
 
   function handleClick(row: number, col: number) {

@@ -34,7 +34,7 @@ interface Template {
 
 const MainTrack: React.FC = () => {
   hideNav();
-  console.log(useParams());
+
   const { sequencer } = useParams<{ sequencer: string }>();
 
   const [sequencerData, setSequencerData] = useState<Sequencer | null>(null);
@@ -123,6 +123,7 @@ const MainTrack: React.FC = () => {
             <TemplateList
               templates={templates}
               onCreateTemplate={handleCreateTemplate}
+              idsequencer={sequencerData.idSequencer}
             />
           </div>
           <div style={{ flex: 2, marginLeft: "20px", marginRight: "10px" }}>

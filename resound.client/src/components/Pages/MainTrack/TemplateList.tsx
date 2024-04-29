@@ -16,6 +16,7 @@ import {
   EditOutlined,
   RadiusUprightOutlined,
 } from "@ant-design/icons";
+import ModalCreateTemplate from "./Modals/ModalCreateTemplate";
 
 interface Template {
   id: number;
@@ -25,11 +26,13 @@ interface Template {
 interface TemplateListProps {
   templates: Template[];
   onCreateTemplate: () => void;
+  idsequencer: string;
 }
 
 const TemplateList: React.FC<TemplateListProps> = ({
   templates,
   onCreateTemplate,
+  idsequencer,
 }) => {
   const [, drag] = useDrag({
     type: ItemTypes.TEMPLATE,
@@ -38,10 +41,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
 
   const navigate = useNavigate();
 
-  const createTemplate = () => {
-    hideNav();
-    navigate("/piano");
-  };
+  const createTemplate = () => {};
 
   return (
     <Card
@@ -49,18 +49,18 @@ const TemplateList: React.FC<TemplateListProps> = ({
       title="Шаблоны"
       className="listTemplates"
     >
-      <Button
-        type="primary"
-        onClick={onCreateTemplate}
-        style={{ marginTop: 16 }}
-      >
-        Создать шаблон
-      </Button>
+      <ModalCreateTemplate idsequencer={idsequencer}></ModalCreateTemplate>
       <List
         dataSource={templates}
         renderItem={(item) => (
           <List.Item>
-            <div ref={drag} onClick={createTemplate}>
+            <div
+              ref={drag}
+              onClick={() => {
+                hideNav();
+                navigate(`/piano/${item.idTemplate}`);
+              }}
+            >
               <Card
                 style={{
                   backgroundColor: "lightblue",

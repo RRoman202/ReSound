@@ -4,12 +4,14 @@ import ModalChooseSound from "../../sequencer/SoundControl/Modals/ModalChooseSou
 import BpmInput from "../../sequencer/SoundControl/chooseBPM";
 import CanvasTimeSignature from "../../sequencer/ui/TimeSignatureBar";
 import { hideNav, viewNav } from "../MainTrack/HiddenNavbar";
+import { useParams } from "react-router-dom";
 import { ClearCanv } from "../../Canvas/ClearCanvasBtn";
 import { RecordCanvas } from "../../sequencer/SoundControl/SaveAudio";
 import "../../sequencer/SoundControl/SaveAudio";
 import PianoTiles from "../../sequencer/ui/PianoTiles";
 import { observer } from "mobx-react";
 import Getnotes from "../../../player/Notes";
+import { m } from "../../../player/playCanvas";
 import SaveTemplateNotes from "./saveTemplate";
 import LoadTemplateNotes, { LoadTempCols } from "./loadTemplate";
 import { PlayCanv } from "../../../player/playCanvas";
@@ -20,6 +22,7 @@ import { url, filename } from "../../sequencer/SoundControl/chooseSound";
 import { backDown, backUp } from "../../sequencer/Helpers/scrollFunction";
 import "../../../handlers/keyboardHandler";
 import { Row, Layout, Tooltip, Radio, Spin } from "antd";
+import axios from "axios";
 
 import {
   CaretUpOutlined,
@@ -59,16 +62,46 @@ export const Prog: React.FC<ProgressBarProps> = ({
 };
 const Piano = observer(() => {
   hideNav();
+  const { template } = useParams<{ template: string }>();
+  const [templateData, setTemplateData] = useState<Template | null>(null);
+  console.log(templateData);
+  useEffect(() => {
+    const fetchTemplate = async () => {
+      const response = await axios.get(
+        `https://localhost:7262/api/Sequencers/template?id=${template}`
+      );
+      setTemplateData(response.data);
+      try {
+        const data = JSON.parse(templateData.notes);
+
+        loadCols(data.cols);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchTemplate();
+  }, [template]);
+  useEffect(() => {
+    try {
+      const data = JSON.parse(templateData.notes);
+
+      loadCols(data.cols);
+    } catch (error) {
+      console.log(error);
+    }
+    setLoading(false);
+  }, [templateData]);
   const [loading, setLoading] = useState(true);
   const [cols, setCols] = useState(48);
   const [widthTime, setWidthTime] = useState(1920);
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(false);
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     setLoading(false);
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
   if (loading) {
     return (
       <div className="spinner-container">
@@ -87,11 +120,35 @@ const Piano = observer(() => {
     setWidthTime(newCols * 40);
   }
 
+  const updateTemplateNotes = async (newNotes: boolean[][]) => {
+    const data = { notes: newNotes, cols };
+    const blob = JSON.stringify(data);
+    try {
+      const response = await axios.patch(
+        `https://localhost:7262/api/Sequencers/template`,
+        {
+          IdTemplate: templateData.idTemplate,
+          Name: templateData.name,
+          Volume: templateData.volume,
+          notes: blob, // Update notes
+          IdSound: templateData.idSound,
+        }
+      );
+    } catch (error) {
+      console.error("Error updating template notes:", error);
+    }
+  };
+
+  if (!templateData) {
+    return <Spin size="large" fullscreen></Spin>; // Display loading message while data is fetched
+  }
+
   return (
     <>
       <Layout className="layoutPiano">
         <Header className="header">
           <div className="divMenuPiano">
+            <Button onClick={() => updateTemplateNotes(m)}>Сохранить</Button>
             <Tooltip title="Вверх" className="btnUp">
               <Button
                 icon={<CaretUpOutlined />}
@@ -164,6 +221,7 @@ const Piano = observer(() => {
                       cols={cols}
                       cellSize={40}
                       key={cols}
+                      matrix={templateData.notes}
                     ></GridCanvas>
                   </div>
                 </div>
