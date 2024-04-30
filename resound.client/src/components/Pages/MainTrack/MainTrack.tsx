@@ -126,6 +126,7 @@ const MainTrack: React.FC = () => {
               templates={templates}
               onCreateTemplate={handleCreateTemplate}
               idsequencer={sequencerData.idSequencer}
+              setTemplates={setTemplates}
             />
           </div>
           <div style={{ flex: 2, marginLeft: "20px", marginRight: "10px" }}>

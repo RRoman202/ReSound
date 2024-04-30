@@ -73,5 +73,11 @@ namespace ReSound.Server.Controllers
         {
             await _sequencersService.DeleteSequencer(id);
         }
+
+        [HttpDelete("template/{id}")]
+        public async Task DeleteTemplate(Guid id)
+        {
+            await _sequencersService.DeleteTemplate(id);
+        }
     }
 }

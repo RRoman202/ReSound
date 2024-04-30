@@ -4,6 +4,7 @@ import { useDrag } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 import { useNavigate, Link } from "react-router-dom";
 import { hideNav } from "./HiddenNavbar";
+import axios from "axios";
 import "./MainTrack.css";
 import {
   CaretUpOutlined,
@@ -39,12 +40,14 @@ interface TemplateListProps {
   templates: Template[];
   onCreateTemplate: () => void;
   idsequencer: string;
+  setTemplates: (templates: Template[]) => void;
 }
 
 const TemplateList: React.FC<TemplateListProps> = ({
   templates,
   onCreateTemplate,
   idsequencer,
+  setTemplates,
 }) => {
   const [, drag] = useDrag({
     type: ItemTypes.TEMPLATE,
@@ -55,24 +58,35 @@ const TemplateList: React.FC<TemplateListProps> = ({
 
   const createTemplate = () => {};
 
+  const handleDeleteTemplate = async (id: string) => {
+    try {
+      await axios.delete(
+        `https://localhost:7262/api/Sequencers/template/${id}`
+      );
+      const updatedTemplates = templates.filter(
+        (template) => template.idTemplate !== id
+      );
+      setTemplates(updatedTemplates);
+    } catch (error) {
+      console.error("Error deleting sequencer:", error);
+    }
+  };
+
   return (
     <Card
       headStyle={{ backgroundColor: "#1677ff", color: "white" }}
       title="Шаблоны"
       className="listTemplates"
     >
-      <ModalCreateTemplate idsequencer={idsequencer}></ModalCreateTemplate>
+      <ModalCreateTemplate
+        idsequencer={idsequencer}
+        setTemplates={setTemplates}
+      ></ModalCreateTemplate>
       <List
         dataSource={templates}
         renderItem={(item) => (
           <List.Item>
-            <div
-              ref={drag}
-              onClick={() => {
-                hideNav();
-                navigate(`/piano/${item.idTemplate}`);
-              }}
-            >
+            <div ref={drag}>
               <Card
                 style={{
                   backgroundColor: "lightblue",
@@ -85,13 +99,25 @@ const TemplateList: React.FC<TemplateListProps> = ({
                 <Dropdown
                   overlay={
                     <Menu>
-                      <Menu.Item key="1">Открыть</Menu.Item>
+                      <Menu.Item
+                        key="1"
+                        onClick={() => {
+                          hideNav();
+                          navigate(`/piano/${item.idTemplate}`);
+                        }}
+                      >
+                        Открыть
+                      </Menu.Item>
                       <Menu.Item key="2">
                         <a target="_blank" rel="noopener noreferrer">
                           Редактировать
                         </a>
                       </Menu.Item>
-                      <Menu.Item key="3" danger>
+                      <Menu.Item
+                        key="3"
+                        onClick={() => handleDeleteTemplate(item.idTemplate)}
+                        danger
+                      >
                         Удалить
                       </Menu.Item>
                     </Menu>

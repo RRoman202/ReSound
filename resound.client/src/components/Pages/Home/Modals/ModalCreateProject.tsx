@@ -3,6 +3,7 @@ import { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate, Link } from "react-router-dom";
 import { hideNav, viewNav } from "../../MainTrack/HiddenNavbar";
+import axios from "axios";
 
 type FieldType = {
   name?: string;
@@ -10,7 +11,11 @@ type FieldType = {
   private?: boolean;
 };
 
-function ModalChooseSound() {
+interface SequencerModalProps {
+  setSequencers: (sequencers: []) => void;
+}
+
+const ModalChooseSound: React.FC<SequencerModalProps> = ({ setSequencers }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
@@ -48,7 +53,7 @@ function ModalChooseSound() {
             if (response.ok) {
               // Success: Close modal, navigate, and show success message
               setIsModalOpen(false);
-              window.location.reload();
+              getSequencers();
 
               // Add success message here (e.g., using a notification or toast)
             } else {
@@ -65,6 +70,15 @@ function ModalChooseSound() {
         console.error("Validation failed:", errorInfo);
         // Display validation errors to the user
       });
+  };
+
+  const getSequencers = async () => {
+    const responseSequencers = await axios.get(
+      "https://localhost:7262/api/Sequencers?iduser=" +
+        localStorage.getItem("userid")
+    );
+    console.log(responseSequencers.data);
+    setSequencers(responseSequencers.data);
   };
 
   const handleCancel = () => {
@@ -131,6 +145,6 @@ function ModalChooseSound() {
       </Modal>
     </>
   );
-}
+};
 
 export default ModalChooseSound;

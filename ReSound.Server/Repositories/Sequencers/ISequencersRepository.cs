@@ -13,6 +13,7 @@ namespace ReSound.Server.Repositories.Sequencers
         Task PatchTemplate([FromBody] TemplatePatchDTO templatePatchDTO);
         Task<Sequencer> PostSequencer([FromBody] SequencerDTO sequencerDTO);
         Task DeleteSequencer(Guid id);
+        Task DeleteTemplate(Guid id);
         Task<IEnumerable<Template>> GetTemplates(Guid idsequencer);
         Task<Template> PostTemplate([FromBody] TemplateDTO templateDTO);
     }

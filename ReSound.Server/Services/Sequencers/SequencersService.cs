@@ -19,6 +19,11 @@ namespace ReSound.Server.Services.Sequencers
             await _sequencersRepository.DeleteSequencer(id);
         }
 
+        public async Task DeleteTemplate(Guid id)
+        {
+            await _sequencersRepository.DeleteTemplate(id);
+        }
+
         public async Task<Sequencer> GetSequencer(Guid id, Guid iduser)
         {
             return await _sequencersRepository.GetSequencer(id, iduser);

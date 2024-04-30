@@ -15,5 +15,6 @@ namespace ReSound.Server.Services.Sequencers
         Task DeleteSequencer(Guid id);
         Task<IEnumerable<Template>> GetTemplates(Guid idsequencer);
         Task<Template> PostTemplate([FromBody] TemplateDTO templateDTO);
+        Task DeleteTemplate(Guid id);
     }
 }

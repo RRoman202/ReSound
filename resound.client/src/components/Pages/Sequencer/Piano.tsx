@@ -77,6 +77,7 @@ const Piano = observer(() => {
   const { template } = useParams<{ template: string }>();
   const [templateData, setTemplateData] = useState<Template | null>(null);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [loadingsBtn, setLoadingsBtn] = useState(false);
 
   const showDrawer = () => {
     setOpenDrawer(true);
@@ -159,6 +160,10 @@ const Piano = observer(() => {
           IdSound: templateData.idSound,
         }
       );
+      setLoadingsBtn(true);
+      setTimeout(() => {
+        setLoadingsBtn(false);
+      }, 1000);
     } catch (error) {
       console.error("Error updating template notes:", error);
     }
@@ -179,12 +184,16 @@ const Piano = observer(() => {
         <Space direction="vertical">
           <h2>{templateData.name}</h2>
           <Flex vertical gap="small" style={{ width: "300px" }}>
-            <Button type="primary">
+            <Button
+              type="primary"
+              onClick={() => updateTemplateNotes(m)}
+              loading={loadingsBtn}
+            >
               <a onClick={() => updateTemplateNotes(m)}>Сохранить</a>
             </Button>
-            <Button type="primary">
-              <SaveTemplateNotes cols={cols}></SaveTemplateNotes>
-            </Button>
+
+            <SaveTemplateNotes cols={cols}></SaveTemplateNotes>
+
             <Button type="primary">Экспорт</Button>
             <Button type="primary" onClick={closePage}>
               Назад

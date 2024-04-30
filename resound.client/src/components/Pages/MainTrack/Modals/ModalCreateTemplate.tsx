@@ -3,12 +3,17 @@ import { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate, Link } from "react-router-dom";
 import { hideNav, viewNav } from "../../MainTrack/HiddenNavbar";
+import axios from "axios";
 
 interface Sequencer {
   idsequencer: string;
+  setTemplates: (templates: []) => void;
 }
 
-const ModalCreateTemplate: React.FC<Sequencer> = ({ idsequencer }) => {
+const ModalCreateTemplate: React.FC<Sequencer> = ({
+  idsequencer,
+  setTemplates,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
@@ -44,7 +49,7 @@ const ModalCreateTemplate: React.FC<Sequencer> = ({ idsequencer }) => {
             if (response.ok) {
               // Success: Close modal, navigate, and show success message
               setIsModalOpen(false);
-              window.location.reload();
+              getTemplates();
 
               // Add success message here (e.g., using a notification or toast)
             } else {
@@ -65,6 +70,14 @@ const ModalCreateTemplate: React.FC<Sequencer> = ({ idsequencer }) => {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+
+  const getTemplates = async () => {
+    const response = await axios.get(
+      `https://localhost:7262/api/Sequencers/templates?idsequencer=` +
+        idsequencer
+    );
+    setTemplates(response.data);
   };
 
   return (

@@ -27,6 +27,22 @@ namespace ReSound.Server.Repositories.Sequencers
             }
         }
 
+        public async Task DeleteTemplate(Guid id)
+        {
+            var sequencertemplate = _context.SequencersTemplates.Where(x => x.IdTemplate == id).FirstOrDefault();
+            if(sequencertemplate != null)
+            {
+                _context.SequencersTemplates.Remove(sequencertemplate);
+                await _context.SaveChangesAsync();
+            }
+            var template = await _context.Templates.FindAsync(id);
+            if (template != null)
+            {
+                _context.Templates.Remove(template);
+                await _context.SaveChangesAsync();
+            }
+        }
+
         public async Task<Sequencer> GetSequencer(Guid id, Guid iduser)
         {
             var sequencer = await _context.Sequencers.Where(s => s.IdUser == iduser && s.IdSequencer == id).FirstOrDefaultAsync();
