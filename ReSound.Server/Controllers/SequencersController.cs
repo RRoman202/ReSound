@@ -4,10 +4,12 @@ using ReSound.Server.Data.Models;
 using ReSound.Server.Data;
 using ReSound.Server.DTO;
 using ReSound.Server.Services.Sequencers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ReSound.Server.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize]
     [ApiController]
     public class SequencersController : ControllerBase
     {
@@ -18,6 +20,7 @@ namespace ReSound.Server.Controllers
             _sequencersService = sequencersService;
         }
 
+        
         [HttpGet]
         public async Task<IEnumerable<Sequencer>> GetSequencers(Guid iduser)
         {

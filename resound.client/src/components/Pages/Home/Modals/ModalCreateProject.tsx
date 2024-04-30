@@ -41,11 +41,11 @@ const ModalChooseSound: React.FC<SequencerModalProps> = ({ setSequencers }) => {
           return;
         }
 
-        // Create sequencer with user ID
         fetch("https://localhost:7262/api/Sequencers", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
           body: JSON.stringify({ ...values, idUser: userId }),
         })

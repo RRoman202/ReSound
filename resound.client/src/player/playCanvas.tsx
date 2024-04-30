@@ -71,11 +71,13 @@ export const PlayCanv: React.FC = () => {
   }
   function playNote() {
     checkNotesPlay();
+
     const notesp = notesplay[index];
 
     for (let n = 0; n < notesp.length; n++) {
       sampler.triggerAttackRelease(notesp[n], "8n");
     }
+
     GetNotesPlay();
 
     index = (index + 1) % checkNotesPlay();

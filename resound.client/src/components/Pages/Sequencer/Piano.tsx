@@ -12,6 +12,7 @@ import PianoTiles from "../../sequencer/ui/PianoTiles";
 import { observer } from "mobx-react";
 import Getnotes from "../../../player/Notes";
 import { m } from "../../../player/playCanvas";
+import * as Tone from "tone";
 import SaveTemplateNotes from "./saveTemplate";
 import LoadTemplateNotes, { LoadTempCols } from "./loadTemplate";
 import { PlayCanv } from "../../../player/playCanvas";
@@ -343,6 +344,7 @@ const Piano = observer(() => {
               <Button
                 onClick={() => {
                   if (!isPlaying) {
+                    Tone.start();
                     isPlaying = true;
                     startProgressBar();
                   }

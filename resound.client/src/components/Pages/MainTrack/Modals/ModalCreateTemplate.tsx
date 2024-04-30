@@ -42,6 +42,7 @@ const ModalCreateTemplate: React.FC<Sequencer> = ({
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: "Bearer " + localStorage.getItem("token"),
           },
           body: JSON.stringify({ ...values, idSequencer: idsequencer }),
         })

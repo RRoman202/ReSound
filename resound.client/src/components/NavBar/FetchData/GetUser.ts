@@ -20,6 +20,7 @@ export const getUser = async (token: string) => {
     localStorage.setItem("user", username);
     localStorage.setItem("userid", userid);
     localStorage.setItem("userfull", JSON.stringify(user));
+
     window.location.reload();
   }
 };

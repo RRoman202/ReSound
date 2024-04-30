@@ -10,7 +10,8 @@ interface volumeProps {
 interface pannerProps {
   pan: number;
 }
-var buffer = new Tone.Buffer();
+// var buffer = new Tone.Buffer();
+
 export let sampler: Tone.Sampler = new Tone.Sampler();
 function newsampler(newurl: string, newfile: string) {
   sampler = new Tone.Sampler({
@@ -31,7 +32,7 @@ function newsamplerpan(pan: number) {
 export const BaseUrl: React.FC<baseUrlProps> = ({ url, filename }) => {
   const urlbase = { url }.url;
   const filenamebase = { filename }.filename;
-  buffer = new Tone.Buffer(urlbase + filenamebase);
+  // buffer = new Tone.Buffer(urlbase + filenamebase);
   newsampler(urlbase, filenamebase);
 
   return null;
