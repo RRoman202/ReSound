@@ -157,14 +157,15 @@ namespace ReSound.Server.Repositories.Sequencers
             return template;
         }
 
-        public async Task PutSequencer(Guid id, Sequencer sequencer)
+        public async Task PutSequencer([FromBody] SequencerPatchDTO sequencerPatchDTO)
         {
-            if (id != sequencer.IdSequencer)
-            {
-                return;
-            }
+            var sequencer = await _context.Sequencers.SingleAsync(x => x.IdSequencer == sequencerPatchDTO.IdSequencer);
 
-            _context.Entry(sequencer).State = EntityState.Modified;
+            sequencer.Name = sequencerPatchDTO.Name;
+            sequencer.Description = sequencerPatchDTO.Description;
+            sequencer.Private = sequencerPatchDTO.Private;
+
+            
             await _context.SaveChangesAsync();
 
             return;

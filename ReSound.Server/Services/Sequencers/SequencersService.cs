@@ -59,9 +59,9 @@ namespace ReSound.Server.Services.Sequencers
             return await _sequencersRepository.PostTemplate(templateDTO);
         }
 
-        public async Task PutSequencer(Guid id, Sequencer sequencer)
+        public async Task PutSequencer([FromBody] SequencerPatchDTO sequencerPatchDTO)
         {
-            await _sequencersRepository.PutSequencer(id, sequencer);
+            await _sequencersRepository.PutSequencer(sequencerPatchDTO);
         }
     }
 }

@@ -33,6 +33,7 @@ import {
 } from "antd";
 import "./Home.css";
 import axios from "axios";
+import ModalUpdateProject from "./Modals/ModalUpdateProject";
 
 const { Search } = Input;
 const { Header, Content, Footer, Sider } = Layout;
@@ -224,9 +225,10 @@ const Home = () => {
                               </Link>
                             </Menu.Item>
                             <Menu.Item key="2">
-                              <a target="_blank" rel="noopener noreferrer">
-                                Редактировать
-                              </a>
+                              <ModalUpdateProject
+                                setSequencers={setSequencers}
+                                idsequencer={sequencer.idSequencer}
+                              ></ModalUpdateProject>
                             </Menu.Item>
                             <Menu.Item key="3" danger>
                               <a

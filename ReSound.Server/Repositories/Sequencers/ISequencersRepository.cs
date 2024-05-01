@@ -9,7 +9,7 @@ namespace ReSound.Server.Repositories.Sequencers
         Task<IEnumerable<Sequencer>> GetSequencers(Guid iduser);
         Task<Sequencer> GetSequencer(Guid id, Guid iduser);
         Task<Template> GetTemplate(Guid id);
-        Task PutSequencer(Guid id, Sequencer sequencer);
+        Task PutSequencer([FromBody] SequencerPatchDTO sequencerPatchDTO);
         Task PatchTemplate([FromBody] TemplatePatchDTO templatePatchDTO);
         Task<Sequencer> PostSequencer([FromBody] SequencerDTO sequencerDTO);
         Task DeleteSequencer(Guid id);

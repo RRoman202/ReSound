@@ -30,6 +30,7 @@ import {
   MoreOutlined,
 } from "@ant-design/icons";
 import ModalCreateTemplate from "./Modals/ModalCreateTemplate";
+import ModalUpdateTemplate from "./Modals/ModalUpdateTemplate";
 
 interface Template {
   id: number;
@@ -109,9 +110,11 @@ const TemplateList: React.FC<TemplateListProps> = ({
                         Открыть
                       </Menu.Item>
                       <Menu.Item key="2">
-                        <a target="_blank" rel="noopener noreferrer">
-                          Редактировать
-                        </a>
+                        <ModalUpdateTemplate
+                          setTemplates={setTemplates}
+                          idsequencer={idsequencer}
+                          idtemplate={item.idTemplate}
+                        ></ModalUpdateTemplate>
                       </Menu.Item>
                       <Menu.Item
                         key="3"

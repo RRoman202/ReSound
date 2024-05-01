@@ -52,10 +52,10 @@ namespace ReSound.Server.Controllers
         }
 
 
-        [HttpPut("{id}")]
-        public async Task PutSequencer(Guid id, Sequencer sequencer)
+        [HttpPatch]
+        public async Task PutSequencer(SequencerPatchDTO sequencerPatchDTO)
         {
-            await _sequencersService.PutSequencer(id, sequencer);
+            await _sequencersService.PutSequencer(sequencerPatchDTO);
         }
 
         [HttpPatch("template")]
