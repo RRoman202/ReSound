@@ -1,5 +1,6 @@
 .MainLayout {
   background-color: gray;
+  height: 100%;
 }
 
 .dark .MainLayout {

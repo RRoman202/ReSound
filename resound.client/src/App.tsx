@@ -17,7 +17,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem("token");
-    Tone.start();
+
     if (token) {
       // Получение JWT token из localStorage
       const getJWTToken = () => {

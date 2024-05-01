@@ -89,6 +89,8 @@ const Piano = observer(() => {
   };
 
   const closePage = () => {
+    isPlaying = false;
+    stopMovingBar();
     navigate(`/maintrack/${localStorage.getItem("sequencerid")}`);
   };
   console.log(templateData);
