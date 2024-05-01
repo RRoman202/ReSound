@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Button } from "antd";
+import { Button, Layout, Menu, Flex } from "antd";
 import * as Tone from "tone";
 import { getSounds } from "./FetchData/GetSounds";
+import { getCategories } from "./FetchData/GetCategories";
 
+const { Header, Content, Footer, Sider } = Layout;
 export let url: string = "https://localhost:7262/audio/";
 export let filename: string = "Piano.mp3";
 
@@ -14,6 +16,7 @@ function playExample(url: string, filename: string) {
 }
 function ChooseSoundFunction() {
   const [sounds, setSounds] = useState([]);
+  const [categories, setCategories] = useState([]);
 
   const ChooseSound = (sound: string) => {
     if (sound) {
@@ -29,24 +32,35 @@ function ChooseSoundFunction() {
     async function fetchData() {
       try {
         const res = await getSounds();
+        const cat = await getCategories();
         setSounds(res);
+        setCategories(cat);
       } catch (err) {
         console.log(err);
       }
     }
     fetchData();
   }, []);
+  const customLabels = categories;
 
+  const itemsMenu = customLabels.map((label, index) => ({
+    key: String(index + 1),
+
+    label: label,
+  }));
   return (
-    <>
-      {sounds.map((sound: string) => (
-        <p key={sound}>
+    <Layout>
+      <Sider>
+        <Menu items={itemsMenu.reverse()} />
+      </Sider>
+      <Flex vertical gap="small" style={{ width: "300px" }}>
+        {sounds.map((sound: string) => (
           <Button type="primary" onClick={() => ChooseSound(sound)}>
             {sound}
           </Button>
-        </p>
-      ))}
-    </>
+        ))}
+      </Flex>
+    </Layout>
   );
 }
 

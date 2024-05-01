@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ReSound.Server.Data;
 
 namespace ReSound.Server.Controllers
 {
@@ -11,9 +12,12 @@ namespace ReSound.Server.Controllers
     {
         private readonly IWebHostEnvironment _env;
 
-        public FilesController(IWebHostEnvironment env)
+        private readonly ReSoundContext _context;
+
+        public FilesController(IWebHostEnvironment env, ReSoundContext context)
         {
             _env = env;
+            _context = context;
         }
 
         [HttpGet]
@@ -33,6 +37,14 @@ namespace ReSound.Server.Controllers
             }
 
             return Ok(fileNamesNoMp3);
+        }
+
+        [HttpGet("Categories")]
+        public IActionResult GetCategories()
+        {
+            var folderPath = Path.Combine(_env.WebRootPath, "sounds");
+            var categories = Directory.GetDirectories(folderPath).Select(Path.GetFileName).ToList(); 
+            return Ok(categories);
         }
 
         [HttpGet("{fileName}")]

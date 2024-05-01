@@ -97,7 +97,7 @@ namespace ReSound.Server.Controllers
                     issuer: _configuration.GetSection("JwtSettings:Issuer").Value,
                     audience: _configuration.GetSection("JwtSettings:Audience").Value,
                     claims: claims,
-                    expires: DateTime.Now.AddHours(1),
+                    expires: DateTime.Now.AddHours(24),
                     signingCredentials: creds
                 );
 

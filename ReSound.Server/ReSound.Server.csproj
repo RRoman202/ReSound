@@ -46,4 +46,10 @@
     <None Include="wwwroot\sounds\Piano.mp3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\sounds\Гитара\" />
+    <Folder Include="wwwroot\sounds\Басс\" />
+    <Folder Include="wwwroot\sounds\Пианино\" />
+  </ItemGroup>
+
 </Project>
