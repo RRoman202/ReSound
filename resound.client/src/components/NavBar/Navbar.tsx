@@ -110,8 +110,8 @@ export default function NavBar({ setIsLoggedIn, isLoggedIn }: NavBarProps) {
               <NavLink to="/feed" className="navbar-link">
                 Треки
               </NavLink>
-              <NavLink to="/" className="navbar-link">
-                Интересное
+              <NavLink to="/composers" className="navbar-link">
+                Пользователи
               </NavLink>
             </>
           ) : (

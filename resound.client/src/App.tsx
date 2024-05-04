@@ -10,6 +10,7 @@ import MainTrack from "./components/Pages/MainTrack/MainTrack";
 import Main from "./components/Pages/Main/Main";
 import Tape from "./components/Pages/Tape/Tape";
 import axios from "axios";
+import Composers from "./components/Pages/Composers/Composers";
 
 function App() {
   document.title = "ReSound";
@@ -54,6 +55,7 @@ function App() {
               <Route path="/home" element={<Home />} />
               <Route path="/maintrack/:sequencer" element={<MainTrack />} />
               <Route path="/feed" element={<Tape />} />
+              <Route path="/composers" element={<Composers />} />
             </>
           ) : (
             <>

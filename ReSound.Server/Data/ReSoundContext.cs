@@ -15,8 +15,8 @@ namespace ReSound.Server.Data
         public DbSet<Sequencer> Sequencers { get; set; }
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Mark> Marks { get; set; }
-        public DbSet<SequencerComment> SequencersComments { get; set;}
-        public DbSet<SequencerMark> SequencersMarks { get; set;}
+        public DbSet<Genre> Genres { get; set;}
+        public DbSet<Follower> Followers { get; set;}
         public DbSet<SequencerTemplate> SequencersTemplates { get; set;}
         public DbSet<SequencerTrack> SequencersTracks { get; set;}
         public DbSet<SettingsSequencer> SequencersSettings { get; set;}
@@ -24,6 +24,7 @@ namespace ReSound.Server.Data
         public DbSet<Template> Templates { get; set; }
         public DbSet<Track> Tracks { get; set; }
         public DbSet<TrackTemplate> TrackTemplates { get; set; }
+        public DbSet<SequencerGenre> SequencerGenres { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -31,8 +32,8 @@ namespace ReSound.Server.Data
             modelBuilder.Entity<Sequencer>().ToTable("sequencer");
             modelBuilder.Entity<Comment>().ToTable("comment");
             modelBuilder.Entity<Mark>().ToTable("mark");
-            modelBuilder.Entity<SequencerComment>().ToTable("sequencer_comment");
-            modelBuilder.Entity<SequencerMark>().ToTable("sequencer_mark");
+            modelBuilder.Entity<Genre>().ToTable("genre");
+            modelBuilder.Entity<Follower>().ToTable("follower");
             modelBuilder.Entity<SequencerTemplate>().ToTable("sequencer_template");
             modelBuilder.Entity<SequencerTrack>().ToTable("sequencer_track");
             modelBuilder.Entity<SettingsSequencer>().ToTable("settings_sequencer");
@@ -40,6 +41,7 @@ namespace ReSound.Server.Data
             modelBuilder.Entity<Template>().ToTable("template");
             modelBuilder.Entity<Track>().ToTable("track");
             modelBuilder.Entity<TrackTemplate>().ToTable("track_template");
+            modelBuilder.Entity<SequencerGenre>().ToTable("sequencer_genre");
             base.OnModelCreating(modelBuilder);
         }
 

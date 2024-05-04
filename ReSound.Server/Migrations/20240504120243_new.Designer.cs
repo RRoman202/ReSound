@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReSound.Server.Data;
@@ -11,9 +12,11 @@ using ReSound.Server.Data;
 namespace ReSound.Server.Migrations
 {
     [DbContext(typeof(ReSoundContext))]
-    partial class ReSoundContextModelSnapshot : ModelSnapshot
+    [Migration("20240504120243_new")]
+    partial class @new
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -174,33 +177,6 @@ namespace ReSound.Server.Migrations
                     b.ToTable("sequencer", (string)null);
                 });
 
-            modelBuilder.Entity("ReSound.Server.Data.Models.SequencerGenre", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("GenreIdGenre")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("IdGenre")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("IdSequencer")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("SequencerIdSequencer")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("GenreIdGenre");
-
-                    b.HasIndex("SequencerIdSequencer");
-
-                    b.ToTable("sequencer_genre", (string)null);
-                });
-
             modelBuilder.Entity("ReSound.Server.Data.Models.SequencerTemplate", b =>
                 {
                     b.Property<Guid>("Id")
@@ -297,9 +273,6 @@ namespace ReSound.Server.Migrations
                     b.Property<Guid>("IdTemplate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
-
-                    b.Property<int>("BPM")
-                        .HasColumnType("integer");
 
                     b.Property<Guid>("IdSound")
                         .HasColumnType("uuid");
@@ -451,21 +424,6 @@ namespace ReSound.Server.Migrations
                     b.Navigation("SettingsSequencer");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ReSound.Server.Data.Models.SequencerGenre", b =>
-                {
-                    b.HasOne("ReSound.Server.Data.Models.Genre", "Genre")
-                        .WithMany()
-                        .HasForeignKey("GenreIdGenre");
-
-                    b.HasOne("ReSound.Server.Data.Models.Sequencer", "Sequencer")
-                        .WithMany()
-                        .HasForeignKey("SequencerIdSequencer");
-
-                    b.Navigation("Genre");
-
-                    b.Navigation("Sequencer");
                 });
 
             modelBuilder.Entity("ReSound.Server.Data.Models.SequencerTemplate", b =>

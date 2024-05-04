@@ -12,6 +12,7 @@ namespace ReSound.Server.Data.Models
 
         public string? Name { get; set; }
 
+        public int BPM { get; set; }
         
         public string? Notes { get; set; }
 

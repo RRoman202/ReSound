@@ -176,10 +176,13 @@ namespace ReSound.Server.Repositories.Sequencers
             var template = await _context.Templates.SingleAsync(x => x.IdTemplate == templatePatchDTO.IdTemplate);
 
             template.Notes = templatePatchDTO.Notes;
+            template.Name = templatePatchDTO.Name;
 
             await _context.SaveChangesAsync();
 
             return;
         }
+
+        
     }
 }

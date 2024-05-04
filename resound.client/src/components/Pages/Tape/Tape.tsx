@@ -17,7 +17,7 @@ interface Track {
 interface TapeProps {}
 
 const Tape: React.FC<TapeProps> = () => {
-  const subscriptionOptions = ["Подписки", "В тренде", "Для тебя"];
+  const subscriptionOptions = ["Все", "Подписки", "В тренде", "Для тебя"];
   const genres = [
     "Pop",
     "Rock",
