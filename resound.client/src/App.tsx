@@ -11,6 +11,7 @@ import Main from "./components/Pages/Main/Main";
 import Tape from "./components/Pages/Tape/Tape";
 import axios from "axios";
 import Composers from "./components/Pages/Composers/Composers";
+import Profile from "./components/Pages/Profile/Profile";
 
 function App() {
   document.title = "ReSound";
@@ -56,6 +57,7 @@ function App() {
               <Route path="/maintrack/:sequencer" element={<MainTrack />} />
               <Route path="/feed" element={<Tape />} />
               <Route path="/composers" element={<Composers />} />
+              <Route path="/user/:user" element={<Profile />} />
             </>
           ) : (
             <>

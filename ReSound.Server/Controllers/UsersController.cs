@@ -83,6 +83,14 @@ namespace ReSound.Server.Controllers
             return userModel;
         }
 
+        //[Authorize]
+        [HttpGet]
+        public async Task<IEnumerable<User>> GetSequencers()
+        {
+            return await _context.Users
+                .ToListAsync();
+        }
+
         private string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim>

@@ -1,4 +1,16 @@
-import { Card, Col, Layout, Row, Segmented, Flex, Button, Input } from "antd";
+import {
+  Card,
+  Col,
+  Layout,
+  Row,
+  Segmented,
+  Flex,
+  Button,
+  Input,
+  Spin,
+} from "antd";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import ComposerCard from "./ComposerCard";
 import "./Tape.css";
 
@@ -21,6 +33,15 @@ interface TapeProps {}
 
 const Composers: React.FC<TapeProps> = () => {
   const subscriptionOptions = ["Все", "Подписки", "В тренде", "Для тебя"];
+
+  const [users, setUsers] = useState([]);
+  useEffect(() => {
+    const fetchSequencers = async () => {
+      const response = await axios.get("https://localhost:7262/Users");
+      setUsers(response.data);
+    };
+    fetchSequencers();
+  }, []);
 
   const popularTracks: Track[] = [
     {
@@ -77,6 +98,10 @@ const Composers: React.FC<TapeProps> = () => {
     console.log(`Selected subscription: ${value}`);
   };
 
+  if (!users) {
+    return <Spin size="large" fullscreen></Spin>;
+  }
+
   return (
     <Layout style={{ padding: "20px" }}>
       <Content>
@@ -90,8 +115,8 @@ const Composers: React.FC<TapeProps> = () => {
 
             <Card title="Пользователи" bordered={false}>
               <Search placeholder="Поиск пользователей" enterButton />
-              {popularTracks.map((track) => (
-                <ComposerCard key={track.title} {...track} /> // ComposerCard instead of MusicCard
+              {users.map((user) => (
+                <ComposerCard key={user.title} {...user} /> // ComposerCard instead of MusicCard
               ))}
             </Card>
           </Col>
