@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Image, Button, Row, Col, Typography, Rate, Input } from "antd";
 import AudioPlayer from "react-audio-player";
+import axios from "axios";
 import {
   CaretUpOutlined,
   CaretRightOutlined,
@@ -31,8 +32,26 @@ const MusicCard: React.FC<MusicCardProps> = ({
   audioSrc,
   likes,
   rating,
+  name,
+  idUser,
+  idSequencer,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [userData, setUserData] = useState(null);
+  useEffect(() => {
+    const fetchSequencers = async () => {
+      const response = await axios.get(
+        "https://localhost:7262/Users/" + idUser
+      );
+      setUserData(response.data);
+      console.log(userData);
+    };
+    fetchSequencers();
+  }, []);
+
+  if (!userData) {
+    return null;
+  }
 
   return (
     <Card style={{ marginTop: "20px", backgroundColor: "lightblue" }}>
@@ -46,13 +65,13 @@ const MusicCard: React.FC<MusicCardProps> = ({
           />
         </Col>
         <Col span={16}>
-          <Typography.Title level={4}>{title}</Typography.Title>
-          <Typography.Text type="secondary">{artist}</Typography.Text>
+          <Typography.Title level={4}>{name}</Typography.Title>
+          <Typography.Text type="secondary">{userData.login}</Typography.Text>
 
           <div style={{ display: "flex", justifyContent: "flex-start" }}>
             <AudioPlayer
               style={{ marginTop: "10px" }}
-              src={audioSrc}
+              src={`https://localhost:7262/track/` + idSequencer}
               autoPlay={false}
               controls
             />

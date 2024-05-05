@@ -20,6 +20,21 @@ namespace ReSound.Server.Controllers
             _context = context;
         }
 
+        [HttpGet("/track/{idsequencer}")]
+        public IActionResult GetAudioFile(Guid idsequencer)
+        {
+            string audioFolderPath = Path.Combine(_env.WebRootPath, "tracks");
+            string audioFilePath = Path.Combine(audioFolderPath, idsequencer + ".mp3");
+
+            if (!System.IO.File.Exists(audioFilePath))
+            {
+                return NotFound();
+            }
+
+            return PhysicalFile(audioFilePath, "audio/mpeg");
+        }
+
+
         [HttpGet]
         public IActionResult GetFileNames()
         {

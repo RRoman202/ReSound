@@ -34,6 +34,7 @@ import {
   Spin,
 } from "antd";
 import "./Home.css";
+import AudioPlayer from "react-audio-player";
 import axios from "axios";
 import ModalUpdateProject from "./Modals/ModalUpdateProject";
 
@@ -49,13 +50,21 @@ const Profile = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState([]);
   const [isFollow, setIsFollow] = useState(false);
+  const [tracks, setTracks] = useState([]);
   useEffect(() => {
     const fetchUser = async () => {
       const response = await axios.get(`https://localhost:7262/Users/${user}`);
       setUserData(response.data);
     };
+    const fetchTracks = async () => {
+      const response = await axios.get(
+        `https://localhost:7262/Tracks/user?iduser=${user}`
+      );
+      setTracks(response.data);
+    };
 
     fetchUser();
+    fetchTracks();
   }, [user]);
 
   useEffect(() => {
@@ -88,7 +97,7 @@ const Profile = () => {
     setIsFollow(true);
   };
 
-  if (!userData) {
+  if (!userData || !tracks) {
     return <Spin size="large" fullscreen></Spin>;
   }
 
@@ -119,7 +128,31 @@ const Profile = () => {
             enterButton
           />
           <div>
-            <List></List>
+            <List
+              className="listprojects"
+              grid={{ gutter: 12, column: 3 }}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+              }}
+              dataSource={tracks}
+              renderItem={(sequencer) => (
+                <List.Item>
+                  <Card className="card-project" title={sequencer.name}>
+                    <p>{sequencer.description}</p>
+                    <AudioPlayer
+                      style={{ marginTop: "10px" }}
+                      src={
+                        `https://localhost:7262/track/` + sequencer.idSequencer
+                      }
+                      autoPlay={false}
+                      controls
+                    />
+                  </Card>
+                </List.Item>
+              )}
+            />
           </div>
         </Content>
       </Layout>

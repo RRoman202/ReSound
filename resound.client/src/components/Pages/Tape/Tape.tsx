@@ -1,6 +1,8 @@
 import { Card, Col, Layout, Row, Segmented, Flex, Button, Input } from "antd";
 import MusicCard from "./MusicCard";
 import "./Tape.css";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 const { Header, Content, Footer } = Layout;
 const { Search } = Input;
@@ -18,6 +20,15 @@ interface TapeProps {}
 
 const Tape: React.FC<TapeProps> = () => {
   const subscriptionOptions = ["Все", "Подписки", "В тренде", "Для тебя"];
+  const [tracks, setTracks] = useState([]);
+  useEffect(() => {
+    const fetchSequencers = async () => {
+      const response = await axios.get("https://localhost:7262/Tracks");
+      setTracks(response.data);
+    };
+    fetchSequencers();
+  }, []);
+
   const genres = [
     "Pop",
     "Rock",
@@ -26,27 +37,6 @@ const Tape: React.FC<TapeProps> = () => {
     "Classical",
     "Jazz",
     "Country",
-  ];
-
-  const popularTracks: Track[] = [
-    {
-      title: "My Awesome Track",
-      artist: "Your Name",
-      cover: "https://via.placeholder.com/128x128",
-      audioSrc:
-        "https://www.bensound.com/royalty-free-music/track/funky-element",
-      likes: 100,
-      rating: 4.5,
-    },
-    {
-      title: "My Awesome Track",
-      artist: "Your Name",
-      cover: "https://via.placeholder.com/128x128",
-      audioSrc:
-        "https://www.bensound.com/royalty-free-music/track/funky-element",
-      likes: 100,
-      rating: 4.5,
-    },
   ];
 
   const handleSubscriptionChange = (value: string) => {
@@ -73,8 +63,8 @@ const Tape: React.FC<TapeProps> = () => {
                 placeholder="Поиск музыкальных произведений"
                 enterButton
               />
-              {popularTracks.map((track) => (
-                <MusicCard key={track.title} {...track} />
+              {tracks.map((track) => (
+                <MusicCard key={track.name} {...track} />
               ))}
             </Card>
           </Col>
