@@ -83,12 +83,52 @@ namespace ReSound.Server.Controllers
             return userModel;
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         public async Task<IEnumerable<User>> GetSequencers()
         {
             return await _context.Users
                 .ToListAsync();
+        }
+
+        [HttpPost("Follower")]
+        public async Task<Follower> PostFollower(FollowerDTO follower)
+        {
+            var newfollower = new Follower
+            {
+                Id = Guid.NewGuid(),
+                IdUser = follower.IdUser,
+                IdFollower = follower.IdFollower,
+            };
+            
+
+            _context.Followers.Add(newfollower);
+            await _context.SaveChangesAsync();
+
+            return newfollower;
+        }
+
+        [HttpGet("Follower")]
+        public async Task<IEnumerable<User>> GetTemplates(Guid iduser)
+        {
+            var usersid = await _context.Followers
+                .Where(st => st.IdFollower == iduser)
+                
+                .ToListAsync();
+
+            var users = new List<User>();
+
+            foreach (var userId in usersid)
+            {
+                var user = await _context.Users.FindAsync(userId.IdUser);
+                if (user != null)
+                {
+                    users.Add(user);
+                }
+            }
+
+
+            return users;
         }
 
         private string CreateToken(User user)

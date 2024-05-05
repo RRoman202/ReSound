@@ -48,6 +48,7 @@ const Profile = () => {
   console.log(user);
   const navigate = useNavigate();
   const [userData, setUserData] = useState([]);
+  const [isFollow, setIsFollow] = useState(false);
   useEffect(() => {
     const fetchUser = async () => {
       const response = await axios.get(`https://localhost:7262/Users/${user}`);
@@ -56,6 +57,36 @@ const Profile = () => {
 
     fetchUser();
   }, [user]);
+
+  useEffect(() => {
+    const fetchAllUsers = async () => {
+      const response = await axios.get(
+        `https://localhost:7262/Users/Follower?iduser=` +
+          localStorage.getItem("userid")
+      );
+      response.data.forEach(async (user) => {
+        if (user.idUser == userData.idUser) {
+          setIsFollow(true);
+        }
+      });
+    };
+    fetchAllUsers();
+  }, [userData]);
+
+  const follow = () => {
+    fetch("https://localhost:7262/Users/Follower", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        IdUser: userData.idUser,
+        IdFollower: localStorage.getItem("userid"),
+      }),
+    });
+    setIsFollow(true);
+  };
 
   if (!userData) {
     return <Spin size="large" fullscreen></Spin>;
@@ -71,6 +102,15 @@ const Profile = () => {
         >
           <Card className="creatediv">
             <Title level={2}>{userData.login}</Title>
+            {isFollow ? (
+              <Button onClick={follow} disabled>
+                Вы подписаны
+              </Button>
+            ) : (
+              <Button type="primary" onClick={follow}>
+                Подписаться
+              </Button>
+            )}
           </Card>
           <Title level={4}>Музыкальные произведения</Title>
           <Search

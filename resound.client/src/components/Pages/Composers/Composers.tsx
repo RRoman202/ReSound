@@ -43,59 +43,25 @@ const Composers: React.FC<TapeProps> = () => {
     fetchSequencers();
   }, []);
 
-  const popularTracks: Track[] = [
-    {
-      title: "My Awesome Track",
-      artist: "Your Name",
-      cover: "https://via.placeholder.com/128x128",
-      audioSrc:
-        "https://www.bensound.com/royalty-free-music/track/funky-element",
-      likes: 100,
-      rating: 4.5,
-      avatar: "https://via.placeholder.com/64x64", // Placeholder avatar
-      login: "Composer123", // Placeholder login
-      genres: ["Electronic", "Pop"], // Placeholder genres
-    },
-    {
-      title: "My Awesome Track",
-      artist: "Your Name",
-      cover: "https://via.placeholder.com/128x128",
-      audioSrc:
-        "https://www.bensound.com/royalty-free-music/track/funky-element",
-      likes: 100,
-      rating: 4.5,
-      avatar: "https://via.placeholder.com/64x64", // Placeholder avatar
-      login: "Composer456", // Placeholder login
-      genres: ["Rock", "Indie"], // Placeholder genres
-    },
-    {
-      title: "My Awesome Track",
-      artist: "Your Name",
-      cover: "https://via.placeholder.com/128x128",
-      audioSrc:
-        "https://www.bensound.com/royalty-free-music/track/funky-element",
-      likes: 100,
-      rating: 4.5,
-      avatar: "https://via.placeholder.com/64x64", // Placeholder avatar
-      login: "Composer456", // Placeholder login
-      genres: ["Rock", "Indie"], // Placeholder genres
-    },
-    {
-      title: "My Awesome Track",
-      artist: "Your Name",
-      cover: "https://via.placeholder.com/128x128",
-      audioSrc:
-        "https://www.bensound.com/royalty-free-music/track/funky-element",
-      likes: 100,
-      rating: 4.5,
-      avatar: "https://via.placeholder.com/64x64", // Placeholder avatar
-      login: "Composer456", // Placeholder login
-      genres: ["Rock", "Indie"], // Placeholder genres
-    },
-  ];
+  const allUser = async () => {
+    const response = await axios.get("https://localhost:7262/Users");
+    setUsers(response.data);
+  };
+
+  const followerUser = async () => {
+    const response = await axios.get(
+      `https://localhost:7262/Users/Follower?iduser=` +
+        localStorage.getItem("userid")
+    );
+    setUsers(response.data);
+  };
 
   const handleSubscriptionChange = (value: string) => {
-    console.log(`Selected subscription: ${value}`);
+    if (value == "Подписки") {
+      followerUser();
+    } else if (value == "Все") {
+      allUser();
+    }
   };
 
   if (!users) {
