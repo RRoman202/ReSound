@@ -50,6 +50,7 @@
     <Folder Include="wwwroot\sounds\Гитара\" />
     <Folder Include="wwwroot\sounds\Басс\" />
     <Folder Include="wwwroot\sounds\Пианино\" />
+    <Folder Include="wwwroot\tracks\" />
   </ItemGroup>
 
 </Project>

@@ -19,10 +19,39 @@ namespace ReSound.Server.Controllers
 
         private readonly IConfiguration _configuration;
 
+        private readonly string _audioFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "tracks");
+
         public UsersController(ReSoundContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
+        }
+
+        [HttpPost("upload-audio")]
+        public async Task<IActionResult> UploadAudio(AudioDTO audioDTO)
+        {
+            if (audioDTO.audioFile == null || audioDTO.audioFile.Length == 0)
+            {
+                return BadRequest("No audio file provided.");
+            }
+
+            // Generate a unique ID for the audio file
+            
+
+            // Create the audio folder if it doesn't exist
+            Directory.CreateDirectory(_audioFolder);
+
+            // Get the full path of the audio file
+            string filePath = Path.Combine(_audioFolder, audioDTO.IdSequencer + ".mp3");
+
+            // Save the audio file to the folder
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await audioDTO.audioFile.CopyToAsync(stream);
+            }
+
+            // Return a success response with the audio ID
+            return Ok(new { audioDTO.IdSequencer });
         }
 
         [AllowAnonymous]

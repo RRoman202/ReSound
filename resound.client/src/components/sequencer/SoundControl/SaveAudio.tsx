@@ -3,10 +3,26 @@ import { sampler } from "../../../player/playSound";
 
 import { m } from "../../../player/playCanvas";
 import GetNotes from "../../../player/Notes";
+import axios from "axios";
 export function RecordCanvas() {
   const notes: string[] = GetNotes();
   let notesplay: { [key: number]: string[] } = {};
   const recorder = new Tone.Recorder();
+
+  const uploadAudio = async (blob: Blob, idsequencer: string) => {
+    const formData = new FormData();
+    formData.append("audioFile", blob);
+    formData.append("idsequencer", idsequencer);
+    const response = await axios.post(
+      "https://localhost:7262/Users/upload-audio",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+  };
 
   sampler.connect(recorder);
   let index = 0;
@@ -44,12 +60,15 @@ export function RecordCanvas() {
     Tone.Transport.cancel();
     Tone.Transport.stop();
 
-    let blob = new Blob([recording], { type: "audio/ogg; codecs=opus" });
+    const blob = new Blob([recording], { type: "audio/mpeg" });
     const url = URL.createObjectURL(blob);
 
     const anchor = document.createElement("a");
-    anchor.download = "recording.ogg";
+    anchor.download = "recording.mp3";
     anchor.href = url;
     anchor.click();
+    if (localStorage.getItem("sequencerid")) {
+      uploadAudio(blob, localStorage.getItem("sequencerid")!);
+    }
   }, (m[0].length * 1000) / (Tone.Transport.bpm.value / 60) / 2);
 }
