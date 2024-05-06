@@ -31,6 +31,10 @@
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Templating" Version="8.0.2" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Utils" Version="8.0.2" />
+    <PackageReference Include="MimeTypes" Version="2.5.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Npgsql" Version="8.0.2" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
@@ -51,6 +55,7 @@
     <Folder Include="wwwroot\sounds\Басс\" />
     <Folder Include="wwwroot\sounds\Пианино\" />
     <Folder Include="wwwroot\tracks\" />
+    <Folder Include="wwwroot\avatars\" />
   </ItemGroup>
 
 </Project>

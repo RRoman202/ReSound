@@ -55,6 +55,10 @@ const Profile = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     const fetchUser = async () => {
       const response = await axios.get(`https://localhost:7262/Users/${user}`);
       setUserData(response.data);
@@ -122,6 +126,13 @@ const Profile = () => {
           }}
         >
           <Card className="creatediv">
+            <Avatar
+              src={
+                `https://localhost:7262/Files/avatar?iduser=` + userData.idUser
+              }
+              size={100}
+              icon={<UserOutlined />}
+            />
             <Title level={2}>{userData.login}</Title>
             {isFollow ? (
               <Button onClick={follow} disabled>

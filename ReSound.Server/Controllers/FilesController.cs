@@ -34,6 +34,30 @@ namespace ReSound.Server.Controllers
             return PhysicalFile(audioFilePath, "audio/mpeg");
         }
 
+        [HttpGet("avatar")]
+        public IActionResult GetAvatarFile(Guid iduser)
+        {
+            string avatarFolderPath = Path.Combine(_env.WebRootPath, "avatars");
+            string avatarFileName = iduser + ".png";
+            string avatarFilePath = Path.Combine(avatarFolderPath, avatarFileName);
+
+            if (!System.IO.File.Exists(avatarFilePath))
+            {
+                return NotFound();
+            }
+
+            string fileExtension = Path.GetExtension(avatarFileName);
+
+            string mimeType = MimeTypes.GetMimeType(fileExtension);
+
+            if (mimeType == null)
+            {
+                return BadRequest("Unsupported file type");
+            }
+
+            return PhysicalFile(avatarFilePath, mimeType);
+        }
+
 
         [HttpGet]
         public IActionResult GetFileNames()

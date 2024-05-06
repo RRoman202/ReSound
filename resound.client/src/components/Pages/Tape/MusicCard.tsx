@@ -10,6 +10,7 @@ import {
   Input,
   Drawer,
   Flex,
+  Avatar,
 } from "antd";
 import AudioPlayer from "react-audio-player";
 import axios from "axios";
@@ -24,6 +25,7 @@ import {
   EditOutlined,
   HeartOutlined,
   CommentOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import moment from "moment"; // Import moment.js
@@ -134,19 +136,39 @@ const MusicCard: React.FC<MusicCardProps> = ({
         open={openDrawer}
       >
         {commentData.map((comment) => (
-          <div style={{ marginTop: "20px" }}>
-            <Typography.Text
+          <div
+            style={{
+              marginTop: "20px",
+              backgroundColor: "#f5f5f5",
+              padding: "10px",
+              borderRadius: "5px",
+            }}
+          >
+            <Avatar
+              style={{ marginBottom: "5px" }}
+              src={
+                `https://localhost:7262/Files/avatar?iduser=` +
+                comment.user.idUser
+              }
+              size={25}
+              icon={<UserOutlined />}
+            />
+            <Typography.Link
               strong
-              style={{ marginRight: "10px", fontSize: "18px" }}
+              style={{ marginLeft: "10px", fontSize: "18px" }}
+              onClick={() => navigate("/user/" + comment.user.idUser)}
             >
               {comment.user.login}
-            </Typography.Text>
-            <Typography.Text style={{ marginRight: "10px" }}>
-              {comment.content}
-            </Typography.Text>
-            <Typography.Text style={{ fontSize: "11px" }}>
-              {moment(comment.created).format("DD MMMM YYYY HH:mm")}
-            </Typography.Text>
+            </Typography.Link>
+
+            <Flex vertical>
+              <Typography.Text style={{ marginRight: "10px" }}>
+                {comment.content}
+              </Typography.Text>
+              <Typography.Text style={{ fontSize: "11px" }}>
+                {moment(comment.created).format("DD MMMM YYYY HH:mm")}
+              </Typography.Text>
+            </Flex>
           </div>
         ))}
         <Input.TextArea
@@ -160,7 +182,7 @@ const MusicCard: React.FC<MusicCardProps> = ({
           type="primary"
           style={{ marginTop: "10px" }}
         >
-          Добавить
+          Отправить
         </Button>
       </Drawer>
       <Row gutter={16}>

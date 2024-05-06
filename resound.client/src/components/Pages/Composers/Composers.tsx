@@ -8,6 +8,7 @@ import {
   Button,
   Input,
   Spin,
+  Pagination,
 } from "antd";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -34,6 +35,8 @@ const Composers: React.FC<ComposersProps> = () => {
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -65,6 +68,7 @@ const Composers: React.FC<ComposersProps> = () => {
     } else if (value == "Все") {
       allUser();
     }
+    setCurrentPage(1); // Reset page on subscription change
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,11 +77,21 @@ const Composers: React.FC<ComposersProps> = () => {
       user.login.toLowerCase().includes(e.target.value.toLowerCase())
     );
     setFilteredUsers(filtered);
+    setCurrentPage(1); // Reset page on search
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   if (!users) {
     return <Spin size="large" fullscreen></Spin>;
   }
+
+  const paginatedFilteredUsers = filteredUsers.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   return (
     <Layout style={{ padding: "20px" }}>
@@ -97,9 +111,16 @@ const Composers: React.FC<ComposersProps> = () => {
                 value={searchTerm}
                 onChange={handleSearchChange}
               />
-              {filteredUsers.map((user) => (
+              {paginatedFilteredUsers.map((user) => (
                 <ComposerCard key={user.login} {...user} />
               ))}
+              <Pagination
+                style={{ marginTop: "20px" }}
+                current={currentPage}
+                total={filteredUsers.length}
+                pageSize={pageSize}
+                onChange={handlePageChange}
+              />
             </Card>
           </Col>
           <Col span={6} style={{ marginTop: "20px" }}>

@@ -34,6 +34,7 @@ import {
 import "./Home.css";
 import axios from "axios";
 import ModalUpdateProject from "./Modals/ModalUpdateProject";
+import ModalUpdateUser from "./Modals/ModalUpdateUser";
 
 const { Search } = Input;
 const { Header, Content, Footer, Sider } = Layout;
@@ -49,14 +50,16 @@ const itemsMenu = customLabels.map((label, index) => ({
   label: label,
 }));
 
+const user = JSON.parse(localStorage.getItem("userfull")!);
+
 const menu = (
   <Menu>
-    <Menu.Item key="1">Редактировать</Menu.Item>
+    <Menu.Item key="1">
+      <ModalUpdateUser userlogin={user.login}></ModalUpdateUser>
+    </Menu.Item>
     <Menu.Item key="2">Выход</Menu.Item>
   </Menu>
 );
-
-const user = JSON.parse(localStorage.getItem("userfull")!);
 
 const UserPanel = () => (
   <div
@@ -68,7 +71,11 @@ const UserPanel = () => (
       marginTop: 20,
     }}
   >
-    <Avatar size={50} icon={<UserOutlined />} />
+    <Avatar
+      src={`https://localhost:7262/Files/avatar?iduser=` + user.idUser}
+      size={50}
+      icon={<UserOutlined />}
+    />
     <p>{user.login}</p>
     <p>{user.email}</p>
     <Dropdown overlay={menu}>

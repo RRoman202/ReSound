@@ -20,11 +20,46 @@ namespace ReSound.Server.Controllers
         private readonly IConfiguration _configuration;
 
         private readonly string _audioFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "tracks");
+        private readonly string _avatarFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "avatars");
 
         public UsersController(ReSoundContext context, IConfiguration configuration)
         {
             _context = context;
             _configuration = configuration;
+        }
+
+        [HttpPost("upload-avatar")]
+        public async Task<IActionResult> UploadAvatar(AvatarDTO avatarDTO)
+        {
+            if (avatarDTO.avatarFile == null || avatarDTO.avatarFile.Length == 0)
+            {
+                return BadRequest("error");
+            }
+
+            Directory.CreateDirectory(_avatarFolder);
+
+            string fileExtension = Path.GetExtension(avatarDTO.avatarFile.FileName);
+
+            string filePath = Path.Combine(_avatarFolder, avatarDTO.IdUser + fileExtension);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await avatarDTO.avatarFile.CopyToAsync(stream);
+            }
+            return Ok(new { avatarDTO.IdUser });
+        }
+
+        [HttpPatch("update")]
+        public async Task PatchUser([FromBody] UserUpdateDTO userUpdateDTO)
+        {
+            var user = await _context.Users.SingleAsync(x => x.IdUser == userUpdateDTO.IdUser);
+
+            user.Login = userUpdateDTO.Login;
+            user.DateUpdated = DateTime.UtcNow;
+
+            await _context.SaveChangesAsync();
+
+            return;
         }
 
         [HttpPost("upload-audio")]

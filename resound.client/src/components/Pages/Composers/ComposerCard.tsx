@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, Image, Button, Row, Col, Typography, Input, Tag } from "antd";
+import {
+  Card,
+  Image,
+  Button,
+  Row,
+  Col,
+  Typography,
+  Input,
+  Tag,
+  Avatar,
+} from "antd";
 import {
   CaretUpOutlined,
   CaretRightOutlined,
@@ -39,13 +49,11 @@ const ComposerCard: React.FC<ComposerCardProps> = ({
     >
       <Row gutter={16} style={{ display: "flex", alignItems: "center" }}>
         {" "}
-        {/* Use Flexbox */}
         <Col span={4}>
-          <Image
-            width={64}
-            height={64}
-            src={avatar}
-            style={{ marginTop: "0" }} // Remove image margin
+          <Avatar
+            size={64}
+            src={`https://localhost:7262/Files/avatar?iduser=` + idUser}
+            style={{ marginTop: "0" }}
           />
         </Col>
         <Col span={12}>

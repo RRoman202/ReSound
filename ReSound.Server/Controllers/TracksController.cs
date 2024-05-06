@@ -40,6 +40,36 @@ namespace ReSound.Server.Controllers
                 .ToListAsync();
         }
 
+        [HttpGet("Follower")]
+        public async Task<IEnumerable<Sequencer>> GetFollowerTracks(Guid iduser)
+        {
+            var usersid = await _context.Followers
+                .Where(st => st.IdFollower == iduser)
+                
+                .ToListAsync();
+
+            var users = new List<User>();
+
+            foreach (var userId in usersid)
+            {
+                var user = await _context.Users.FindAsync(userId.IdUser);
+                if (user != null)
+                {
+                    users.Add(user);
+                }
+            }
+
+            var tracks = new List<Sequencer>();
+
+            foreach (var user in users)
+            {
+                var trackuser = _context.Sequencers.Where(x => x.IdUser == user.IdUser).ToList();
+                tracks.AddRange(trackuser);
+            }
+
+            return tracks;
+        }
+
         [HttpGet("user")]
         public async Task<IEnumerable<Sequencer>> GetUserTracks(Guid iduser)
         {
