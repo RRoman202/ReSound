@@ -1,4 +1,14 @@
-import { Card, Col, Layout, Row, Segmented, Flex, Button, Input } from "antd";
+import {
+  Card,
+  Col,
+  Layout,
+  Row,
+  Segmented,
+  Flex,
+  Button,
+  Input,
+  Drawer,
+} from "antd";
 import MusicCard from "./MusicCard";
 import "./Tape.css";
 import { useState, useEffect } from "react";
@@ -21,10 +31,14 @@ interface TapeProps {}
 const Tape: React.FC<TapeProps> = () => {
   const subscriptionOptions = ["Все", "Подписки", "В тренде", "Для тебя"];
   const [tracks, setTracks] = useState([]);
+  const [filteredTracks, setFilteredTracks] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
   useEffect(() => {
     const fetchSequencers = async () => {
       const response = await axios.get("https://localhost:7262/Tracks");
       setTracks(response.data);
+      setFilteredTracks(response.data);
     };
     fetchSequencers();
   }, []);
@@ -47,6 +61,14 @@ const Tape: React.FC<TapeProps> = () => {
     console.log(`Selected genre: ${value}`);
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    const filtered = tracks.filter((track) =>
+      track.name.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredTracks(filtered);
+  };
+
   return (
     <Layout style={{ padding: "20px" }}>
       <Content>
@@ -62,8 +84,10 @@ const Tape: React.FC<TapeProps> = () => {
               <Search
                 placeholder="Поиск музыкальных произведений"
                 enterButton
+                value={searchTerm}
+                onChange={handleSearchChange}
               />
-              {tracks.map((track) => (
+              {filteredTracks.map((track) => (
                 <MusicCard key={track.name} {...track} />
               ))}
             </Card>

@@ -17,35 +17,37 @@ import "./Tape.css";
 const { Header, Content, Footer } = Layout;
 const { Search } = Input;
 
-interface Track {
-  title: string;
-  artist: string;
-  cover: string;
-  audioSrc: string;
-  likes: number;
-  rating: number;
-  avatar: string; // Add avatar prop
-  login: string; // Add login prop
-  genres: string[]; // Add genres prop
+interface User {
+  login: string;
+  email: string;
+  avatar: string;
+  genres: string[];
+  idUser: number;
+  // Add other user properties as needed
 }
 
-interface TapeProps {}
+interface ComposersProps {}
 
-const Composers: React.FC<TapeProps> = () => {
+const Composers: React.FC<ComposersProps> = () => {
   const subscriptionOptions = ["Все", "Подписки", "В тренде", "Для тебя"];
 
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
   useEffect(() => {
-    const fetchSequencers = async () => {
+    const fetchUsers = async () => {
       const response = await axios.get("https://localhost:7262/Users");
       setUsers(response.data);
+      setFilteredUsers(response.data);
     };
-    fetchSequencers();
+    fetchUsers();
   }, []);
 
   const allUser = async () => {
     const response = await axios.get("https://localhost:7262/Users");
     setUsers(response.data);
+    setFilteredUsers(response.data);
   };
 
   const followerUser = async () => {
@@ -54,6 +56,7 @@ const Composers: React.FC<TapeProps> = () => {
         localStorage.getItem("userid")
     );
     setUsers(response.data);
+    setFilteredUsers(response.data);
   };
 
   const handleSubscriptionChange = (value: string) => {
@@ -62,6 +65,14 @@ const Composers: React.FC<TapeProps> = () => {
     } else if (value == "Все") {
       allUser();
     }
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    const filtered = users.filter((user) =>
+      user.login.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredUsers(filtered);
   };
 
   if (!users) {
@@ -80,9 +91,14 @@ const Composers: React.FC<TapeProps> = () => {
             />
 
             <Card title="Пользователи" bordered={false}>
-              <Search placeholder="Поиск пользователей" enterButton />
-              {users.map((user) => (
-                <ComposerCard key={user.title} {...user} /> // ComposerCard instead of MusicCard
+              <Search
+                placeholder="Поиск пользователей"
+                enterButton
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+              {filteredUsers.map((user) => (
+                <ComposerCard key={user.login} {...user} />
               ))}
             </Card>
           </Col>

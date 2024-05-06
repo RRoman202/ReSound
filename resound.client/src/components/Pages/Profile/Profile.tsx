@@ -51,6 +51,9 @@ const Profile = () => {
   const [userData, setUserData] = useState([]);
   const [isFollow, setIsFollow] = useState(false);
   const [tracks, setTracks] = useState([]);
+  const [filteredTracks, setFilteredTracks] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
   useEffect(() => {
     const fetchUser = async () => {
       const response = await axios.get(`https://localhost:7262/Users/${user}`);
@@ -61,6 +64,7 @@ const Profile = () => {
         `https://localhost:7262/Tracks/user?iduser=${user}`
       );
       setTracks(response.data);
+      setFilteredTracks(response.data);
     };
 
     fetchUser();
@@ -97,6 +101,14 @@ const Profile = () => {
     setIsFollow(true);
   };
 
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    const filtered = tracks.filter((track) =>
+      track.name.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredTracks(filtered);
+  };
+
   if (!userData || !tracks) {
     return <Spin size="large" fullscreen></Spin>;
   }
@@ -126,6 +138,8 @@ const Profile = () => {
             style={{ marginTop: 20 }}
             placeholder="Поиск музыкальных произведений"
             enterButton
+            value={searchTerm}
+            onChange={handleSearchChange}
           />
           <div>
             <List
@@ -136,7 +150,7 @@ const Profile = () => {
                 flexDirection: "column",
                 justifyContent: "flex-start",
               }}
-              dataSource={tracks}
+              dataSource={filteredTracks}
               renderItem={(sequencer) => (
                 <List.Item>
                   <Card className="card-project" title={sequencer.name}>

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ReSound.Server.Data;
 using ReSound.Server.Data.Models;
+using ReSound.Server.DTO;
 
 namespace ReSound.Server.Controllers
 {
@@ -57,6 +58,31 @@ namespace ReSound.Server.Controllers
             return await _context.Sequencers
                 .Where(s => s.Private == false && s.IdUser == iduser && fileNamesNoMp3.Contains(s.IdSequencer.ToString())).Include(s => s.User)
                 .ToListAsync();
+        }
+
+        [HttpGet("comment")]
+        public async Task<IEnumerable<Comment>> GetCommentTrack(Guid idsequencer)
+        {
+            var comments = await _context.Comments.Where(x => x.IdSequencer == idsequencer).Include(x => x.User).ToListAsync();
+            return comments;
+        }
+
+        [HttpPost("comment")]
+        public async Task<IActionResult> PostComment(CommentDTO comment)
+        {
+            var newcomment = new Comment
+            {
+                IdComment = Guid.NewGuid(),
+                IdSequencer = comment.IdSequencer,
+                IdUser = comment.IdUser,
+                Content = comment.Content,
+                Created = DateTime.UtcNow,
+                User = await _context.Users.FindAsync(comment.IdUser)
+
+            };
+            await _context.Comments.AddAsync(newcomment);
+            await _context.SaveChangesAsync();
+            return Ok(newcomment);
         }
 
 

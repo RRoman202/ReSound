@@ -77,9 +77,9 @@ const Piano = observer(() => {
   const navigate = useNavigate();
   const { template } = useParams<{ template: string }>();
   const [templateData, setTemplateData] = useState<Template | null>(null);
-  const [openDrawer, setOpenDrawer] = useState(false);
-  const [loadingsBtn, setLoadingsBtn] = useState(false);
 
+  const [loadingsBtn, setLoadingsBtn] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
   const showDrawer = () => {
     setOpenDrawer(true);
   };

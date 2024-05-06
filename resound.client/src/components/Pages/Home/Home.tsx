@@ -124,6 +124,9 @@ const Home = () => {
 
   const navigate = useNavigate();
   const [sequencers, setSequencers] = useState([]);
+  const [filteredSequencers, setFilteredSequencers] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
   useEffect(() => {
     const fetchSequencers = async () => {
       const response = await axios.get(
@@ -131,6 +134,7 @@ const Home = () => {
           localStorage.getItem("userid")
       );
       setSequencers(response.data);
+      setFilteredSequencers(response.data);
     };
     fetchSequencers();
   }, []);
@@ -142,6 +146,7 @@ const Home = () => {
         (sequencer) => sequencer.idSequencer !== id
       );
       setSequencers(updatedSequencers);
+      setFilteredSequencers(updatedSequencers);
     } catch (error) {
       console.error("Error deleting sequencer:", error);
     }
@@ -149,6 +154,14 @@ const Home = () => {
   const openSequencer = async (id: string) => {
     localStorage.setItem("sequencerid", id);
     navigate(`/maintrack/${id}`);
+  };
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    const filtered = sequencers.filter((sequencer) =>
+      sequencer.name.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    setFilteredSequencers(filtered);
   };
 
   return (
@@ -194,6 +207,8 @@ const Home = () => {
             style={{ marginTop: 20 }}
             placeholder="Поиск музыкальных произведений"
             enterButton
+            value={searchTerm}
+            onChange={handleSearchChange}
           />
           <div>
             <List
@@ -204,7 +219,7 @@ const Home = () => {
                 flexDirection: "column",
                 justifyContent: "flex-start",
               }}
-              dataSource={sequencers}
+              dataSource={filteredSequencers}
               renderItem={(sequencer) => (
                 <List.Item ref={ref3}>
                   <Card
