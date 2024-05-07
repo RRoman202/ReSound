@@ -41,6 +41,23 @@ const MainTrack: React.FC = () => {
   console.log(sequencerData);
   const [templates, setTemplates] = useState([]);
 
+  const copyTemplate = async (template: any) => {
+    fetch("https://localhost:7262/api/Sequencers/templates", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        Name: template.name,
+        Volume: template.volume,
+        notes: template.notes,
+        IdSound: template.idSound,
+        idSequencer: template.idSequencer,
+      }),
+    });
+  };
+
   useEffect(() => {
     const fetchSequencer = async () => {
       const response = await axios.get(

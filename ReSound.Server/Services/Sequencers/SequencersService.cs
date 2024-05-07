@@ -14,6 +14,11 @@ namespace ReSound.Server.Services.Sequencers
             _sequencersRepository = sequencersRepository;
         }
 
+        public async Task<Template> CopyTemplate([FromBody] CopyTempalteDTO template)
+        {
+            return await _sequencersRepository.CopyTemplate(template);
+        }
+
         public async Task DeleteSequencer(Guid id)
         {
             await _sequencersRepository.DeleteSequencer(id);

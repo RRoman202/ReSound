@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Identity;
 using ReSound.Server.Data;
 using ReSound.Server.Data.Models;
 using ReSound.Server.DTO;
@@ -155,6 +156,32 @@ namespace ReSound.Server.Repositories.Sequencers
             await _context.SaveChangesAsync();
 
             return template;
+        }
+
+        public async Task<Template> CopyTemplate([FromBody] CopyTempalteDTO template)
+        {
+            Guid idtemp = Guid.NewGuid();
+            var copy = new Template
+            {
+                IdTemplate = idtemp,
+                IdSound = template.IdSound,
+                BPM = template.BPM,
+                Name = template.Name,
+                Notes = template.Notes,
+                Volume = template.Volume,
+                Sound = template.Sound,
+            };
+            _context.Templates.Add(copy);
+            _context.SequencersTemplates.Add(new SequencerTemplate
+            {
+                Id = Guid.NewGuid(),
+                IdTemplate = idtemp,
+                IdSequencer = template.IdSequencer,
+                Template = copy
+            });
+            await _context.SaveChangesAsync();
+
+            return copy;
         }
 
         public async Task PutSequencer([FromBody] SequencerPatchDTO sequencerPatchDTO)

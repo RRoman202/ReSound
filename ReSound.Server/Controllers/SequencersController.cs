@@ -44,6 +44,11 @@ namespace ReSound.Server.Controllers
         {
             return await _sequencersService.PostTemplate(templateDTO);
         }
+        [HttpPost("copy-templates")]
+        public async Task<ActionResult<Template>> CopyTemplate([FromBody] CopyTempalteDTO templateDTO)
+        {
+            return await _sequencersService.CopyTemplate(templateDTO);
+        }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Sequencer>> GetSequencer(Guid id, Guid iduser)

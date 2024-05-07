@@ -59,6 +59,41 @@ const TemplateList: React.FC<TemplateListProps> = ({
 
   const createTemplate = () => {};
 
+  const copyTemplate = async (template: any, idsequencer: string) => {
+    fetch("https://localhost:7262/api/Sequencers/copy-templates", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        IdSound: template.idSound,
+        BPM: template.bpm,
+        Name: template.name,
+        Notes: template.notes,
+        Volume: template.volume,
+        Sound: template.sound,
+        IdSequencer: idsequencer,
+      }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          getTemplates();
+        } else {
+          console.error("Error");
+        }
+      })
+      .finally(() => {});
+  };
+
+  const getTemplates = async () => {
+    const response = await axios.get(
+      `https://localhost:7262/api/Sequencers/templates?idsequencer=` +
+        idsequencer
+    );
+    setTemplates(response.data);
+  };
+
   const handleDeleteTemplate = async (id: string) => {
     try {
       await axios.delete(
@@ -109,7 +144,15 @@ const TemplateList: React.FC<TemplateListProps> = ({
                       >
                         Открыть
                       </Menu.Item>
-                      <Menu.Item key="2">
+                      <Menu.Item
+                        key="2"
+                        onClick={() => {
+                          copyTemplate(item, idsequencer);
+                        }}
+                      >
+                        Скопировать
+                      </Menu.Item>
+                      <Menu.Item key="3">
                         <ModalUpdateTemplate
                           setTemplates={setTemplates}
                           idsequencer={idsequencer}
@@ -117,7 +160,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
                         ></ModalUpdateTemplate>
                       </Menu.Item>
                       <Menu.Item
-                        key="3"
+                        key="4"
                         onClick={() => handleDeleteTemplate(item.idTemplate)}
                         danger
                       >

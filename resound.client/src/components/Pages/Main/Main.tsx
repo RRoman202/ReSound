@@ -1,6 +1,6 @@
 import Layout from "antd/es/layout/layout";
 import React from "react";
-import { Carousel, Flex, Space, Button } from "antd";
+import { Carousel, Flex, Space, Button, List, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
 import background from "./background.png";
 import "./Main.css";
@@ -96,6 +96,18 @@ const Main = () => {
             </h3>
           </div>
         </Carousel>
+      </Layout>
+      <Layout style={{ backgroundColor: "lightblue" }}>
+        <Typography.Title level={3}>Популярные треки</Typography.Title>
+        <List></List>
+      </Layout>
+      <Layout style={{ backgroundColor: "lightblue" }}>
+        <Typography.Title level={3}>Последние треки</Typography.Title>
+        <List></List>
+      </Layout>
+      <Layout style={{ backgroundColor: "#1677ff" }}>
+        <Typography.Title level={3}>Отзывы</Typography.Title>
+        <List></List>
       </Layout>
     </div>
   );
