@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 using ReSound.Server.Data;
 using ReSound.Server.Data.Models;
 using ReSound.Server.DTO;
@@ -113,6 +114,60 @@ namespace ReSound.Server.Controllers
             await _context.Comments.AddAsync(newcomment);
             await _context.SaveChangesAsync();
             return Ok(newcomment);
+        }
+
+        [HttpPost("mark")]
+        public async Task<IActionResult> PostMark(MarkDTO mark)
+        {
+
+            var newmark = new Mark
+            {
+                IdMark = Guid.NewGuid(),
+                IdSequencer = mark.IdSequencer,
+                IdUser = mark.IdUser,
+                Value = mark.Value,
+                Created = DateTime.UtcNow,
+                User = await _context.Users.FindAsync(mark.IdUser)
+
+            };
+            var marks = await _context.Marks.Where(x => x.IdSequencer == mark.IdSequencer && x.IdUser == mark.IdUser).FirstOrDefaultAsync();
+            if(marks == null)
+            {
+                await _context.Marks.AddAsync(newmark);
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+                _context.Marks.Remove(marks);
+                await _context.Marks.AddAsync(newmark);
+                await _context.SaveChangesAsync();
+            }
+            
+            return Ok(newmark);
+        }
+
+        [HttpGet("mark")]
+        public async Task<Mark> GetMarkTrack(Guid idsequencer, Guid iduser)
+        {
+            var marks = await _context.Marks.Where(x => x.IdSequencer == idsequencer && x.IdUser == iduser).FirstOrDefaultAsync();
+            if(marks == null)
+            {
+                return null;
+            }
+            else
+            {
+                return marks;
+            }
+            
+        }
+
+        [HttpGet("rating")]
+        public async Task<double> GetRatingTrack(Guid idsequencer)
+        {
+            var marks = await _context.Marks.Where(x => x.IdSequencer == idsequencer).Include(x => x.User).ToListAsync();
+            var values = marks.Select(x => x.Value).ToList();
+            double rating = values.Average();
+            return Math.Round(rating, 2);
         }
 
 

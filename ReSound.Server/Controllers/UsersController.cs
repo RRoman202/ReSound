@@ -165,6 +165,17 @@ namespace ReSound.Server.Controllers
             return newfollower;
         }
 
+        [HttpDelete("Follower")]
+        public async Task DeleteFollower(FollowerDTO follower)
+        {
+            var followerdelete = _context.Followers.Where(x => x.IdFollower == follower.IdFollower && x.IdUser == follower.IdUser).FirstOrDefault();
+
+            _context.Followers.Remove(followerdelete);
+            await _context.SaveChangesAsync();
+
+            return;
+        }
+
         [HttpGet("Follower")]
         public async Task<IEnumerable<User>> GetTemplates(Guid iduser)
         {

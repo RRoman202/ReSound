@@ -113,6 +113,21 @@ const Profile = () => {
     setFilteredTracks(filtered);
   };
 
+  const deleteFollower = async () => {
+    fetch("https://localhost:7262/Users/Follower", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        IdUser: userData.idUser,
+        IdFollower: localStorage.getItem("userid"),
+      }),
+    });
+    setIsFollow(false);
+  };
+
   if (!userData || !tracks) {
     return <Spin size="large" fullscreen></Spin>;
   }
@@ -135,9 +150,7 @@ const Profile = () => {
             />
             <Title level={2}>{userData.login}</Title>
             {isFollow ? (
-              <Button onClick={follow} disabled>
-                Вы подписаны
-              </Button>
+              <Button onClick={deleteFollower}>Отписаться</Button>
             ) : (
               <Button type="primary" onClick={follow}>
                 Подписаться

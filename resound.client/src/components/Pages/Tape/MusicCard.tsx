@@ -11,6 +11,7 @@ import {
   Drawer,
   Flex,
   Avatar,
+  Tag,
 } from "antd";
 import AudioPlayer from "react-audio-player";
 import axios from "axios";
@@ -59,7 +60,9 @@ const MusicCard: React.FC<MusicCardProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [userData, setUserData] = useState(null);
   const [commentData, setCommentData] = useState([]);
+  const [mark, setMark] = useState(null);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [rate, setRate] = useState(null);
   const showDrawer = () => {
     setOpenDrawer(true);
   };
@@ -78,6 +81,29 @@ const MusicCard: React.FC<MusicCardProps> = ({
       console.log(userData);
     };
     fetchSequencers();
+  }, []);
+
+  useEffect(() => {
+    const fetchRate = async () => {
+      const response = await axios.get(
+        "https://localhost:7262/Tracks/rating?idsequencer=" + idSequencer
+      );
+      setRate(response.data);
+    };
+    fetchRate();
+  }, []);
+
+  useEffect(() => {
+    const fetchMark = async () => {
+      const response = await axios.get(
+        "https://localhost:7262/Tracks/mark?idsequencer=" +
+          idSequencer +
+          "&iduser=" +
+          localStorage.getItem("userid")
+      );
+      setMark(response.data.value);
+    };
+    fetchMark();
   }, []);
 
   const fetchComments = async () => {
@@ -107,6 +133,24 @@ const MusicCard: React.FC<MusicCardProps> = ({
       }
     );
     fetchComments();
+  };
+
+  const AddMark = async (value: number, idsequencer: string) => {
+    const formData = new FormData();
+    formData.append("value", value.toString());
+    formData.append("idsequencer", idsequencer);
+    formData.append("iduser", localStorage.getItem("userid")!);
+    const response = await axios.post(
+      "https://localhost:7262/Tracks/mark",
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }
+    );
+    setMark(response.data.value);
   };
 
   moment.locale("ru");
@@ -194,7 +238,7 @@ const MusicCard: React.FC<MusicCardProps> = ({
             style={{ marginTop: "35px" }}
           />
         </Col>
-        <Col span={16}>
+        <Col span={10}>
           <Typography.Title level={4}>{name}</Typography.Title>
 
           <Typography.Link
@@ -216,7 +260,11 @@ const MusicCard: React.FC<MusicCardProps> = ({
           <Row justify="space-between" style={{ marginTop: "35px" }}>
             <Col>
               <Button shape="circle" icon={<HeartOutlined />}></Button>
-              <Rate style={{ marginLeft: "20px" }}></Rate>
+              <Rate
+                value={mark!}
+                onChange={(e) => AddMark(e, idSequencer.toString())}
+                style={{ marginLeft: "20px" }}
+              ></Rate>
               <Button
                 type="primary"
                 style={{ marginLeft: "20px" }}
@@ -226,6 +274,16 @@ const MusicCard: React.FC<MusicCardProps> = ({
             </Col>
             <Col></Col>
           </Row>
+        </Col>
+        <Col span={6} style={{ textAlign: "end" }}>
+          <Flex gap={5} vertical>
+            <Tag color="blue">
+              <Typography.Text>Рейтинг: {rate}</Typography.Text>
+            </Tag>
+            <Tag color="blue">
+              <Typography.Text>Прослушали:</Typography.Text>
+            </Tag>
+          </Flex>
         </Col>
       </Row>
     </Card>

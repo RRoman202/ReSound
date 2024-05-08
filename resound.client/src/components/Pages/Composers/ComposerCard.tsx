@@ -47,8 +47,7 @@ const ComposerCard: React.FC<ComposerCardProps> = ({
       onClick={() => toUser(idUser)}
       hoverable
     >
-      <Row gutter={16} style={{ display: "flex", alignItems: "center" }}>
-        {" "}
+      <Row>
         <Col span={4}>
           <Avatar
             size={64}
@@ -56,7 +55,7 @@ const ComposerCard: React.FC<ComposerCardProps> = ({
             style={{ marginTop: "0" }}
           />
         </Col>
-        <Col span={12}>
+        <Col span={12} style={{}}>
           <Typography.Title level={4}>{login}</Typography.Title>
           {/* <div style={{ display: "flex", flexWrap: "wrap" }}>
             {genres.map((genre) => (

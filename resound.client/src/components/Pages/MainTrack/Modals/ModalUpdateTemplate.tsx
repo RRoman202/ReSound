@@ -102,7 +102,7 @@ const ModalUpdateTemplate: React.FC<Sequencer> = ({
         Редактировать
       </a>
       <Modal
-        title="Редатирование шаблона"
+        title="Редактирование шаблона"
         open={isModalOpen}
         okText="Применить"
         cancelText="Отмена"
