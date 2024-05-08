@@ -44,6 +44,7 @@ interface MusicCardProps {
   name: string;
   idUser: number;
   idSequencer: number;
+  views: number;
 }
 
 const MusicCard: React.FC<MusicCardProps> = ({
@@ -56,6 +57,7 @@ const MusicCard: React.FC<MusicCardProps> = ({
   name,
   idUser,
   idSequencer,
+  views,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [userData, setUserData] = useState(null);
@@ -63,6 +65,7 @@ const MusicCard: React.FC<MusicCardProps> = ({
   const [mark, setMark] = useState(null);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [rate, setRate] = useState(null);
+  const [isFavorite, setIsFavorite] = useState(false);
   const showDrawer = () => {
     setOpenDrawer(true);
   };
@@ -72,6 +75,52 @@ const MusicCard: React.FC<MusicCardProps> = ({
   };
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchAllFavorites = async () => {
+      const response = await axios.get(
+        `https://localhost:7262/Tracks/Favorite?iduser=` +
+          localStorage.getItem("userid")
+      );
+      response.data.forEach(async (user) => {
+        if (user.idSequencer == idSequencer) {
+          setIsFavorite(true);
+        }
+      });
+    };
+    fetchAllFavorites();
+  }, [userData]);
+
+  const addFavorite = () => {
+    fetch("https://localhost:7262/Tracks/Favorite", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        IdUser: localStorage.getItem("userid"),
+        IdSequencer: idSequencer,
+      }),
+    });
+    setIsFavorite(true);
+  };
+
+  const deleteFavorite = async () => {
+    fetch("https://localhost:7262/Tracks/Favorite", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
+      body: JSON.stringify({
+        IdUser: localStorage.getItem("userid"),
+        idSequencer: idSequencer,
+      }),
+    });
+    setIsFavorite(false);
+  };
+
   useEffect(() => {
     const fetchSequencers = async () => {
       const response = await axios.get(
@@ -133,6 +182,18 @@ const MusicCard: React.FC<MusicCardProps> = ({
       }
     );
     fetchComments();
+  };
+
+  const AddViews = async () => {
+    const response = await axios.patch(
+      "https://localhost:7262/Tracks/views?idsequencer=" + idSequencer,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }
+    );
   };
 
   const AddMark = async (value: number, idsequencer: string) => {
@@ -250,6 +311,7 @@ const MusicCard: React.FC<MusicCardProps> = ({
 
           <div style={{ display: "flex", justifyContent: "flex-start" }}>
             <AudioPlayer
+              onEnded={() => AddViews(idSequencer.toString())}
               style={{ marginTop: "10px" }}
               src={`https://localhost:7262/track/` + idSequencer}
               autoPlay={false}
@@ -259,7 +321,21 @@ const MusicCard: React.FC<MusicCardProps> = ({
 
           <Row justify="space-between" style={{ marginTop: "35px" }}>
             <Col>
-              <Button shape="circle" icon={<HeartOutlined />}></Button>
+              {isFavorite ? (
+                <Button
+                  onClick={deleteFavorite}
+                  type="primary"
+                  shape="circle"
+                  icon={<HeartOutlined />}
+                ></Button>
+              ) : (
+                <Button
+                  onClick={addFavorite}
+                  shape="circle"
+                  icon={<HeartOutlined />}
+                ></Button>
+              )}
+
               <Rate
                 value={mark!}
                 onChange={(e) => AddMark(e, idSequencer.toString())}
@@ -281,7 +357,7 @@ const MusicCard: React.FC<MusicCardProps> = ({
               <Typography.Text>Рейтинг: {rate}</Typography.Text>
             </Tag>
             <Tag color="blue">
-              <Typography.Text>Прослушали:</Typography.Text>
+              <Typography.Text>Прослушали: {views}</Typography.Text>
             </Tag>
           </Flex>
         </Col>

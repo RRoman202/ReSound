@@ -170,6 +170,74 @@ namespace ReSound.Server.Controllers
             return Math.Round(rating, 2);
         }
 
+        [HttpPatch("views")]
+        public async Task AddViews(Guid idsequencer)
+        {
+            var sequencer = await _context.Sequencers.SingleAsync(x => x.IdSequencer == idsequencer);
+            if (sequencer != null)
+            {
+                sequencer.Views += 1;
+            }
+            else
+            {
+                sequencer.Views = 1;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return;
+        }
+
+        [HttpPost("Favorite")]
+        public async Task<Favorite> PostFavorite(FavoriteDTO favorite)
+        {
+            var newfavorite = new Favorite
+            {
+                Id = Guid.NewGuid(),
+                IdUser = favorite.IdUser,
+                IdSequencer = favorite.IdSequencer,
+            };
+
+
+            _context.Favorites.Add(newfavorite);
+            await _context.SaveChangesAsync();
+
+            return newfavorite;
+        }
+
+        [HttpDelete("Favorite")]
+        public async Task DeleteFavorite(FavoriteDTO favorite)
+        {
+            var favoritedelete = _context.Favorites.Where(x => x.IdSequencer == favorite.IdSequencer && x.IdUser == favorite.IdUser).FirstOrDefault();
+
+            _context.Favorites.Remove(favoritedelete);
+            await _context.SaveChangesAsync();
+
+            return;
+        }
+
+        [HttpGet("Favorite")]
+        public async Task<IEnumerable<Sequencer>> GetFavorites(Guid iduser)
+        {
+            var usersid = await _context.Favorites
+                .Where(st => st.IdUser == iduser)
+                .ToListAsync();
+
+            var sequencers = new List<Sequencer>();
+
+            foreach (var userId in usersid)
+            {
+                var sequencer = await _context.Sequencers.FindAsync(userId.IdSequencer);
+                if (sequencer != null)
+                {
+                    sequencers.Add(sequencer);
+                }
+            }
+
+
+            return sequencers;
+        }
+
 
     }
 }

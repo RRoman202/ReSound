@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ReSound.Server.Data;
@@ -11,9 +12,11 @@ using ReSound.Server.Data;
 namespace ReSound.Server.Migrations
 {
     [DbContext(typeof(ReSoundContext))]
-    partial class ReSoundContextModelSnapshot : ModelSnapshot
+    [Migration("20240508121342_new4")]
+    partial class new4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -53,33 +56,6 @@ namespace ReSound.Server.Migrations
                     b.HasIndex("UserIdUser");
 
                     b.ToTable("comment", (string)null);
-                });
-
-            modelBuilder.Entity("ReSound.Server.Data.Models.Favorite", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("IdSequencer")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("IdUser")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("SequencerIdSequencer")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("UserIdUser")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SequencerIdSequencer");
-
-                    b.HasIndex("UserIdUser");
-
-                    b.ToTable("favorite", (string)null);
                 });
 
             modelBuilder.Entity("ReSound.Server.Data.Models.Follower", b =>
@@ -424,21 +400,6 @@ namespace ReSound.Server.Migrations
                 });
 
             modelBuilder.Entity("ReSound.Server.Data.Models.Comment", b =>
-                {
-                    b.HasOne("ReSound.Server.Data.Models.Sequencer", "Sequencer")
-                        .WithMany()
-                        .HasForeignKey("SequencerIdSequencer");
-
-                    b.HasOne("ReSound.Server.Data.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserIdUser");
-
-                    b.Navigation("Sequencer");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ReSound.Server.Data.Models.Favorite", b =>
                 {
                     b.HasOne("ReSound.Server.Data.Models.Sequencer", "Sequencer")
                         .WithMany()

@@ -15,6 +15,8 @@ namespace ReSound.Server.Data.Models
 
         public string? Description { get; set; }
 
+        public long Views {  get; set; }
+
         public DateTime? Created { get; set; }
 
         public DateTime? Updated { get; set; }

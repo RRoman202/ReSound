@@ -25,6 +25,7 @@ namespace ReSound.Server.Data
         public DbSet<Track> Tracks { get; set; }
         public DbSet<TrackTemplate> TrackTemplates { get; set; }
         public DbSet<SequencerGenre> SequencerGenres { get; set; }
+        public DbSet<Favorite> Favorites { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -42,6 +43,7 @@ namespace ReSound.Server.Data
             modelBuilder.Entity<Track>().ToTable("track");
             modelBuilder.Entity<TrackTemplate>().ToTable("track_template");
             modelBuilder.Entity<SequencerGenre>().ToTable("sequencer_genre");
+            modelBuilder.Entity<Favorite>().ToTable("favorite");
             base.OnModelCreating(modelBuilder);
         }
 

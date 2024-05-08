@@ -3,6 +3,7 @@ import ModalCreateProject from "./Modals/ModalCreateProject";
 import { useNavigate, Link } from "react-router-dom";
 import changeTheme from "../../NavBar/changeTheme";
 import { hideNav, viewNav } from "../MainTrack/HiddenNavbar";
+import AudioPlayer from "react-audio-player";
 import type { MenuProps, TourProps } from "antd";
 import {
   UploadOutlined,
@@ -86,7 +87,7 @@ const UserPanel = () => (
   </div>
 );
 
-const Home = () => {
+const Favorite = () => {
   viewNav();
 
   const ref1 = useRef(null);
@@ -137,7 +138,7 @@ const Home = () => {
   useEffect(() => {
     const fetchSequencers = async () => {
       const response = await axios.get(
-        "https://localhost:7262/api/Sequencers?iduser=" +
+        "https://localhost:7262/Tracks/Favorite?iduser=" +
           localStorage.getItem("userid")
       );
       setSequencers(response.data);
@@ -153,23 +154,6 @@ const Home = () => {
     if (value === "2") {
       navigate("/favorite");
     }
-  };
-
-  const handleDeleteSequencer = async (id: string) => {
-    try {
-      await axios.delete(`https://localhost:7262/api/Sequencers/${id}`);
-      const updatedSequencers = sequencers.filter(
-        (sequencer) => sequencer.idSequencer !== id
-      );
-      setSequencers(updatedSequencers);
-      setFilteredSequencers(updatedSequencers);
-    } catch (error) {
-      console.error("Error deleting sequencer:", error);
-    }
-  };
-  const openSequencer = async (id: string) => {
-    localStorage.setItem("sequencerid", id);
-    navigate(`/maintrack/${id}`);
   };
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -214,12 +198,9 @@ const Home = () => {
           }}
         >
           <Card className="creatediv" ref={ref2}>
-            <Title level={2}>Создать музыку</Title>
-            <ModalCreateProject
-              setSequencers={setSequencers}
-            ></ModalCreateProject>
+            <Title level={2}>Любимые музыкальные произведения</Title>
           </Card>
-          <Title level={4}>Мои музыкальные произведения</Title>
+
           <Search
             style={{ marginTop: 20 }}
             placeholder="Поиск музыкальных произведений"
@@ -239,60 +220,16 @@ const Home = () => {
               dataSource={filteredSequencers}
               renderItem={(sequencer) => (
                 <List.Item ref={ref3}>
-                  <Card
-                    className="card-project"
-                    title={sequencer.name}
-                    extra={
-                      <Dropdown
-                        overlay={
-                          <Menu>
-                            <Menu.Item key="1">
-                              <Link
-                                to={`/maintrack/${sequencer.idSequencer}`}
-                                onClick={() =>
-                                  openSequencer(sequencer.idSequencer)
-                                }
-                              >
-                                Открыть
-                              </Link>
-                            </Menu.Item>
-                            <Menu.Item key="2">
-                              <ModalUpdateProject
-                                setSequencers={setSequencers}
-                                idsequencer={sequencer.idSequencer}
-                              ></ModalUpdateProject>
-                            </Menu.Item>
-                            <Menu.Item key="3" danger>
-                              <a
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                onClick={() =>
-                                  handleDeleteSequencer(sequencer.idSequencer)
-                                }
-                              >
-                                Удалить
-                              </a>
-                            </Menu.Item>
-                          </Menu>
-                        }
-                      >
-                        <Button icon={<MoreOutlined></MoreOutlined>}></Button>
-                      </Dropdown>
-                    }
-                    hoverable
-                  >
+                  <Card className="card-project" title={sequencer.name}>
                     <p>{sequencer.description}</p>
-                    <Button
-                      type="primary"
-                      onClick={() => openSequencer(sequencer.idSequencer)}
-                    >
-                      <Link
-                        to={`/maintrack/${sequencer.idSequencer}`}
-                        onClick={() => openSequencer(sequencer.idSequencer)}
-                      >
-                        Открыть
-                      </Link>
-                    </Button>
+                    <AudioPlayer
+                      style={{ marginTop: "10px" }}
+                      src={
+                        `https://localhost:7262/track/` + sequencer.idSequencer
+                      }
+                      autoPlay={false}
+                      controls
+                    />
                   </Card>
                 </List.Item>
               )}
@@ -315,4 +252,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Favorite;

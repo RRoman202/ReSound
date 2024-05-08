@@ -97,7 +97,8 @@ namespace ReSound.Server.Repositories.Sequencers
                 Description = sequencerDTO.Description,
                 Private = sequencerDTO.Private,
                 Created = DateTime.UtcNow,
-                Updated = DateTime.UtcNow
+                Updated = DateTime.UtcNow,
+                Views = 0
             };
 
             var settingsSequencer = new SettingsSequencer
