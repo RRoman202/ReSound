@@ -203,7 +203,7 @@ const Home = () => {
           className="sidemenu"
           theme="light"
           mode="inline"
-          defaultSelectedKeys={["4"]}
+          defaultSelectedKeys={["1"]}
           items={itemsMenu}
         />
       </Sider>
@@ -216,6 +216,7 @@ const Home = () => {
           <Card className="creatediv" ref={ref2}>
             <Title level={2}>Создать музыку</Title>
             <ModalCreateProject
+              setFilteredSequencers={setFilteredSequencers}
               setSequencers={setSequencers}
             ></ModalCreateProject>
           </Card>

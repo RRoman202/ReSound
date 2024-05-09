@@ -25,6 +25,8 @@ namespace ReSound.Server.Data.Models
 
         public string? Photo {  get; set; }
 
+       
+
         public User? User { get; set; }
 
         public SettingsSequencer? SettingsSequencer { get; set; }

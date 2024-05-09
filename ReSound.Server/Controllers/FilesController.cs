@@ -31,6 +31,10 @@ namespace ReSound.Server.Controllers
                 return NotFound();
             }
 
+            Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
+            Response.Headers.Add("Pragma", "no-cache");
+            Response.Headers.Add("Expires", "0");
+
             return PhysicalFile(audioFilePath, "audio/mpeg");
         }
 
@@ -54,6 +58,10 @@ namespace ReSound.Server.Controllers
             {
                 return BadRequest("Unsupported file type");
             }
+
+            Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
+            Response.Headers.Add("Pragma", "no-cache");
+            Response.Headers.Add("Expires", "0");
 
             return PhysicalFile(avatarFilePath, mimeType);
         }

@@ -66,6 +66,7 @@ const MusicCard: React.FC<MusicCardProps> = ({
   const [openDrawer, setOpenDrawer] = useState(false);
   const [rate, setRate] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  // const [popularite, setPopularite] = useState(null);
   const showDrawer = () => {
     setOpenDrawer(true);
   };

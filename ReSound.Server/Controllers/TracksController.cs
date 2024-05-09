@@ -44,6 +44,19 @@ namespace ReSound.Server.Controllers
         [HttpGet("Follower")]
         public async Task<IEnumerable<Sequencer>> GetFollowerTracks(Guid iduser)
         {
+            var folderPath = Path.Combine(_env.WebRootPath, "tracks");
+
+            var fileNames = Directory.GetFiles(folderPath)
+                .Select(Path.GetFileName)
+                .ToList();
+
+            var fileNamesNoMp3 = new List<string>();
+
+            foreach (var file in fileNames)
+            {
+                fileNamesNoMp3.Add(file.Replace(".mp3", ""));
+            }
+
             var usersid = await _context.Followers
                 .Where(st => st.IdFollower == iduser)
                 
@@ -64,7 +77,7 @@ namespace ReSound.Server.Controllers
 
             foreach (var user in users)
             {
-                var trackuser = _context.Sequencers.Where(x => x.IdUser == user.IdUser).ToList();
+                var trackuser = _context.Sequencers.Where(x => x.IdUser == user.IdUser && x.Private == false && fileNamesNoMp3.Contains(x.IdSequencer.ToString())).ToList();
                 tracks.AddRange(trackuser);
             }
 
@@ -168,6 +181,62 @@ namespace ReSound.Server.Controllers
             var values = marks.Select(x => x.Value).ToList();
             double rating = values.Average();
             return Math.Round(rating, 2);
+        }
+
+        [HttpGet("popularite")]
+        public async Task<IEnumerable<Sequencer>> GetPopulariteTrack()
+        {
+            var folderPath = Path.Combine(_env.WebRootPath, "tracks");
+
+            var fileNames = Directory.GetFiles(folderPath)
+                .Select(Path.GetFileName)
+                .ToList();
+
+            var fileNamesNoMp3 = new List<string>();
+
+            foreach (var file in fileNames)
+            {
+                fileNamesNoMp3.Add(file.Replace(".mp3", ""));
+            }
+
+            var sequencers = await _context.Sequencers.ToListAsync();
+
+            var populariteList = new List<PopulariteDTO>();
+
+            foreach(var s in sequencers)
+            {
+                populariteList.Add(new PopulariteDTO
+                {
+                    IdSequencer = s.IdSequencer,
+                    Popularite = CalculatePopularite(s.IdSequencer)
+                });
+            }
+
+            var sortedSequencers = populariteList
+                .OrderByDescending(item => item.Popularite)
+                .Select(item => sequencers.First(s => s.IdSequencer == item.IdSequencer)).Where(x => x.Private == false && fileNamesNoMp3.Contains(x.IdSequencer.ToString()))
+                .ToList();
+
+            return sortedSequencers;
+        }
+
+        private double CalculatePopularite(Guid idsequencer)
+        {
+            
+            var marks = _context.Marks.Where(x => x.IdSequencer == idsequencer).Include(x => x.User).ToList();
+            if (marks.Count == 0)
+            {
+                return 0;
+            }
+            var values = marks.Select(x => x.Value).ToList();
+            double rating = values.Average();
+            var likes =_context.Favorites.Where(x => x.IdSequencer == idsequencer).Include(x => x.User).ToList();
+            var like_count = likes.Count();
+            var seq = _context.Sequencers.Find(idsequencer);
+            var views_count = seq.Views;
+            double popularite = (like_count * 1) + (views_count * 0.5) + (rating * 2);
+            
+            return popularite;
         }
 
         [HttpPatch("views")]

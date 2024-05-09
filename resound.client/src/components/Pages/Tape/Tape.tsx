@@ -43,7 +43,13 @@ const Tape: React.FC<TapeProps> = () => {
   useEffect(() => {
     fetchSequencers();
   }, []);
-
+  const fetchPopularite = async () => {
+    const response = await axios.get(
+      "https://localhost:7262/Tracks/popularite"
+    );
+    setTracks(response.data);
+    setFilteredTracks(response.data);
+  };
   const fetchFollowerSequencers = async () => {
     const response = await axios.get(
       "https://localhost:7262/Tracks/Follower?iduser=" +
@@ -68,6 +74,8 @@ const Tape: React.FC<TapeProps> = () => {
       fetchFollowerSequencers();
     } else if (value == "Все") {
       fetchSequencers();
+    } else if (value == "В тренде") {
+      fetchPopularite();
     }
     setCurrentPage(1);
   };

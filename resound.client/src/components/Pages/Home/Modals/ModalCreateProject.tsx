@@ -13,9 +13,13 @@ type FieldType = {
 
 interface SequencerModalProps {
   setSequencers: (sequencers: []) => void;
+  setFilteredSequencers: (sequencers: []) => void;
 }
 
-const ModalChooseSound: React.FC<SequencerModalProps> = ({ setSequencers }) => {
+const ModalChooseSound: React.FC<SequencerModalProps> = ({
+  setSequencers,
+  setFilteredSequencers,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [form] = Form.useForm();
@@ -79,6 +83,7 @@ const ModalChooseSound: React.FC<SequencerModalProps> = ({ setSequencers }) => {
     );
     console.log(responseSequencers.data);
     setSequencers(responseSequencers.data);
+    setFilteredSequencers(responseSequencers.data);
   };
 
   const handleCancel = () => {

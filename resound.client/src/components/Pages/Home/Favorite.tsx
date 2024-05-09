@@ -187,7 +187,7 @@ const Favorite = () => {
           className="sidemenu"
           theme="light"
           mode="inline"
-          defaultSelectedKeys={["4"]}
+          defaultSelectedKeys={["2"]}
           items={itemsMenu}
         />
       </Sider>

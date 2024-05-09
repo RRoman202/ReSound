@@ -39,13 +39,19 @@ namespace ReSound.Server.Controllers
             Directory.CreateDirectory(_avatarFolder);
 
             string fileExtension = Path.GetExtension(avatarDTO.avatarFile.FileName);
-
             string filePath = Path.Combine(_avatarFolder, avatarDTO.IdUser + fileExtension);
+
+            
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
 
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await avatarDTO.avatarFile.CopyToAsync(stream);
             }
+
             return Ok(new { avatarDTO.IdUser });
         }
 
@@ -74,13 +80,19 @@ namespace ReSound.Server.Controllers
 
             string filePath = Path.Combine(_audioFolder, audioDTO.IdSequencer + ".mp3");
 
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+
             using (var stream = new FileStream(filePath, FileMode.Create))
             {
                 await audioDTO.audioFile.CopyToAsync(stream);
             }
+
             return Ok(new { audioDTO.IdSequencer });
         }
-        
+
 
         [AllowAnonymous]
         [HttpPost("register")]
