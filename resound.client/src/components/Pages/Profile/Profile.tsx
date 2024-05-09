@@ -187,6 +187,15 @@ const Profile = () => {
                       autoPlay={false}
                       controls
                     />
+                    <img
+                      width={68}
+                      height={68}
+                      src={
+                        `https://localhost:7262/Files/cover?idsequencer=` +
+                        sequencer.idSequencer
+                      }
+                      style={{ marginLeft: "10px" }}
+                    />
                   </Card>
                 </List.Item>
               )}

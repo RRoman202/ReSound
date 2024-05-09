@@ -66,6 +66,34 @@ namespace ReSound.Server.Controllers
             return PhysicalFile(avatarFilePath, mimeType);
         }
 
+        [HttpGet("cover")]
+        public IActionResult GetCoverFile(Guid idsequencer)
+        {
+            string avatarFolderPath = Path.Combine(_env.WebRootPath, "covers");
+            string avatarFileName = idsequencer + ".png";
+            string avatarFilePath = Path.Combine(avatarFolderPath, avatarFileName);
+
+            if (!System.IO.File.Exists(avatarFilePath))
+            {
+                return NotFound();
+            }
+
+            string fileExtension = Path.GetExtension(avatarFileName);
+
+            string mimeType = MimeTypes.GetMimeType(fileExtension);
+
+            if (mimeType == null)
+            {
+                return BadRequest("Unsupported file type");
+            }
+
+            Response.Headers.Add("Cache-Control", "no-cache, no-store, must-revalidate");
+            Response.Headers.Add("Pragma", "no-cache");
+            Response.Headers.Add("Expires", "0");
+
+            return PhysicalFile(avatarFilePath, mimeType);
+        }
+
 
         [HttpGet]
         public IActionResult GetFileNames()

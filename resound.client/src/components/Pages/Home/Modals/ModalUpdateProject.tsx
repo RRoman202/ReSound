@@ -13,16 +13,19 @@ type FieldType = {
 
 interface SequencerModalProps {
   setSequencers: (sequencers: []) => void;
+  setFilteredSequencers: (sequencers: []) => void;
   idsequencer: string;
 }
 
 const ModalUpdateProject: React.FC<SequencerModalProps> = ({
   setSequencers,
   idsequencer,
+  setFilteredSequencers,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [sequencerData, setSequencerData] = useState<Sequencer | null>(null);
+  const [file, setFile] = useState(null);
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
@@ -42,11 +45,29 @@ const ModalUpdateProject: React.FC<SequencerModalProps> = ({
     setIsModalOpen(true);
   };
 
-  const handleOk = () => {
+  const changeCover = async (idsequencer: string) => {
+    const blob = file.slice(0, file.size, file.type);
+    console.log(blob);
+    const formData = new FormData();
+    formData.append("coverFile", blob, file.name);
+    formData.append("idsequencer", idsequencer);
+    const response = await axios.post(
+      "https://localhost:7262/Users/upload-cover",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    window.location.reload();
+  };
+
+  const handleOk = async () => {
     setIsLoading(true);
     form
       .validateFields()
-      .then((values) => {
+      .then(async (values) => {
         // Get user ID from localStorage
 
         // Check if name is filled
@@ -55,6 +76,9 @@ const ModalUpdateProject: React.FC<SequencerModalProps> = ({
           // Display error message to the user
           console.error("Name is required!");
           return;
+        }
+        if (values.photo) {
+          await changeCover(idsequencer);
         }
 
         fetch("https://localhost:7262/api/Sequencers", {
@@ -69,6 +93,7 @@ const ModalUpdateProject: React.FC<SequencerModalProps> = ({
             if (response.ok) {
               // Success: Close modal, navigate, and show success message
               setIsModalOpen(false);
+
               getSequencers();
 
               // Add success message here (e.g., using a notification or toast)
@@ -95,6 +120,7 @@ const ModalUpdateProject: React.FC<SequencerModalProps> = ({
     );
     console.log(responseSequencers.data);
     setSequencers(responseSequencers.data);
+    setFilteredSequencers(responseSequencers.data);
   };
 
   const handleCancel = () => {
@@ -150,6 +176,17 @@ const ModalUpdateProject: React.FC<SequencerModalProps> = ({
               rules={[{ required: false }]}
             >
               <Input.TextArea rows={4} />
+            </Form.Item>
+
+            <Form.Item id="photo" name="photo" label="Обложка">
+              <Input
+                type="file"
+                accept=".png"
+                onChange={(e) => {
+                  setFile(e.target.files[0]);
+                }}
+                value={""}
+              ></Input>
             </Form.Item>
 
             <Form.Item

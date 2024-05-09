@@ -111,6 +111,18 @@ namespace ReSound.Server.Controllers
             return comments;
         }
 
+        [HttpGet("last-comment")]
+        public async Task<IEnumerable<Comment>> GetLastCommentTrack()
+        {
+            var comments = await _context.Comments
+                .Include(x => x.User)
+                .OrderByDescending(x => x.Created)
+                .Take(3) 
+                .ToListAsync();
+
+            return comments;
+        }
+
         [HttpPost("comment")]
         public async Task<IActionResult> PostComment(CommentDTO comment)
         {

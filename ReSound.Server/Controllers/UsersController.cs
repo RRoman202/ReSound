@@ -21,6 +21,7 @@ namespace ReSound.Server.Controllers
 
         private readonly string _audioFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "tracks");
         private readonly string _avatarFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "avatars");
+        private readonly string _coverFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "covers");
 
         public UsersController(ReSoundContext context, IConfiguration configuration)
         {
@@ -55,6 +56,33 @@ namespace ReSound.Server.Controllers
             return Ok(new { avatarDTO.IdUser });
         }
 
+        [HttpPost("upload-cover")]
+        public async Task<IActionResult> UploadCover(CoverDTO coverDTO)
+        {
+            if (coverDTO.coverFile == null || coverDTO.coverFile.Length == 0)
+            {
+                return BadRequest("error");
+            }
+
+            Directory.CreateDirectory(_coverFolder);
+
+            string fileExtension = Path.GetExtension(coverDTO.coverFile.FileName);
+            string filePath = Path.Combine(_coverFolder, coverDTO.IdSequencer + fileExtension);
+
+
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await coverDTO.coverFile.CopyToAsync(stream);
+            }
+
+            return Ok(new { coverDTO.IdSequencer });
+        }
+
         [HttpPatch("update")]
         public async Task PatchUser([FromBody] UserUpdateDTO userUpdateDTO)
         {
@@ -66,6 +94,13 @@ namespace ReSound.Server.Controllers
             await _context.SaveChangesAsync();
 
             return;
+        }
+
+        [HttpGet("users-count")]
+        public async Task<long> GetCountUser()
+        {
+            var users = await _context.Users.ToListAsync();
+            return users.Count;
         }
 
         [HttpPost("upload-audio")]

@@ -296,7 +296,9 @@ const MusicCard: React.FC<MusicCardProps> = ({
           <Image
             width={128}
             height={128}
-            src={cover}
+            src={
+              `https://localhost:7262/Files/cover?idsequencer=` + idSequencer
+            }
             style={{ marginTop: "35px" }}
           />
         </Col>

@@ -1,5 +1,5 @@
 import { Modal, Button, Form, Input, Checkbox, Spin } from "antd";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate, Link } from "react-router-dom";
 import { hideNav, viewNav } from "../../MainTrack/HiddenNavbar";
@@ -22,6 +22,7 @@ const ModalChooseSound: React.FC<SequencerModalProps> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [file, setFile] = useState(null);
   const [form] = Form.useForm();
   const navigate = useNavigate();
 
@@ -53,11 +54,19 @@ const ModalChooseSound: React.FC<SequencerModalProps> = ({
           },
           body: JSON.stringify({ ...values, idUser: userId }),
         })
-          .then((response) => {
+          .then(async (response) => {
             if (response.ok) {
               // Success: Close modal, navigate, and show success message
               setIsModalOpen(false);
               getSequencers();
+              const data = await response.json();
+              if (values.photo) {
+                await changeCover(data.idSequencer);
+              }
+
+              // if (values.photo) {
+              //   changeCover(response);
+              // }
 
               // Add success message here (e.g., using a notification or toast)
             } else {
@@ -74,6 +83,24 @@ const ModalChooseSound: React.FC<SequencerModalProps> = ({
         console.error("Validation failed:", errorInfo);
         // Display validation errors to the user
       });
+  };
+
+  const changeCover = async (idsequencer: string) => {
+    const blob = file.slice(0, file.size, file.type);
+    console.log(blob);
+    const formData = new FormData();
+    formData.append("coverFile", blob, file.name);
+    formData.append("idsequencer", idsequencer);
+    const response = await axios.post(
+      "https://localhost:7262/Users/upload-cover",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    window.location.reload();
   };
 
   const getSequencers = async () => {
@@ -135,6 +162,17 @@ const ModalChooseSound: React.FC<SequencerModalProps> = ({
               rules={[{ required: false }]}
             >
               <Input.TextArea rows={4} />
+            </Form.Item>
+
+            <Form.Item id="photo" name="photo" label="Обложка">
+              <Input
+                type="file"
+                accept=".png"
+                onChange={(e) => {
+                  setFile(e.target.files[0]);
+                }}
+                value={""}
+              ></Input>
             </Form.Item>
 
             <Form.Item

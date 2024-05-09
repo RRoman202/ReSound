@@ -259,6 +259,7 @@ const Home = () => {
                             </Menu.Item>
                             <Menu.Item key="2">
                               <ModalUpdateProject
+                                setFilteredSequencers={setFilteredSequencers}
                                 setSequencers={setSequencers}
                                 idsequencer={sequencer.idSequencer}
                               ></ModalUpdateProject>

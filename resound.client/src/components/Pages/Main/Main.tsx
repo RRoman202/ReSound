@@ -1,8 +1,11 @@
 import Layout from "antd/es/layout/layout";
-import React from "react";
-import { Carousel, Flex, Space, Button, List, Typography } from "antd";
+import React, { useState, useEffect } from "react";
+import { Carousel, Flex, Space, Button, List, Typography, Card } from "antd";
 import { useNavigate } from "react-router-dom";
 import background from "./background.png";
+import AudioPlayer from "react-audio-player";
+import axios from "axios";
+import moment from "moment";
 import "./Main.css";
 
 const contentStyle: React.CSSProperties = {
@@ -17,9 +20,35 @@ const contentStyle: React.CSSProperties = {
 const { Header, Content, Footer } = Layout;
 
 const Main = () => {
+  const [popularite, setPopularite] = useState([]);
+  const [lastcomment, setLastComment] = useState([]);
+  const [usercount, setUserCount] = useState(null);
   const onChange = (currentSlide: number) => {
     console.log(currentSlide);
   };
+  const fetchPopularite = async () => {
+    const response = await axios.get(
+      "https://localhost:7262/Tracks/popularite"
+    );
+    setPopularite(response.data);
+  };
+  const fetchLastComment = async () => {
+    const response = await axios.get(
+      "https://localhost:7262/Tracks/last-comment"
+    );
+    setLastComment(response.data);
+  };
+  const fetchUserCount = async () => {
+    const response = await axios.get(
+      "https://localhost:7262/Users/users-count"
+    );
+    setUserCount(response.data);
+  };
+  useEffect(() => {
+    fetchPopularite();
+    fetchUserCount();
+    fetchLastComment();
+  }, []);
   return (
     <div style={{ backgroundColor: "black" }}>
       <Layout style={{ alignItems: "center", backgroundColor: "black" }}>
@@ -99,7 +128,28 @@ const Main = () => {
       </Layout>
       <Layout style={{ backgroundColor: "lightblue" }}>
         <Typography.Title level={3}>Популярные треки</Typography.Title>
-        <List></List>
+        <List
+          grid={{ gutter: 12, column: 3 }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+          }}
+          dataSource={popularite.slice(0, 3)}
+          renderItem={(sequencer) => (
+            <List.Item>
+              <Card className="card-project" title={sequencer.name}>
+                <p>{sequencer.description}</p>
+                <AudioPlayer
+                  style={{ marginTop: "10px" }}
+                  src={`https://localhost:7262/track/` + sequencer.idSequencer}
+                  autoPlay={false}
+                  controls
+                />
+              </Card>
+            </List.Item>
+          )}
+        />
       </Layout>
       <Layout style={{ backgroundColor: "lightblue" }}>
         <Typography.Title level={3}>Последние треки</Typography.Title>
@@ -107,7 +157,35 @@ const Main = () => {
       </Layout>
       <Layout style={{ backgroundColor: "#1677ff" }}>
         <Typography.Title level={3}>Отзывы</Typography.Title>
-        <List></List>
+        <List
+          grid={{ gutter: 12, column: 3 }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+          }}
+          dataSource={lastcomment}
+          renderItem={(comment) => (
+            <List.Item>
+              <Card className="card-project" title={comment.user.login}>
+                <div>
+                  <Typography.Text style={{ marginRight: "10px" }}>
+                    {comment.content}
+                  </Typography.Text>
+                  <Typography.Text style={{ fontSize: "11px" }}>
+                    {moment(comment.created).format("DD MMMM YYYY HH:mm")}
+                  </Typography.Text>
+                </div>
+              </Card>
+            </List.Item>
+          )}
+        />
+      </Layout>
+      <Layout>
+        <Typography.Title level={3}>
+          {" "}
+          Количество пользователей: {usercount}
+        </Typography.Title>
       </Layout>
     </div>
   );

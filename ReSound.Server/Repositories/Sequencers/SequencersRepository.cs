@@ -192,6 +192,7 @@ namespace ReSound.Server.Repositories.Sequencers
             sequencer.Name = sequencerPatchDTO.Name;
             sequencer.Description = sequencerPatchDTO.Description;
             sequencer.Private = sequencerPatchDTO.Private;
+            
 
             
             await _context.SaveChangesAsync();
