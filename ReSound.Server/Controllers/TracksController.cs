@@ -293,6 +293,25 @@ namespace ReSound.Server.Controllers
             return newfavorite;
         }
 
+        [HttpPost("seq-genre")]
+        public async Task<SequencerGenre> PostSequencerGenre(SequencerGenreDTO sequencerGenreDTO)
+        {
+            foreach(var g in sequencerGenreDTO.genres)
+            {
+                var seqgen = new SequencerGenre
+                {
+                    Id = Guid.NewGuid(),
+                    IdGenre = new Guid(g),
+                    IdSequencer = sequencerGenreDTO.IdSequencer,
+
+                };
+                _context.SequencerGenres.Add(seqgen);
+            }
+            await _context.SaveChangesAsync();
+
+            return null;
+        }
+
         [HttpDelete("Favorite")]
         public async Task DeleteFavorite(FavoriteDTO favorite)
         {

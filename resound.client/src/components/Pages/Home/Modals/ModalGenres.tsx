@@ -16,7 +16,13 @@ interface UserModalProps {
   userlogin: string;
 }
 
-const ModalGenres: React.FC<UserModalProps> = () => {
+interface SequencerModalProps {
+  setSequencers: (sequencers: []) => void;
+  setFilteredSequencers: (sequencers: []) => void;
+  idsequencer: string;
+}
+
+const ModalGenres: React.FC<SequencerModalProps> = ({ idsequencer }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [genres, setGenres] = useState([]);
@@ -29,6 +35,23 @@ const ModalGenres: React.FC<UserModalProps> = () => {
     setGenres(response.data);
   };
 
+  const postGenre = async () => {
+    const formData = new FormData();
+
+    selectedgenres.forEach((genre) => formData.append("genres", genre));
+    formData.append("idsequencer", "9dcbe82d-cfc0-4198-9962-b05050f45218");
+    const response = await axios.post(
+      "https://localhost:7262/Tracks/seq-genre",
+      formData,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      }
+    );
+  };
+
   useEffect(() => {
     fetchGenres();
   }, []);
@@ -39,6 +62,9 @@ const ModalGenres: React.FC<UserModalProps> = () => {
 
   const handleOk = async () => {
     setIsLoading(true);
+    await postGenre();
+    setIsLoading(false);
+    setIsModalOpen(false);
   };
 
   const handleCancel = () => {
