@@ -10,6 +10,7 @@ import {
   Pagination,
 } from "antd";
 import MusicCard from "./MusicCard";
+import MiniMusicCard from "./MiniMusicCard";
 import "./Tape.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -160,6 +161,9 @@ const Tape: React.FC<TapeProps> = () => {
               bordered={false}
               style={{ marginTop: "20px" }}
             >
+              {paginatedFilteredTracks.slice(0, 3).map((track) => (
+                <MiniMusicCard key={track.name} {...track} />
+              ))}
               <Row justify="space-between">
                 <Col span={24}></Col>
               </Row>

@@ -4,6 +4,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate, Link } from "react-router-dom";
 import { hideNav, viewNav } from "../../MainTrack/HiddenNavbar";
 import axios from "axios";
+import ModalGenres from "./ModalGenres";
 
 type FieldType = {
   name?: string;
@@ -174,6 +175,8 @@ const ModalChooseSound: React.FC<SequencerModalProps> = ({
                 value={""}
               ></Input>
             </Form.Item>
+
+            <ModalGenres></ModalGenres>
 
             <Form.Item
               id="private"

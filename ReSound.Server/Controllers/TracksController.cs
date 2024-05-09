@@ -195,6 +195,13 @@ namespace ReSound.Server.Controllers
             return Math.Round(rating, 2);
         }
 
+        [HttpGet("genres")]
+        public async Task<IEnumerable<Genre>> GetGenres()
+        {
+            var genres = await _context.Genres.ToListAsync();
+            return genres;
+        }
+
         [HttpGet("popularite")]
         public async Task<IEnumerable<Sequencer>> GetPopulariteTrack()
         {

@@ -179,6 +179,7 @@ const Profile = () => {
                 <List.Item>
                   <Card className="card-project" title={sequencer.name}>
                     <p>{sequencer.description}</p>
+
                     <AudioPlayer
                       style={{ marginTop: "10px" }}
                       src={
