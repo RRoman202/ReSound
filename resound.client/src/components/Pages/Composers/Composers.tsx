@@ -13,6 +13,7 @@ import {
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ComposerCard from "./ComposerCard";
+import MiniComposerCard from "./MiniComposerCard";
 import "./Tape.css";
 
 const { Header, Content, Footer } = Layout;
@@ -37,6 +38,7 @@ const Composers: React.FC<ComposersProps> = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [popularitemonth, setPopularitemonth] = useState([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -45,7 +47,15 @@ const Composers: React.FC<ComposersProps> = () => {
       setFilteredUsers(response.data);
     };
     fetchUsers();
+    fetchPopulariteMonth();
   }, []);
+
+  const fetchPopulariteMonth = async () => {
+    const response = await axios.get(
+      "https://localhost:7262/Users/popularite-month"
+    );
+    setPopularitemonth(response.data);
+  };
 
   const allUser = async () => {
     const response = await axios.get("https://localhost:7262/Users");
@@ -138,6 +148,9 @@ const Composers: React.FC<ComposersProps> = () => {
               style={{ marginTop: "20px" }}
             >
               <Row justify="space-between">
+                {popularitemonth.map((user) => (
+                  <MiniComposerCard key={user.login} {...user} />
+                ))}
                 <Col span={24}></Col>
               </Row>
             </Card>

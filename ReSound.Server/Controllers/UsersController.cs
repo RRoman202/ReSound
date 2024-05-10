@@ -305,6 +305,35 @@ namespace ReSound.Server.Controllers
 
         }
 
+        [HttpGet("popularite-month")]
+        public async Task<IEnumerable<User>> GetPopulariteMonthUsers()
+        {
+            var users = await _context.Users.ToListAsync();
+
+
+            var populariteList = new List<PopulariteUserDTO>();
+
+            foreach (var user in users)
+            {
+                var followers = await _context.Followers.Where(x => x.IdUser == user.IdUser).ToListAsync();
+                var followers_count = followers.Count();
+                populariteList.Add(new PopulariteUserDTO
+                {
+                    IdUser = user.IdUser,
+                    Followers = followers_count
+                });
+            }
+
+            var sortedUsers = populariteList
+                .OrderByDescending(item => item.Followers)
+                .Select(item => users.First(s => s.IdUser == item.IdUser))
+                .ToList();
+
+            return sortedUsers.Take(3);
+
+
+        }
+
         [HttpGet("popularite-track")]
         public async Task<IEnumerable<Sequencer>> GetPopulariteUsersTrack()
         {

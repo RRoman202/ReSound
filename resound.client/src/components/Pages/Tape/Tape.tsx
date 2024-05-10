@@ -40,6 +40,7 @@ const Tape: React.FC<TapeProps> = () => {
   const [pageSize, setPageSize] = useState(10);
   const [selectedgenres, setSelectedGenres] = useState<string[]>([]);
   const [genreName, setGenreName] = useState(null);
+  const [popularitemonth, setPopularitemonth] = useState([]);
   const fetchSequencers = async () => {
     const response = await axios.get("https://localhost:7262/Tracks");
     setTracks(response.data);
@@ -47,6 +48,7 @@ const Tape: React.FC<TapeProps> = () => {
   };
   useEffect(() => {
     fetchSequencers();
+    fetchPopulariteMonth();
   }, []);
 
   const changeGenres = async (idgenre: string) => {
@@ -61,6 +63,13 @@ const Tape: React.FC<TapeProps> = () => {
     setFilteredTracks(response.data);
     getGenreName();
     setSelectedGenres([]);
+  };
+
+  const fetchPopulariteMonth = async () => {
+    const response = await axios.get(
+      "https://localhost:7262/Tracks/popularite-month"
+    );
+    setPopularitemonth(response.data);
   };
 
   const fetchPopularite = async () => {
@@ -266,7 +275,7 @@ const Tape: React.FC<TapeProps> = () => {
               bordered={false}
               style={{ marginTop: "20px" }}
             >
-              {paginatedFilteredTracks.slice(0, 3).map((track) => (
+              {popularitemonth.map((track) => (
                 <MiniMusicCard key={track.name} {...track} />
               ))}
               <Row justify="space-between">

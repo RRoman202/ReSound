@@ -239,6 +239,43 @@ namespace ReSound.Server.Controllers
             return sortedSequencers;
         }
 
+        [HttpGet("popularite-month")]
+        public async Task<IEnumerable<Sequencer>> GetPopulariteMonthTrack()
+        {
+            var folderPath = Path.Combine(_env.WebRootPath, "tracks");
+
+            var fileNames = Directory.GetFiles(folderPath)
+                .Select(Path.GetFileName)
+                .ToList();
+
+            var fileNamesNoMp3 = new List<string>();
+
+            foreach (var file in fileNames)
+            {
+                fileNamesNoMp3.Add(file.Replace(".mp3", ""));
+            }
+
+            var sequencers = await _context.Sequencers.ToListAsync();
+
+            var populariteList = new List<PopulariteDTO>();
+
+            foreach (var s in sequencers)
+            {
+                populariteList.Add(new PopulariteDTO
+                {
+                    IdSequencer = s.IdSequencer,
+                    Popularite = CalculatePopularite(s.IdSequencer)
+                });
+            }
+
+            var sortedSequencers = populariteList
+                .OrderByDescending(item => item.Popularite)
+                .Select(item => sequencers.First(s => s.IdSequencer == item.IdSequencer)).Where(x => x.Private == false && fileNamesNoMp3.Contains(x.IdSequencer.ToString()))
+                .ToList();
+
+            return sortedSequencers.Take(3);
+        }
+
         private double CalculatePopularite(Guid idsequencer)
         {
             

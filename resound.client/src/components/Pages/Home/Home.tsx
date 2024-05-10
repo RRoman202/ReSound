@@ -57,7 +57,6 @@ const menu = (
     <Menu.Item key="1">
       <ModalUpdateUser userlogin={user.login}></ModalUpdateUser>
     </Menu.Item>
-    <Menu.Item key="2">Выход</Menu.Item>
   </Menu>
 );
 
