@@ -97,12 +97,12 @@ const Main = () => {
           Создайте свою музыку прямо сейчас!
         </h2>
 
-        <Button
+        {/* <Button
           type="primary"
           style={{ width: "300px", height: "50px", fontSize: "25px" }}
         >
           Начать
-        </Button>
+        </Button> */}
       </Layout>
       <Layout>
         <Carousel

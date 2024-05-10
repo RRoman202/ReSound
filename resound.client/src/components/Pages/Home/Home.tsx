@@ -153,6 +153,9 @@ const Home = () => {
     if (value === "2") {
       navigate("/favorite");
     }
+    if (value === "3") {
+      navigate("/statistic");
+    }
   };
 
   const handleDeleteSequencer = async (id: string) => {

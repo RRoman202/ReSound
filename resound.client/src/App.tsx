@@ -13,6 +13,7 @@ import axios from "axios";
 import Composers from "./components/Pages/Composers/Composers";
 import Profile from "./components/Pages/Profile/Profile";
 import Favorite from "./components/Pages/Home/Favorite";
+import Statistic from "./components/Pages/Home/Statistic";
 
 function App() {
   document.title = "ReSound";
@@ -60,6 +61,7 @@ function App() {
               <Route path="/feed" element={<Tape />} />
               <Route path="/composers" element={<Composers />} />
               <Route path="/user/:user" element={<Profile />} />
+              <Route path="/statistic" element={<Statistic></Statistic>} />
             </>
           ) : (
             <>

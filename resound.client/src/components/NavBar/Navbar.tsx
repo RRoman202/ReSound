@@ -50,15 +50,16 @@ export default function NavBar({ setIsLoggedIn, isLoggedIn }: NavBarProps) {
         </a>
       ),
     },
+
     {
       key: "2",
       label: (
         <a
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/favorite")}
         >
-          Мои проекты
+          Любимое
         </a>
       ),
     },
@@ -68,26 +69,14 @@ export default function NavBar({ setIsLoggedIn, isLoggedIn }: NavBarProps) {
         <a
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => navigate("/home")}
-        >
-          Любимое
-        </a>
-      ),
-    },
-    {
-      key: "4",
-      label: (
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/statistic")}
         >
           Статистика
         </a>
       ),
     },
     {
-      key: "5",
+      key: "4",
       label: (
         <a target="_blank" rel="noopener noreferrer" onClick={handleLogout}>
           Выход

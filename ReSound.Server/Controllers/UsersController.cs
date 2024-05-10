@@ -367,5 +367,24 @@ namespace ReSound.Server.Controllers
             var followers = _context.Followers.Where(x => x.IdUser ==  iduser).ToList();
             return followers.Count();
         }
+
+        [HttpGet("user-track")]
+        public async Task<IEnumerable<Sequencer>> GetUserTrack(Guid iduser)
+        {
+            var folderPath = Path.Combine(_env.WebRootPath, "tracks");
+
+            var fileNames = Directory.GetFiles(folderPath)
+                .Select(Path.GetFileName)
+                .ToList();
+
+            var fileNamesNoMp3 = new List<string>();
+
+            foreach (var file in fileNames)
+            {
+                fileNamesNoMp3.Add(file.Replace(".mp3", ""));
+            }
+            var sequencers = await _context.Sequencers.Where(x => x.IdUser == iduser && x.Private == false && fileNamesNoMp3.Contains(x.IdSequencer.ToString())).ToListAsync();
+            return sequencers;
+        }
     }
 }

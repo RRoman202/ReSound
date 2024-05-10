@@ -5,6 +5,7 @@ import changeTheme from "../../NavBar/changeTheme";
 import { hideNav, viewNav } from "../MainTrack/HiddenNavbar";
 import AudioPlayer from "react-audio-player";
 import type { MenuProps, TourProps } from "antd";
+import { Line } from "@ant-design/charts";
 import {
   UploadOutlined,
   UserOutlined,
@@ -87,7 +88,7 @@ const UserPanel = () => (
   </div>
 );
 
-const Favorite = () => {
+const Statistic = () => {
   viewNav();
 
   const ref1 = useRef(null);
@@ -131,21 +132,30 @@ const Favorite = () => {
   ];
 
   const navigate = useNavigate();
-  const [sequencers, setSequencers] = useState([]);
-  const [filteredSequencers, setFilteredSequencers] = useState([]);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [data, setData] = useState([]);
+
+  const [props, setProps] = useState([]);
 
   useEffect(() => {
-    const fetchSequencers = async () => {
-      const response = await axios.get(
-        "https://localhost:7262/Tracks/Favorite?iduser=" +
-          localStorage.getItem("userid")
-      );
-      setSequencers(response.data);
-      setFilteredSequencers(response.data);
-    };
-    fetchSequencers();
+    getSequencers();
   }, []);
+
+  const setPropsFunc = async () => {
+    const propss = {
+      data,
+      xField: "name",
+      yField: "views",
+    };
+
+    setProps(propss);
+    console.log(sequencers);
+    console.log(props);
+    console.log(props2);
+  };
+
+  useEffect(() => {
+    setPropsFunc();
+  }, [data]);
 
   const changeMenu = async (value: string) => {
     if (value === "1") {
@@ -159,13 +169,18 @@ const Favorite = () => {
     }
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    const filtered = sequencers.filter((sequencer) =>
-      sequencer.name.toLowerCase().includes(e.target.value.toLowerCase())
+  const getSequencers = async () => {
+    const response = await axios.get(
+      "https://localhost:7262/Users/user-track?iduser=" +
+        localStorage.getItem("userid")
     );
-    setFilteredSequencers(filtered);
+
+    setData(response.data);
   };
+
+  if (!data && !props) {
+    return <></>;
+  }
 
   return (
     <Layout>
@@ -190,7 +205,7 @@ const Favorite = () => {
           className="sidemenu"
           theme="light"
           mode="inline"
-          defaultSelectedKeys={["2"]}
+          defaultSelectedKeys={["3"]}
           items={itemsMenu}
         />
       </Sider>
@@ -201,43 +216,12 @@ const Favorite = () => {
           }}
         >
           <Card className="creatediv" ref={ref2}>
-            <Title level={2}>Любимые музыкальные произведения</Title>
+            <Title level={2}>Статистика</Title>
           </Card>
-
-          <Search
-            style={{ marginTop: 20 }}
-            placeholder="Поиск музыкальных произведений"
-            enterButton
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
-          <div>
-            <List
-              className="listprojects"
-              grid={{ gutter: 12, column: 3 }}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "flex-start",
-              }}
-              dataSource={filteredSequencers}
-              renderItem={(sequencer) => (
-                <List.Item ref={ref3}>
-                  <Card className="card-project" title={sequencer.name}>
-                    <p>{sequencer.description}</p>
-                    <AudioPlayer
-                      style={{ marginTop: "10px" }}
-                      src={
-                        `https://localhost:7262/track/` + sequencer.idSequencer
-                      }
-                      autoPlay={false}
-                      controls
-                    />
-                  </Card>
-                </List.Item>
-              )}
-            />
-          </div>
+          <Typography.Title level={3}>
+            Количество просмотров у ваших треков
+          </Typography.Title>
+          <Line {...props} />
         </Content>
         <Tour
           open={openTour}
@@ -245,14 +229,8 @@ const Favorite = () => {
           steps={steps}
         />
       </Layout>
-      <FloatButton
-        onClick={() => setOpenTour(true)}
-        icon={<QuestionCircleOutlined />}
-        type="primary"
-        style={{ right: 94 }}
-      />
     </Layout>
   );
 };
 
-export default Favorite;
+export default Statistic;
