@@ -7,6 +7,7 @@ import { hideNav, viewNav } from "../MainTrack/HiddenNavbar";
 import { useParams } from "react-router-dom";
 import { ClearCanv } from "../../Canvas/ClearCanvasBtn";
 import { RecordCanvas } from "../../sequencer/SoundControl/SaveAudio";
+import { RecordCanvasTrack } from "../../sequencer/SoundControl/SaveTrack";
 import "../../sequencer/SoundControl/SaveAudio";
 import PianoTiles from "../../sequencer/ui/PianoTiles";
 import { observer } from "mobx-react";
@@ -219,7 +220,7 @@ const Piano = observer(() => {
               <ModalChooseSound></ModalChooseSound>
               <BpmInput></BpmInput>
               <Button
-                onClick={RecordCanvas}
+                onClick={RecordCanvasTrack}
                 type="primary"
                 className="record-button"
               >
