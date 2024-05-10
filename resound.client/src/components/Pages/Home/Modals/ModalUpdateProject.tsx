@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate, Link } from "react-router-dom";
 import { hideNav, viewNav } from "../../MainTrack/HiddenNavbar";
+import ModalGenres from "./ModalGenres";
 import axios from "axios";
 
 type FieldType = {
@@ -188,6 +189,8 @@ const ModalUpdateProject: React.FC<SequencerModalProps> = ({
                 value={""}
               ></Input>
             </Form.Item>
+
+            <ModalGenres idsequencer={idsequencer}></ModalGenres>
 
             <Form.Item
               id="private"

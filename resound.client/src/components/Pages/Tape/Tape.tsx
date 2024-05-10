@@ -9,6 +9,8 @@ import {
   Input,
   Pagination,
 } from "antd";
+
+import { CloseOutlined } from "@ant-design/icons";
 import MusicCard from "./MusicCard";
 import MiniMusicCard from "./MiniMusicCard";
 import "./Tape.css";
@@ -36,6 +38,8 @@ const Tape: React.FC<TapeProps> = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [selectedgenres, setSelectedGenres] = useState<string[]>([]);
+  const [genreName, setGenreName] = useState(null);
   const fetchSequencers = async () => {
     const response = await axios.get("https://localhost:7262/Tracks");
     setTracks(response.data);
@@ -44,6 +48,21 @@ const Tape: React.FC<TapeProps> = () => {
   useEffect(() => {
     fetchSequencers();
   }, []);
+
+  const changeGenres = async (idgenre: string) => {
+    selectedgenres.push(idgenre);
+    setSelectedGenres(selectedgenres);
+
+    const response = await axios.get(
+      "https://localhost:7262/Tracks/track-by-genre?genres=" +
+        selectedgenres.join(",")
+    );
+    setTracks(response.data);
+    setFilteredTracks(response.data);
+    getGenreName();
+    setSelectedGenres([]);
+  };
+
   const fetchPopularite = async () => {
     const response = await axios.get(
       "https://localhost:7262/Tracks/popularite"
@@ -69,6 +88,13 @@ const Tape: React.FC<TapeProps> = () => {
     "Jazz",
     "Country",
   ];
+
+  const getGenreName = async () => {
+    const response = await axios.get(
+      "https://localhost:7262/Tracks/genre-name?idgenre=" + selectedgenres[0]
+    );
+    setGenreName(response.data.name);
+  };
 
   const handleSubscriptionChange = (value: string) => {
     if (value == "Подписки") {
@@ -118,7 +144,23 @@ const Tape: React.FC<TapeProps> = () => {
               size="large"
             />
 
-            <Card title="Треки" bordered={false}>
+            <Card
+              title="Треки"
+              bordered={false}
+              extra={
+                <Flex>
+                  <p>{genreName}</p>
+                  <Button
+                    icon={<CloseOutlined></CloseOutlined>}
+                    style={{ marginLeft: "10px", marginTop: "10px" }}
+                    onClick={() => {
+                      setGenreName(null);
+                      fetchSequencers();
+                    }}
+                  ></Button>
+                </Flex>
+              }
+            >
               <Search
                 placeholder="Поиск музыкальных произведений"
                 enterButton
@@ -140,19 +182,82 @@ const Tape: React.FC<TapeProps> = () => {
           <Col span={6} style={{ marginTop: "40px" }}>
             <Flex gap="small" align="flex-start" vertical>
               <Flex gap="small">
-                <Button shape="round">Рок</Button>
-                <Button shape="round">Поп</Button>
-                <Button shape="round">Хип-хоп</Button>
-                <Button shape="round">Джаз</Button>
+                <Button
+                  shape="round"
+                  onClick={() =>
+                    changeGenres("aaeaa8ab-ff7e-4b03-abe5-ced849477a64")
+                  }
+                >
+                  Рок
+                </Button>
+                <Button
+                  shape="round"
+                  onClick={() =>
+                    changeGenres("a26454e5-c24c-45be-b13b-b35bc9bf20e6")
+                  }
+                >
+                  Поп
+                </Button>
+                <Button
+                  shape="round"
+                  onClick={() =>
+                    changeGenres("6edcca69-38d5-4585-a656-dae75b10ed66")
+                  }
+                >
+                  Хип-хоп
+                </Button>
+                <Button
+                  shape="round"
+                  onClick={() =>
+                    changeGenres("dee04dc9-44d5-4fec-9420-76da44f1ba22")
+                  }
+                >
+                  Джаз
+                </Button>
               </Flex>
               <Flex gap="small">
-                <Button shape="round">Электронная</Button>
-                <Button shape="round">Классическая</Button>
+                <Button
+                  shape="round"
+                  onClick={() =>
+                    changeGenres("1896b605-ec30-4934-9f0c-02fde1b82b1d")
+                  }
+                >
+                  Электронная
+                </Button>
+                <Button
+                  shape="round"
+                  onClick={() =>
+                    changeGenres("150805fd-a799-4c0d-86bd-d9615d6ff61b")
+                  }
+                >
+                  Классическая
+                </Button>
               </Flex>
               <Flex gap="small">
-                <Button shape="round">Блюз</Button>
-                <Button shape="round">Металл</Button>
-                <Button shape="round">Кантри</Button>
+                <Button
+                  shape="round"
+                  onClick={() =>
+                    changeGenres("05143832-c84d-4182-be93-d1e3d8c99763")
+                  }
+                >
+                  Блюз
+                </Button>
+                <Button
+                  shape="round"
+                  onClick={() =>
+                    changeGenres("812fca01-1f40-4b8d-8891-23678a8610b9")
+                  }
+                >
+                  Металл
+                </Button>
+                <Button
+                  shape="round"
+                  onClick={() =>
+                    changeGenres("3e7def6f-73a7-4f88-a778-b3de8af695b1")
+                  }
+                >
+                  Кантри
+                </Button>
               </Flex>
             </Flex>
 

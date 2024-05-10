@@ -66,6 +66,7 @@ const MusicCard: React.FC<MusicCardProps> = ({
   const [openDrawer, setOpenDrawer] = useState(false);
   const [rate, setRate] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [genres, setGenres] = useState([]);
   // const [popularite, setPopularite] = useState(null);
   const showDrawer = () => {
     setOpenDrawer(true);
@@ -91,6 +92,13 @@ const MusicCard: React.FC<MusicCardProps> = ({
     };
     fetchAllFavorites();
   }, [userData]);
+
+  const getGenres = async () => {
+    const response = await axios.get(
+      `https://localhost:7262/Tracks/track-genre?idsequencer=` + idSequencer
+    );
+    setGenres(response.data);
+  };
 
   const addFavorite = () => {
     fetch("https://localhost:7262/Tracks/Favorite", {
@@ -165,6 +173,7 @@ const MusicCard: React.FC<MusicCardProps> = ({
 
   useEffect(() => {
     fetchComments();
+    getGenres();
   }, []);
 
   const AddComment = async (comment: string, idsequencer: string) => {
@@ -294,8 +303,8 @@ const MusicCard: React.FC<MusicCardProps> = ({
       <Row gutter={16}>
         <Col span={8}>
           <Image
-            width={128}
-            height={128}
+            width={164}
+            height={164}
             src={
               `https://localhost:7262/Files/cover?idsequencer=` + idSequencer
             }
@@ -303,6 +312,9 @@ const MusicCard: React.FC<MusicCardProps> = ({
           />
         </Col>
         <Col span={10}>
+          {genres.map((genre) => (
+            <Tag color="blue">{genre.name}</Tag>
+          ))}
           <Typography.Title level={4}>{name}</Typography.Title>
 
           <Typography.Link

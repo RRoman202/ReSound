@@ -37,9 +37,9 @@ const ModalGenres: React.FC<SequencerModalProps> = ({ idsequencer }) => {
 
   const postGenre = async () => {
     const formData = new FormData();
+    formData.append("genres", selectedgenres.join(","));
 
-    selectedgenres.forEach((genre) => formData.append("genres", genre));
-    formData.append("idsequencer", "9dcbe82d-cfc0-4198-9962-b05050f45218");
+    formData.append("idsequencer", idsequencer);
     const response = await axios.post(
       "https://localhost:7262/Tracks/seq-genre",
       formData,
@@ -64,6 +64,7 @@ const ModalGenres: React.FC<SequencerModalProps> = ({ idsequencer }) => {
     setIsLoading(true);
     await postGenre();
     setIsLoading(false);
+    setSelectedGenres([]);
     setIsModalOpen(false);
   };
 
@@ -73,11 +74,17 @@ const ModalGenres: React.FC<SequencerModalProps> = ({ idsequencer }) => {
 
   const changeGenres = async (idgenre: string) => {
     let selgen = selectedgenres;
-    if (selgen.includes(idgenre)) {
-      selgen = selgen.filter((name) => name !== idgenre);
+    if (selectedgenres.includes(idgenre)) {
+      if (selectedgenres.length === 1) {
+        selgen.pop();
+        selectedgenres.pop();
+      } else {
+        selgen = selgen.filter((name) => name !== idgenre);
+      }
     } else {
       selgen.push(idgenre);
     }
+    setSelectedGenres(selgen);
 
     console.log(selectedgenres);
   };

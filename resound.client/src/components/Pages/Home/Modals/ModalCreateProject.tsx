@@ -176,7 +176,7 @@ const ModalChooseSound: React.FC<SequencerModalProps> = ({
               ></Input>
             </Form.Item>
 
-            <ModalGenres></ModalGenres>
+            {/* <ModalGenres></ModalGenres> */}
 
             <Form.Item
               id="private"

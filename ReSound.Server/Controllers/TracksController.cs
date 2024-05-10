@@ -296,7 +296,10 @@ namespace ReSound.Server.Controllers
         [HttpPost("seq-genre")]
         public async Task<SequencerGenre> PostSequencerGenre(SequencerGenreDTO sequencerGenreDTO)
         {
-            foreach(var g in sequencerGenreDTO.genres)
+            string[] genres = sequencerGenreDTO.genres.Split(',');
+            var seq = await _context.SequencerGenres.Where(x => x.IdSequencer == sequencerGenreDTO.IdSequencer).ToListAsync();
+            _context.SequencerGenres.RemoveRange(seq);
+            foreach(var g in genres)
             {
                 var seqgen = new SequencerGenre
                 {
@@ -343,6 +346,62 @@ namespace ReSound.Server.Controllers
 
 
             return sequencers;
+        }
+
+        [HttpGet("track-genre")]
+        public async Task<IEnumerable<Genre>> GetTrackGenre(Guid idsequencer)
+        {
+            var seq = await _context.SequencerGenres.Where(x => x.IdSequencer == idsequencer).ToListAsync();
+
+            var genres = new List<Genre>();
+
+            foreach (var s in seq)
+            {
+                var genre = await _context.Genres.FindAsync(s.IdGenre);
+               
+                if (genre != null)
+                {
+                    genres.Add(genre);
+                }
+            }
+
+            return genres;
+        }
+
+        [HttpGet("track-by-genre")]
+        public async Task<IEnumerable<Sequencer>> GetTrackByGenre(string genres)
+        {
+            string[] gens = genres.Split(',');
+            var seq = new List<SequencerGenre>();
+            foreach(var g in gens)
+            {
+                var seqs = await _context.SequencerGenres.Where(x => x.IdGenre == new Guid(g)).ToListAsync();
+                if(seqs != null)
+                {
+                    seq.AddRange(seqs);
+                }
+            }
+            var sequencers = new List<Sequencer>();
+
+            foreach (var s in seq)
+            {
+                var sequencer = await _context.Sequencers.FindAsync(s.IdSequencer);
+                if(sequencer != null)
+                {
+                    sequencers.Add(sequencer);
+                }
+            }
+
+            return sequencers.Distinct();
+        }
+
+        [HttpGet("genre-name")]
+        public async Task<Genre> GetGenreName(Guid idgenre)
+        {
+            var genre = await _context.Genres.FindAsync(idgenre);
+            return genre;
+            
+            
         }
 
 
