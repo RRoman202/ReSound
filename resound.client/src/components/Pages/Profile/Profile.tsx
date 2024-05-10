@@ -53,10 +53,19 @@ const Profile = () => {
   const [tracks, setTracks] = useState([]);
   const [filteredTracks, setFilteredTracks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [followers, setFollowers] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    getFollowersCount();
   }, []);
+
+  const getFollowersCount = async () => {
+    const response = await axios.get(
+      "https://localhost:7262/Users/follower-count?iduser=" + user
+    );
+    setFollowers(response.data);
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -148,7 +157,9 @@ const Profile = () => {
               size={100}
               icon={<UserOutlined />}
             />
+
             <Title level={2}>{userData.login}</Title>
+            <p>Количество подписчиков: {followers}</p>
             {isFollow ? (
               <Button onClick={deleteFollower}>Отписаться</Button>
             ) : (

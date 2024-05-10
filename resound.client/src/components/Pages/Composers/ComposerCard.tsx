@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   Card,
   Image,
@@ -37,9 +38,19 @@ const ComposerCard: React.FC<ComposerCardProps> = ({
   idUser,
 }) => {
   const navigate = useNavigate();
+  const [followers, setFollowers] = useState(null);
   const toUser = (id: string) => {
     navigate("/user/" + id);
   };
+  const getFollowersCount = async () => {
+    const response = await axios.get(
+      "https://localhost:7262/Users/follower-count?iduser=" + idUser
+    );
+    setFollowers(response.data);
+  };
+  useEffect(() => {
+    getFollowersCount();
+  }, []);
   return (
     <Card
       style={{ marginTop: "20px", backgroundColor: "lightblue" }}
@@ -57,6 +68,7 @@ const ComposerCard: React.FC<ComposerCardProps> = ({
         </Col>
         <Col span={12} style={{}}>
           <Typography.Title level={4}>{login}</Typography.Title>
+          <Typography.Text>Количество подписчиков: {followers}</Typography.Text>
           {/* <div style={{ display: "flex", flexWrap: "wrap" }}>
             {genres.map((genre) => (
               <Tag key={genre} color="blue">

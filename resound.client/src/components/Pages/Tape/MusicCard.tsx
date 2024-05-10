@@ -67,6 +67,7 @@ const MusicCard: React.FC<MusicCardProps> = ({
   const [rate, setRate] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
   const [genres, setGenres] = useState([]);
+  const [likescount, setlikescount] = useState(null);
   // const [popularite, setPopularite] = useState(null);
   const showDrawer = () => {
     setOpenDrawer(true);
@@ -98,6 +99,13 @@ const MusicCard: React.FC<MusicCardProps> = ({
       `https://localhost:7262/Tracks/track-genre?idsequencer=` + idSequencer
     );
     setGenres(response.data);
+  };
+
+  const getLikesCount = async () => {
+    const response = await axios.get(
+      `https://localhost:7262/Tracks/likes-count?idsequencer=` + idSequencer
+    );
+    setlikescount(response.data);
   };
 
   const addFavorite = () => {
@@ -174,6 +182,7 @@ const MusicCard: React.FC<MusicCardProps> = ({
   useEffect(() => {
     fetchComments();
     getGenres();
+    getLikesCount();
   }, []);
 
   const AddComment = async (comment: string, idsequencer: string) => {
@@ -373,6 +382,9 @@ const MusicCard: React.FC<MusicCardProps> = ({
             </Tag>
             <Tag color="blue">
               <Typography.Text>Прослушали: {views}</Typography.Text>
+            </Tag>
+            <Tag color="blue">
+              <Typography.Text>Понравилось: {likescount}</Typography.Text>
             </Tag>
           </Flex>
         </Col>

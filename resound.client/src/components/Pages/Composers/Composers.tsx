@@ -62,11 +62,19 @@ const Composers: React.FC<ComposersProps> = () => {
     setFilteredUsers(response.data);
   };
 
+  const populariteUser = async () => {
+    const response = await axios.get(`https://localhost:7262/Users/popularite`);
+    setUsers(response.data);
+    setFilteredUsers(response.data);
+  };
+
   const handleSubscriptionChange = (value: string) => {
     if (value == "Подписки") {
       followerUser();
     } else if (value == "Все") {
       allUser();
+    } else if (value == "В тренде") {
+      populariteUser();
     }
     setCurrentPage(1); // Reset page on subscription change
   };

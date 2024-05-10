@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.CodeAnalysis.Elfie.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
+using NuGet.Versioning;
 using ReSound.Server.Data;
 using ReSound.Server.Data.Models;
 using ReSound.Server.DTO;
@@ -19,14 +22,17 @@ namespace ReSound.Server.Controllers
 
         private readonly IConfiguration _configuration;
 
+        private readonly IWebHostEnvironment _env;
+
         private readonly string _audioFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "tracks");
         private readonly string _avatarFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "avatars");
         private readonly string _coverFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "covers");
 
-        public UsersController(ReSoundContext context, IConfiguration configuration)
+        public UsersController(ReSoundContext context, IConfiguration configuration, IWebHostEnvironment env)
         {
             _context = context;
             _configuration = configuration;
+            _env = env;
         }
 
         [HttpPost("upload-avatar")]
@@ -268,6 +274,98 @@ namespace ReSound.Server.Controllers
 
             return jwt;
 
+        }
+
+        [HttpGet("popularite")]
+        public async Task<IEnumerable<User>> GetPopulariteUsers()
+        {
+            var users = await _context.Users.ToListAsync();
+            
+
+            var populariteList = new List<PopulariteUserDTO>();
+
+            foreach (var user in users)
+            {
+                var followers = await _context.Followers.Where(x => x.IdUser == user.IdUser).ToListAsync();
+                var followers_count = followers.Count();
+                populariteList.Add(new PopulariteUserDTO
+                {
+                    IdUser = user.IdUser,
+                    Followers = followers_count
+                });
+            }
+
+            var sortedUsers = populariteList
+                .OrderByDescending(item => item.Followers)
+                .Select(item => users.First(s => s.IdUser == item.IdUser))
+                .ToList();
+
+            return sortedUsers;
+
+
+        }
+
+        [HttpGet("popularite-track")]
+        public async Task<IEnumerable<Sequencer>> GetPopulariteUsersTrack()
+        {
+
+            var folderPath = Path.Combine(_env.WebRootPath, "tracks");
+
+            var fileNames = Directory.GetFiles(folderPath)
+                .Select(Path.GetFileName)
+                .ToList();
+
+            var fileNamesNoMp3 = new List<string>();
+
+            foreach (var file in fileNames)
+            {
+                fileNamesNoMp3.Add(file.Replace(".mp3", ""));
+            }
+
+            var users = await _context.Users.ToListAsync();
+
+            var populariteList = new List<PopulariteUserDTO>();
+
+            foreach (var user in users)
+            {
+                var followers = await _context.Followers.Where(x => x.IdUser == user.IdUser).ToListAsync();
+                var followers_count = followers.Count();
+                populariteList.Add(new PopulariteUserDTO
+                {
+                    IdUser = user.IdUser,
+                    Followers = followers_count
+                });
+            }
+
+            var sortedUsers = populariteList
+                .OrderByDescending(item => item.Followers)
+                .Select(item => users.First(s => s.IdUser == item.IdUser))
+                .ToList();
+
+            var lasts = new List<Sequencer>();
+
+            foreach(var user in sortedUsers.Take(3))
+            {
+                var sequencers = await _context.Sequencers.Where(x => x.IdUser == user.IdUser && x.Private == false && fileNamesNoMp3.Contains(x.IdSequencer.ToString())).ToListAsync();
+                var orderedSequencers = sequencers.OrderByDescending(x => x.Created);
+                var latestSequencer = orderedSequencers.FirstOrDefault();
+                if(latestSequencer != null)
+                {
+                    lasts.Add(latestSequencer);
+                }
+                
+            }
+
+            return lasts;
+
+
+        }
+
+        [HttpGet("follower-count")]
+        public long GetUserFollower(Guid iduser)
+        {
+            var followers = _context.Followers.Where(x => x.IdUser ==  iduser).ToList();
+            return followers.Count();
         }
     }
 }

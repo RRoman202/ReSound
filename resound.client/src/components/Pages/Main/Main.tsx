@@ -21,16 +21,33 @@ const { Header, Content, Footer } = Layout;
 
 const Main = () => {
   const [popularite, setPopularite] = useState([]);
+  const [trackuser, setTrackuser] = useState([]);
   const [lastcomment, setLastComment] = useState([]);
   const [usercount, setUserCount] = useState(null);
+  const [genrescount, setGenresCount] = useState([]);
   const onChange = (currentSlide: number) => {
     console.log(currentSlide);
   };
+
+  const fetchGenresCount = async () => {
+    const response = await axios.get(
+      "https://localhost:7262/Tracks/genre-count"
+    );
+    setGenresCount(response.data);
+  };
+
   const fetchPopularite = async () => {
     const response = await axios.get(
       "https://localhost:7262/Tracks/popularite"
     );
     setPopularite(response.data);
+  };
+  const fetchPopulariteUserTrack = async () => {
+    const response = await axios.get(
+      "https://localhost:7262/Users/popularite-track"
+    );
+
+    setTrackuser(response.data);
   };
   const fetchLastComment = async () => {
     const response = await axios.get(
@@ -48,6 +65,8 @@ const Main = () => {
     fetchPopularite();
     fetchUserCount();
     fetchLastComment();
+    fetchPopulariteUserTrack();
+    fetchGenresCount();
   }, []);
   return (
     <div style={{ backgroundColor: "black" }}>
@@ -152,10 +171,33 @@ const Main = () => {
         />
       </Layout>
       <Layout style={{ backgroundColor: "lightblue" }}>
-        <Typography.Title level={3}>Последние треки</Typography.Title>
-        <List></List>
+        <Typography.Title level={3}>
+          Последние треки от популярных пользователей
+        </Typography.Title>
+        <List
+          grid={{ gutter: 12, column: 3 }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+          }}
+          dataSource={trackuser}
+          renderItem={(sequencer) => (
+            <List.Item>
+              <Card className="card-project" title={sequencer.name}>
+                <p>{sequencer.description}</p>
+                <AudioPlayer
+                  style={{ marginTop: "10px" }}
+                  src={`https://localhost:7262/track/` + sequencer.idSequencer}
+                  autoPlay={false}
+                  controls
+                />
+              </Card>
+            </List.Item>
+          )}
+        />
       </Layout>
-      <Layout style={{ backgroundColor: "#1677ff" }}>
+      <Layout style={{ backgroundColor: "lightblue" }}>
         <Typography.Title level={3}>Отзывы</Typography.Title>
         <List
           grid={{ gutter: 12, column: 3 }}
@@ -181,11 +223,29 @@ const Main = () => {
           )}
         />
       </Layout>
-      <Layout>
+      <Layout style={{ backgroundColor: "lightblue" }}>
         <Typography.Title level={3}>
           {" "}
           Количество пользователей: {usercount}
         </Typography.Title>
+        <List
+          grid={{ gutter: 12, column: 3 }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+          }}
+          dataSource={genrescount}
+          renderItem={(genre) => (
+            <List.Item>
+              <div>
+                <Typography.Title level={2}>
+                  {genre.name}: {genre.count}
+                </Typography.Title>
+              </div>
+            </List.Item>
+          )}
+        />
       </Layout>
     </div>
   );

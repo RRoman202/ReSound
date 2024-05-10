@@ -258,6 +258,14 @@ namespace ReSound.Server.Controllers
             return popularite;
         }
 
+        [HttpGet("likes-count")]
+        public long GetLikesCount(Guid idsequencer)
+        {
+            var likes = _context.Favorites.Where(x => x.IdSequencer == idsequencer).Include(x => x.User).ToList();
+            var like_count = likes.Count();
+            return like_count;
+        }
+
         [HttpPatch("views")]
         public async Task AddViews(Guid idsequencer)
         {
@@ -402,6 +410,27 @@ namespace ReSound.Server.Controllers
             return genre;
             
             
+        }
+
+        [HttpGet("genre-count")]
+        public async Task<IEnumerable<GenreCountDTO>> GetGenreCount()
+        {
+            var genres = await _context.Genres.ToListAsync();
+            var genres_count = new List<GenreCountDTO>();
+            foreach(var genre in genres)
+            {
+                var count = await _context.SequencerGenres.Where(x => x.IdGenre == genre.IdGenre).ToListAsync();
+
+                var gen_count = new GenreCountDTO {
+                    IdGenre = genre.IdGenre,
+                    Name = genre.Name,
+                    Count = count.Count()
+                };
+
+                genres_count.Add(gen_count);
+            }
+
+            return genres_count;
         }
 
 
