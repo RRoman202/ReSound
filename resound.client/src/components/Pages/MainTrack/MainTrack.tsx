@@ -7,6 +7,8 @@ import { hideNav, viewNav } from "./HiddenNavbar";
 import { Layout, Tooltip, Button, Drawer, Space, Flex, Spin } from "antd";
 import BpmInput from "../../sequencer/SoundControl/chooseBPM";
 import { useNavigate } from "react-router-dom";
+import { BaseUrl } from "../../../player/playSound";
+import { url, filename } from "../../sequencer/SoundControl/chooseSound";
 import { useParams } from "react-router-dom";
 import { BpmValue } from "../../../player/playCanvas";
 import axios from "axios";
@@ -171,6 +173,7 @@ const MainTrack: React.FC = () => {
           </div>
         </Footer> */}
       </Layout>
+      <BaseUrl url={url} filename={filename}></BaseUrl>
     </DndProvider>
   );
 };

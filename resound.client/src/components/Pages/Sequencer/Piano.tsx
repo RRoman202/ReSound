@@ -220,7 +220,7 @@ const Piano = observer(() => {
               <ModalChooseSound></ModalChooseSound>
               <BpmInput></BpmInput>
               <Button
-                onClick={RecordCanvasTrack}
+                onClick={RecordCanvas}
                 type="primary"
                 className="record-button"
               >
