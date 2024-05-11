@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\sounds\Пианино\Piano.mp3" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="FluentValidation" Version="11.9.1" />
     <PackageReference Include="Mediator.Abstractions" Version="2.1.7" />
@@ -48,12 +52,11 @@
 
   <ItemGroup>
     <None Include="wwwroot\sounds\Piano.mp3" />
+    <None Include="wwwroot\sounds\Пианино\Piano.mp3" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\sounds\Гитара\" />
     <Folder Include="wwwroot\sounds\Басс\" />
-    <Folder Include="wwwroot\sounds\Пианино\" />
     <Folder Include="wwwroot\tracks\" />
     <Folder Include="wwwroot\avatars\" />
     <Folder Include="wwwroot\covers\" />

@@ -3,6 +3,7 @@ import { Button, Layout, Menu, Flex } from "antd";
 import * as Tone from "tone";
 import { getSounds } from "./FetchData/GetSounds";
 import { getCategories } from "./FetchData/GetCategories";
+import axios from "axios";
 
 const { Header, Content, Footer, Sider } = Layout;
 export let url: string = "https://localhost:7262/audio/";
@@ -28,12 +29,19 @@ function ChooseSoundFunction() {
     }
   };
 
+  const getCategoriesSounds = async (category: string) => {
+    const response = await axios.get(
+      `https://localhost:7262/Files/categories-files?category=` + category
+    );
+    setSounds(response.data);
+  };
+
   useEffect(() => {
     async function fetchData() {
       try {
         const res = await getSounds();
         const cat = await getCategories();
-        setSounds(res);
+        getCategoriesSounds("Пианино");
         setCategories(cat);
       } catch (err) {
         console.log(err);
@@ -44,14 +52,18 @@ function ChooseSoundFunction() {
   const customLabels = categories;
 
   const itemsMenu = customLabels.map((label, index) => ({
-    key: String(index + 1),
+    key: label,
 
     label: label,
   }));
   return (
     <Layout>
       <Sider>
-        <Menu items={itemsMenu.reverse()} />
+        <Menu
+          defaultSelectedKeys={["Пианино"]}
+          items={itemsMenu.reverse()}
+          onSelect={(e) => getCategoriesSounds(e.key)}
+        />
       </Sider>
       <Flex vertical gap="small" style={{ width: "300px" }}>
         {sounds.map((sound: string) => (

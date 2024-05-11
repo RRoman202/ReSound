@@ -137,6 +137,25 @@ namespace ReSound.Server.Controllers
             return File(fileBytes, "application/octet-stream", fileName);
         }
 
+        [HttpGet("categories-files")]
+        public IActionResult GetCategoriesFileNames(string category)
+        {
+            var folderPath = Path.Combine(_env.WebRootPath, "sounds/" + category);
+
+            var fileNames = Directory.GetFiles(folderPath)
+                .Select(Path.GetFileName)
+                .ToList();
+
+            var fileNamesNoMp3 = new List<string>();
+
+            foreach (var file in fileNames)
+            {
+                fileNamesNoMp3.Add(file.Replace(".mp3", ""));
+            }
+
+            return Ok(fileNamesNoMp3);
+        }
+
         [HttpGet("/audio/{fileName}")]
         public IActionResult GetAudioFile(string fileName)
         {
