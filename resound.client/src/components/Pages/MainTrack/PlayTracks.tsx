@@ -29,7 +29,6 @@ export function PlayTracks(m: boolean[][]) {
   let index = 0;
   function GetNotesPlay() {
     const matrix = m;
-    console.log(m);
     const numRows: number = matrix.length;
     const numCols: number = matrix[0].length;
     for (let col = 0; col < numCols; col++) {
@@ -42,35 +41,51 @@ export function PlayTracks(m: boolean[][]) {
       notesplay[col] = colnotes;
     }
   }
+
+  function checkNotesPlay() {
+    let lastNonEmptyListKey = 0;
+    for (const key in notesplay) {
+      if (notesplay[key].length > 0) {
+        lastNonEmptyListKey = Number(key);
+      }
+    }
+
+    return Math.ceil(lastNonEmptyListKey / 4 + 0.25) * 4;
+  }
   function playNote() {
+    checkNotesPlay();
+
     const notesp = notesplay[index];
 
     for (let n = 0; n < notesp.length; n++) {
       sampler.triggerAttackRelease(notesp[n], "8n");
     }
+
     GetNotesPlay();
-    index = (index + 1) % m[0].length;
+
+    index = (index + 1) % checkNotesPlay();
   }
+
   GetNotesPlay();
   recorder.start();
 
   Tone.Transport.scheduleRepeat(playNote, "8n");
   Tone.Transport.start();
 
-  setTimeout(async () => {
-    const recording = await recorder.stop();
-    Tone.Transport.cancel();
-    Tone.Transport.stop();
+  // setTimeout(async () => {
+  //   const recording = await recorder.stop();
+  //   Tone.Transport.cancel();
+  //   Tone.Transport.stop();
 
-    // const blob = new Blob([recording], { type: "audio/mpeg" });
-    // const url = URL.createObjectURL(blob);
+  //   // const blob = new Blob([recording], { type: "audio/mpeg" });
+  //   // const url = URL.createObjectURL(blob);
 
-    // const anchor = document.createElement("a");
-    // anchor.download = "recording.mp3";
-    // anchor.href = url;
-    // anchor.click();
-    // if (localStorage.getItem("sequencerid")) {
-    //   uploadAudio(blob, localStorage.getItem("sequencerid")!);
-    // }
-  }, (m[0].length * 1000) / (Tone.Transport.bpm.value / 60) / 2);
+  //   // const anchor = document.createElement("a");
+  //   // anchor.download = "recording.mp3";
+  //   // anchor.href = url;
+  //   // anchor.click();
+  //   // if (localStorage.getItem("sequencerid")) {
+  //   //   uploadAudio(blob, localStorage.getItem("sequencerid")!);
+  //   // }
+  // }, (m[0].length * 1000) / (Tone.Transport.bpm.value / 60) / 2);
 }

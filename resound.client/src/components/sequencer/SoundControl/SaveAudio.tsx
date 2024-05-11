@@ -9,20 +9,20 @@ export function RecordCanvas() {
   let notesplay: { [key: number]: string[] } = {};
   const recorder = new Tone.Recorder();
 
-  const uploadAudio = async (blob: Blob, idsequencer: string) => {
-    const formData = new FormData();
-    formData.append("audioFile", blob);
-    formData.append("idsequencer", idsequencer);
-    const response = await axios.post(
-      "https://localhost:7262/Users/upload-audio",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-  };
+  // const uploadAudio = async (blob: Blob, idsequencer: string) => {
+  //   const formData = new FormData();
+  //   formData.append("audioFile", blob);
+  //   formData.append("idsequencer", idsequencer);
+  //   const response = await axios.post(
+  //     "https://localhost:7262/Users/upload-audio",
+  //     formData,
+  //     {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     }
+  //   );
+  // };
 
   sampler.connect(recorder);
   let index = 0;
@@ -67,8 +67,8 @@ export function RecordCanvas() {
     anchor.download = "recording.mp3";
     anchor.href = url;
     anchor.click();
-    if (localStorage.getItem("sequencerid")) {
-      uploadAudio(blob, localStorage.getItem("sequencerid")!);
-    }
+    // if (localStorage.getItem("sequencerid")) {
+    //   uploadAudio(blob, localStorage.getItem("sequencerid")!);
+    // }
   }, (m[0].length * 1000) / (Tone.Transport.bpm.value / 60) / 2);
 }

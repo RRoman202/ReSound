@@ -145,33 +145,6 @@ const MainTrack: React.FC = () => {
             />
           </div>
         </div>
-        {/* <Footer className="footer">
-          <div className="play-btn">
-            <Tooltip title="Пауза">
-              <Button
-                type="primary"
-                shape="circle"
-                className="pause-button"
-                icon={<PauseCircleOutlined />}
-              ></Button>
-            </Tooltip>
-            <Tooltip title="Пуск">
-              <Button
-                type="primary"
-                shape="circle"
-                className="play-button"
-                icon={<CaretRightOutlined />}
-              ></Button>
-            </Tooltip>
-            <Tooltip title="Стоп">
-              <Button
-                type="primary"
-                shape="circle"
-                icon={<BorderOutlined />}
-              ></Button>
-            </Tooltip>
-          </div>
-        </Footer> */}
       </Layout>
       <BaseUrl url={url} filename={filename}></BaseUrl>
     </DndProvider>

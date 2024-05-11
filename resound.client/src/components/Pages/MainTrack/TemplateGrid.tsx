@@ -11,6 +11,15 @@ import * as Tone from "tone";
 import axios from "axios";
 import { CloseOutlined } from "@ant-design/icons";
 import {
+  CaretUpOutlined,
+  CaretRightOutlined,
+  CaretDownOutlined,
+  SoundTwoTone,
+  BorderOutlined,
+  PauseCircleOutlined,
+  DeleteOutlined,
+} from "@ant-design/icons";
+import {
   GridContextProvider,
   GridDropZone,
   GridItem,
@@ -88,9 +97,10 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
   const playTracks = async () => {
     // console.log(tracks);
     // console.log(templatestrack);
+    Tone.start();
     setIsBlocked(true);
     let k = 0;
-    Tone.Transport.start();
+
     tracks.forEach(async (track) => {
       const trackTemplates = templatestrack.filter(
         (t) => t.idTrack === track.idTrack
@@ -114,8 +124,9 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
 
   const publicTrack = async () => {
     let k = 0;
+    Tone.start();
     setIsBlocked(true);
-    Tone.Transport.start();
+
     tracks.forEach((track) => {
       const trackTemplates = templatestrack.filter(
         (t) => t.idTrack === track.idTrack
@@ -216,20 +227,15 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
           <Button type="primary" onClick={addTracks}>
             Добавить дорожку
           </Button>
+
           {isBlocked ? (
             <>
-              <Button type="primary" disabled onClick={() => playTracks()}>
-                Прослушать
-              </Button>
-              <Button type="primary" disabled onClick={() => publicTrack()}>
+              <Button type="primary" onClick={() => publicTrack()}>
                 Опубликовать
               </Button>
             </>
           ) : (
             <>
-              <Button type="primary" onClick={() => playTracks()}>
-                Прослушать
-              </Button>
               <Button type="primary" onClick={() => publicTrack()}>
                 Опубликовать
               </Button>
@@ -237,6 +243,25 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
           )}
         </div>
       </Layout>
+      <Footer className="footer-main">
+        <div className="play-btn">
+          <Tooltip title="Пуск">
+            <Button
+              icon={<CaretRightOutlined></CaretRightOutlined>}
+              onClick={() => playTracks()}
+              shape="circle"
+              className="play-button"
+            ></Button>
+          </Tooltip>
+          <Tooltip title="Стоп">
+            <Button
+              icon={<BorderOutlined></BorderOutlined>}
+              shape="circle"
+              onClick={() => Tone.Transport.cancel()}
+            ></Button>
+          </Tooltip>
+        </div>
+      </Footer>
     </Card>
   );
 };
