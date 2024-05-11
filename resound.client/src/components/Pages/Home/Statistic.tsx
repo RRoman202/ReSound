@@ -218,7 +218,7 @@ const Statistic = () => {
             <Title level={2}>Статистика</Title>
           </Card>
           <Typography.Title level={3}>
-            Количество просмотров у ваших треков
+            Количество прослушиваний у ваших треков
           </Typography.Title>
           <Line {...props} />
         </Content>

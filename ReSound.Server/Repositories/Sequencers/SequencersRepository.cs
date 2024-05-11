@@ -120,7 +120,15 @@ namespace ReSound.Server.Repositories.Sequencers
                 Notes = "null",
                 Name = "Новый шаблон"
             };
+
+            var track = new Track
+            {
+                IdTrack = Guid.NewGuid(),
+                TrackNumber = 1,
+                Volume = 100,
+            };
             _context.Templates.Add(template);
+            _context.Tracks.Add(track);
             _context.Sequencers.Add(sequencer);
             _context.SequencersTemplates.Add(new SequencerTemplate
             {
@@ -130,6 +138,13 @@ namespace ReSound.Server.Repositories.Sequencers
             
                 Template = template,
                 
+            });
+            _context.SequencersTracks.Add(new SequencerTrack
+            {
+                Id = Guid.NewGuid(),
+                IdSequencer = sequencer.IdSequencer,
+                IdTrack = track.IdTrack,
+                Track = track
             });
             await _context.SaveChangesAsync();
 

@@ -38,25 +38,9 @@ const MainTrack: React.FC = () => {
   const { sequencer } = useParams<{ sequencer: string }>();
 
   const [sequencerData, setSequencerData] = useState<Sequencer | null>(null);
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
   console.log(sequencerData);
   const [templates, setTemplates] = useState([]);
-
-  const copyTemplate = async (template: any) => {
-    fetch("https://localhost:7262/api/Sequencers/templates", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        Name: template.name,
-        Volume: template.volume,
-        notes: template.notes,
-        IdSound: template.idSound,
-        idSequencer: template.idSequencer,
-      }),
-    });
-  };
 
   useEffect(() => {
     const fetchSequencer = async () => {
@@ -99,6 +83,11 @@ const MainTrack: React.FC = () => {
   const closePage = () => {
     navigate("/home");
     viewNav();
+  };
+
+  const handleChangeTemplate = (selectedTemplate) => {
+    console.log(selectedTemplate);
+    setSelectedTemplate(selectedTemplate);
   };
 
   const handleCreateTemplate = () => {
@@ -144,13 +133,17 @@ const MainTrack: React.FC = () => {
               onCreateTemplate={handleCreateTemplate}
               idsequencer={sequencerData.idSequencer}
               setTemplates={setTemplates}
+              onChangeSelectTemplate={handleChangeTemplate}
             />
           </div>
           <div style={{ flex: 2, marginLeft: "20px", marginRight: "10px" }}>
-            <AudioTrackGrid />
+            <AudioTrackGrid
+              idSequencer={sequencer}
+              selectedTemplate={selectedTemplate}
+            />
           </div>
         </div>
-        <Footer className="footer">
+        {/* <Footer className="footer">
           <div className="play-btn">
             <Tooltip title="Пауза">
               <Button
@@ -176,7 +169,7 @@ const MainTrack: React.FC = () => {
               ></Button>
             </Tooltip>
           </div>
-        </Footer>
+        </Footer> */}
       </Layout>
     </DndProvider>
   );

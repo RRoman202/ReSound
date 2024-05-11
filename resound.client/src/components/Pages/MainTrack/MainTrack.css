@@ -1,5 +1,5 @@
 .MainLayout {
-  background-color: gray;
+  background-color: lightgray;
   height: 100%;
 }
 
@@ -41,4 +41,18 @@
 }
 
 .soundMainIcon {
+}
+
+.template-card-selected {
+  background-color: #1677ff;
+  width: 300px;
+  text-align: center;
+  position: relative;
+}
+
+.template-card- {
+  background-color: lightblue;
+  width: 300px;
+  text-align: center;
+  position: relative;
 }

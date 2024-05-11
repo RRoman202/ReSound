@@ -4,6 +4,7 @@ import { useDrag } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 import { useNavigate, Link } from "react-router-dom";
 import { hideNav } from "./HiddenNavbar";
+import { useState } from "react";
 import axios from "axios";
 import "./MainTrack.css";
 import {
@@ -42,6 +43,7 @@ interface TemplateListProps {
   onCreateTemplate: () => void;
   idsequencer: string;
   setTemplates: (templates: Template[]) => void;
+  onChangeSelectTemplate: (template: Template) => void;
 }
 
 const TemplateList: React.FC<TemplateListProps> = ({
@@ -49,11 +51,20 @@ const TemplateList: React.FC<TemplateListProps> = ({
   onCreateTemplate,
   idsequencer,
   setTemplates,
+  onChangeSelectTemplate,
 }) => {
   const [, drag] = useDrag({
     type: ItemTypes.TEMPLATE,
     item: { name: "Template" },
   });
+
+  const [selectedTemplate, setSelectedTemplate] = useState(null);
+
+  const handleSelectTemplate = async (template: Template) => {
+    setSelectedTemplate(template);
+    onChangeSelectTemplate(template);
+    console.log(selectedTemplate);
+  };
 
   const navigate = useNavigate();
 
@@ -124,13 +135,18 @@ const TemplateList: React.FC<TemplateListProps> = ({
           <List.Item>
             <div ref={drag}>
               <Card
-                style={{
-                  backgroundColor: "lightblue",
-                  width: "300px",
-                  textAlign: "center",
-                  position: "relative",
-                }}
+                // style={{
+                //   backgroundColor: "lightblue",
+                //   width: "300px",
+                //   textAlign: "center",
+                //   position: "relative",
+                // }}
+                className={
+                  "template-card-" +
+                  (selectedTemplate === item ? "selected" : "")
+                }
                 hoverable
+                onClick={() => handleSelectTemplate(item)}
               >
                 <Dropdown
                   overlay={

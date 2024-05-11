@@ -1,10 +1,9 @@
 import * as Tone from "tone";
 import { sampler } from "../../../player/playSound";
 
-import { m } from "../../../player/playCanvas";
 import GetNotes from "../../../player/Notes";
 import axios from "axios";
-export function RecordCanvasTrack() {
+export function PublicationTrack(m: boolean[][]) {
   const notes: string[] = GetNotes();
   let notesplay: { [key: number]: string[] } = {};
   const recorder = new Tone.Recorder();
@@ -26,10 +25,9 @@ export function RecordCanvasTrack() {
 
   sampler.connect(recorder);
   let index = 0;
-  let matrixs = [m];
-  console.log(matrixs[0]);
-  function GetNotesPlay(m: boolean[][]) {
+  function GetNotesPlay() {
     const matrix = m;
+    console.log(m);
     const numRows: number = matrix.length;
     const numCols: number = matrix[0].length;
     for (let col = 0; col < numCols; col++) {
@@ -42,26 +40,20 @@ export function RecordCanvasTrack() {
       notesplay[col] = colnotes;
     }
   }
-  function playNote(m: boolean[][]) {
+  function playNote() {
     const notesp = notesplay[index];
 
     for (let n = 0; n < notesp.length; n++) {
       sampler.triggerAttackRelease(notesp[n], "8n");
     }
-    GetNotesPlay(m);
+    GetNotesPlay();
     index = (index + 1) % m[0].length;
   }
-  // GetNotesPlay();
-  // recorder.start();
+  GetNotesPlay();
+  recorder.start();
 
-  for (let n = 0; n < matrixs.length; n++) {
-    GetNotesPlay(matrixs[n]);
-    recorder.start();
-    Tone.Transport.scheduleRepeat(() => playNote(m), "8n");
-    Tone.Transport.start();
-  }
-  // Tone.Transport.scheduleRepeat(playNote, "8n");
-  // Tone.Transport.start();
+  Tone.Transport.scheduleRepeat(playNote, "8n");
+  Tone.Transport.start();
 
   setTimeout(async () => {
     const recording = await recorder.stop();

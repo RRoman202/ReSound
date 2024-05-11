@@ -470,6 +470,113 @@ namespace ReSound.Server.Controllers
             return genres_count;
         }
 
+        [HttpGet("seq-track")]
+        public async Task<IEnumerable<Track>> GetSequencerTrack(Guid idsequencer)
+        {
+            var tracks = await _context.SequencersTracks
+                .Include(st => st.Track)
+                .Where(st => st.IdSequencer == idsequencer)
+                .Select(st => st.Track)
+                .ToListAsync();
+
+
+            return tracks;
+        }
+
+        [HttpPost("seq-track")]
+        public async Task<Track> PostSequencerTrack(Guid idsequencer)
+        {
+            var tracks = await _context.SequencersTracks
+                .Include(st => st.Track)
+                .Where(st => st.IdSequencer == idsequencer)
+                .Select(st => st.Track)
+                .ToListAsync();
+
+            var max = tracks.Count() + 1;
+
+            var track = new Track
+            {
+                IdTrack = Guid.NewGuid(),
+                TrackNumber = max,
+                Volume = 100
+            };
+
+            _context.Tracks.Add(track);
+            _context.SequencersTracks.Add(new SequencerTrack
+            {
+                Id = Guid.NewGuid(),
+                IdTrack = track.IdTrack,
+                IdSequencer = idsequencer,
+                Track = track,
+            });
+
+            await _context.SaveChangesAsync();
+
+            return null;
+
+        }
+
+        [HttpPost("track-template")]
+        public async Task<TrackTemplate> PostTrackTemplate(Guid idtrack, Guid idtemplate, long position)
+        {
+            var deleted = await _context.TrackTemplates.Where(x => x.IdTrack == idtrack && x.PositionTemplate == position).FirstOrDefaultAsync();
+            if (deleted != null)
+            {
+                _context.TrackTemplates.Remove(deleted);
+            }
+            _context.TrackTemplates.Add(new TrackTemplate
+            {
+                Id = Guid.NewGuid(),
+                IdTemplate = idtemplate,
+                IdTrack = idtrack,
+                PositionTemplate = position,
+                Template = await _context.Templates.FindAsync(idtemplate)
+                
+            });
+            
+            await _context.SaveChangesAsync();
+
+            return null;
+
+        }
+
+        [HttpDelete("track-template")]
+        public async Task<TrackTemplate> DeleteTrackTemplate(Guid idtrack, long position)
+        {
+            var deleted = await _context.TrackTemplates.Where(x => x.IdTrack == idtrack && x.PositionTemplate == position).FirstOrDefaultAsync();
+            if (deleted != null)
+            {
+                _context.TrackTemplates.Remove(deleted);
+            }
+            await _context.SaveChangesAsync();
+
+            return null;
+
+        }
+        [HttpGet("track-template")]
+        public async Task<IEnumerable<TrackTemplate>> GetTrackTemplate(Guid idsequencer)
+        {
+            var tracks = await _context.SequencersTracks
+                .Include(st => st.Track)
+                .Where(st => st.IdSequencer == idsequencer)
+                .Select(st => st.Track)
+                .ToListAsync();
+
+            var trackTemplates = new List<TrackTemplate>();
+
+            foreach (var track in tracks)
+            {
+                var tt = await _context.TrackTemplates.Include(x => x.Template).Where(x => x.IdTrack == track.IdTrack).ToListAsync();
+                if(tt != null)
+                {
+                    trackTemplates.AddRange(tt);
+                }
+            }
+
+            return trackTemplates;
+        }
+
+
 
     }
 }

@@ -252,7 +252,7 @@ const Piano = observer(() => {
             </Dropdown> */}
 
               <LoadTemplateNotes></LoadTemplateNotes>
-              <Radio.Group
+              {/* <Radio.Group
                 defaultValue="a"
                 buttonStyle="solid"
                 className="pencil-button"
@@ -267,7 +267,7 @@ const Piano = observer(() => {
                     <RadiusUprightOutlined />
                   </Tooltip>
                 </Radio.Button>
-              </Radio.Group>
+              </Radio.Group> */}
 
               <SoundTwoTone className="soundicon" />
               <VolumeSlider></VolumeSlider>
