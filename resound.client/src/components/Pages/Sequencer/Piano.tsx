@@ -198,7 +198,9 @@ const Piano = observer(() => {
 
             <SaveTemplateNotes cols={cols}></SaveTemplateNotes>
 
-            <Button type="primary">Экспорт</Button>
+            <Button type="primary" onClick={RecordCanvas}>
+              Экспорт в mp3
+            </Button>
             <Button type="primary" onClick={closePage}>
               Назад
             </Button>
@@ -219,13 +221,13 @@ const Piano = observer(() => {
               </Button>
               <ModalChooseSound></ModalChooseSound>
               <BpmInput></BpmInput>
-              <Button
+              {/* <Button
                 onClick={RecordCanvas}
                 type="primary"
                 className="record-button"
               >
                 Записать
-              </Button>
+              </Button> */}
               <Tooltip title="Очистить">
                 <Button
                   className="delete-button"

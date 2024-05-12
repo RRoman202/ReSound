@@ -4,7 +4,17 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import TemplateList from "./TemplateList";
 import AudioTrackGrid from "./TemplateGrid";
 import { hideNav, viewNav } from "./HiddenNavbar";
-import { Layout, Tooltip, Button, Drawer, Space, Flex, Spin } from "antd";
+import {
+  Layout,
+  Tooltip,
+  Button,
+  Drawer,
+  Space,
+  Flex,
+  Spin,
+  Typography,
+  Tag,
+} from "antd";
 import BpmInput from "../../sequencer/SoundControl/chooseBPM";
 import { useNavigate } from "react-router-dom";
 import { BaseUrl } from "../../../player/playSound";
@@ -12,6 +22,7 @@ import { url, filename } from "../../sequencer/SoundControl/chooseSound";
 import { useParams } from "react-router-dom";
 import { BpmValue } from "../../../player/playCanvas";
 import axios from "axios";
+import moment from "moment";
 
 import {
   CaretUpOutlined,
@@ -34,6 +45,10 @@ interface Template {
   name: string;
 }
 
+interface Sequencer {
+  private: boolean;
+}
+
 const MainTrack: React.FC = () => {
   hideNav();
 
@@ -41,6 +56,7 @@ const MainTrack: React.FC = () => {
 
   const [sequencerData, setSequencerData] = useState<Sequencer | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+
   console.log(sequencerData);
   const [templates, setTemplates] = useState([]);
 
@@ -108,11 +124,31 @@ const MainTrack: React.FC = () => {
     <DndProvider backend={HTML5Backend}>
       <Drawer title="Файл" placement="left" onClose={onClose} open={openDrawer}>
         <Space direction="vertical">
+          {sequencerData.private ? (
+            <>
+              <Tag color="blue">Приватный</Tag>
+            </>
+          ) : (
+            <>
+              <Tag color="blue">Публичный</Tag>
+            </>
+          )}
+
           <h2>{sequencerData.name}</h2>
+          <Typography.Text>
+            Дата создания:{" "}
+            {moment(sequencerData.created).format("DD MMMM YYYY HH:mm")}
+          </Typography.Text>
           <Flex vertical gap="small" style={{ width: "300px" }}>
-            <Button type="primary">Сохранить</Button>
-            <Button type="primary">Сохранить как</Button>
-            <Button type="primary">Экспорт</Button>
+            <Button type="primary" disabled>
+              Сохранить
+            </Button>
+            <Button type="primary" disabled>
+              Сохранить как
+            </Button>
+            <Button type="primary" disabled>
+              Экспорт
+            </Button>
             <Button type="primary" onClick={closePage}>
               Выйти
             </Button>
