@@ -109,9 +109,16 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
       const playtemplates = trackTemplates.filter(
         (t) => t.positionTemplate === k
       );
-      playtemplates.forEach((template) => {
+      playtemplates.forEach(async (template) => {
         const notes = JSON.parse(template.template.notes);
-        PlayTracks(notes.notes);
+
+        const response = await axios.get(
+          `https://localhost:7262/Tracks/sound?idsound=${template.template.idSound}`
+        );
+
+        const fileNameSound = response.data.fileName;
+
+        PlayTracks(notes.notes, fileNameSound);
 
         setTimeout(async () => {
           setIsBlocked(false);
@@ -135,12 +142,13 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
       const playtemplates = trackTemplates.filter(
         (t) => t.positionTemplate === k
       );
-      playtemplates.forEach((template) => {
+      playtemplates.forEach(async (template) => {
         const notes = JSON.parse(template.template.notes);
-        PublicationTrack(notes.notes);
-        setTimeout(async () => {
-          setIsBlocked(false);
-        }, (notes.notes.length * 1000) / (Tone.Transport.bpm.value / 60) / 2);
+        const response = await axios.get(
+          `https://localhost:7262/Tracks/sound?idsound=${template.template.idSound}`
+        );
+        const fileNameSound = response.data.fileName;
+        PublicationTrack(notes.notes, fileNameSound);
       });
     });
   };

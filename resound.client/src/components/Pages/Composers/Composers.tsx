@@ -25,13 +25,12 @@ interface User {
   avatar: string;
   genres: string[];
   idUser: number;
-  // Add other user properties as needed
 }
 
 interface ComposersProps {}
 
 const Composers: React.FC<ComposersProps> = () => {
-  const subscriptionOptions = ["Все", "Подписки", "В тренде", "Для тебя"];
+  const subscriptionOptions = ["Все", "Подписки", "В тренде"];
 
   const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);

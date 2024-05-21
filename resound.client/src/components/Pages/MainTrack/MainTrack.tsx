@@ -140,7 +140,7 @@ const MainTrack: React.FC = () => {
             {moment(sequencerData.created).format("DD MMMM YYYY HH:mm")}
           </Typography.Text>
           <Flex vertical gap="small" style={{ width: "300px" }}>
-            <Button type="primary" disabled>
+            {/* <Button type="primary" disabled>
               Сохранить
             </Button>
             <Button type="primary" disabled>
@@ -148,7 +148,7 @@ const MainTrack: React.FC = () => {
             </Button>
             <Button type="primary" disabled>
               Экспорт
-            </Button>
+            </Button> */}
             <Button type="primary" onClick={closePage}>
               Выйти
             </Button>

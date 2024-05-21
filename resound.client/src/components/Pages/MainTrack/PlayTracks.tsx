@@ -1,11 +1,11 @@
 import * as Tone from "tone";
-import { sampler } from "../../../player/playSound";
+// import { sampler } from "../../../player/playSound";
 
 // import { m } from "../../../player/playCanvas";
 import GetNotes from "../../../player/Notes";
 import axios from "axios";
 
-export function PlayTracks(m: boolean[][]) {
+export function PlayTracks(m: boolean[][], fileNameSound: string) {
   const notes: string[] = GetNotes();
   let notesplay: { [key: number]: string[] } = {};
   const recorder = new Tone.Recorder();
@@ -24,6 +24,14 @@ export function PlayTracks(m: boolean[][]) {
   //       }
   //     );
   //   };
+
+  const sampler = new Tone.Sampler({
+    urls: {
+      C4: fileNameSound,
+    },
+    release: 1,
+    baseUrl: "https://localhost:7262/audio/",
+  }).toDestination();
 
   sampler.connect(recorder);
   let index = 0;

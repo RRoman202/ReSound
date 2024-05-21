@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ReSound.Server.Data;
+using ReSound.Server.Data.Models;
 
 namespace ReSound.Server.Controllers
 {
@@ -112,6 +113,36 @@ namespace ReSound.Server.Controllers
             }
 
             return Ok(fileNamesNoMp3);
+        }
+
+        [HttpPost("create-sounds")]
+        public async Task<IEnumerable<Sound>> CreateSounds()
+        {
+            var folderPath = Path.Combine(_env.WebRootPath, "sounds");
+
+            var fileNames = Directory.GetFiles(folderPath)
+                .Select(Path.GetFileName)
+                .ToList();
+
+            var sounds = new List<Sound>();
+
+            foreach(var file in fileNames)
+            {
+                var newSound = new Sound
+                {
+                    Name = "empty",
+                    Path = "sounds",
+                    FileName = file,
+                    
+                };
+
+                sounds.Add(newSound);
+            }
+
+            _context.AddRange(sounds);
+            _context.SaveChanges();
+
+            return sounds;
         }
 
         [HttpGet("Categories")]

@@ -575,6 +575,29 @@ namespace ReSound.Server.Controllers
 
             return trackTemplates;
         }
+        [HttpGet("sound")]
+        public async Task<Sound> GetSound(Guid idsound)
+        {
+            return await _context.Sounds.FindAsync(idsound);
+        }
+
+        [HttpPatch("sound")]
+        public async Task PatchSound([FromBody] SoundUpdateDTO soundDTO)
+        {
+            var template = await _context.Templates.SingleAsync(x => x.IdTemplate == soundDTO.IdTemplate);
+            var sound = await _context.Sounds.Where(x => x.FileName == soundDTO.FileNameSound).FirstOrDefaultAsync();
+            if (sound != null)
+            {
+                template.IdSound = sound.IdSound;
+            }
+            
+
+            await _context.SaveChangesAsync();
+
+            return;
+        }
+
+        
 
 
 

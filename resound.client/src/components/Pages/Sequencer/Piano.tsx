@@ -81,6 +81,9 @@ const Piano = observer(() => {
 
   const [loadingsBtn, setLoadingsBtn] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [fileNameSound, setFileNameSound] = useState("");
+  const [soundData, setSoundData] = useState(null);
+
   const showDrawer = () => {
     setOpenDrawer(true);
   };
@@ -112,11 +115,23 @@ const Piano = observer(() => {
 
     fetchTemplate();
   }, [template]);
+
+  const fetchSound = async () => {
+    const response = await axios.get(
+      `https://localhost:7262/Tracks/sound?idsound=${templateData.idSound}`
+    );
+    setSoundData(response.data);
+    setFileNameSound(response.data.fileName);
+
+    console.log(response.data);
+  };
+
   useEffect(() => {
     try {
       const data = JSON.parse(templateData.notes);
 
       loadCols(data.cols);
+      fetchSound();
     } catch (error) {
       console.log(error);
     }
@@ -150,6 +165,14 @@ const Piano = observer(() => {
     setWidthTime(newCols * 40);
   }
 
+  // useEffect(() => {
+  //   if (soundData) {
+  //     setFileNameSound(soundData.fileName);
+  //     console.log(soundData.fileName);
+  //   }
+  //   console.log(soundData);
+  // }, [soundData]);
+
   const updateTemplateNotes = async (newNotes: boolean[][]) => {
     const data = { notes: newNotes, cols };
     const blob = JSON.stringify(data);
@@ -173,7 +196,7 @@ const Piano = observer(() => {
     }
   };
 
-  if (!templateData) {
+  if (!templateData || !soundData || !fileNameSound) {
     return <Spin size="large" fullscreen></Spin>; // Display loading message while data is fetched
   }
 
@@ -219,7 +242,12 @@ const Piano = observer(() => {
               <Button type="primary" onClick={showDrawer}>
                 Файл шаблона
               </Button>
-              <ModalChooseSound></ModalChooseSound>
+              <ModalChooseSound
+                idtemplate={templateData.idTemplate}
+                setFileNameSound={setFileNameSound}
+                fileNameSound={fileNameSound}
+                idsound={templateData.idSound}
+              ></ModalChooseSound>
               <BpmInput></BpmInput>
               {/* <Button
                 onClick={RecordCanvas}
@@ -374,7 +402,7 @@ const Piano = observer(() => {
           </div>
         </Footer>
       </Layout>
-      <BaseUrl url={url} filename={filename}></BaseUrl>
+      <BaseUrl url={url} filename={fileNameSound}></BaseUrl>
       <LoadTempCols loadTemplateCols={loadCols}></LoadTempCols>
     </>
   );

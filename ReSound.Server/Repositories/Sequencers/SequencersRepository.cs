@@ -114,7 +114,7 @@ namespace ReSound.Server.Repositories.Sequencers
 
             var template = new Template
             {
-                IdSound = Guid.NewGuid(),
+                IdSound = new Guid("bffbbdcf-e205-4e38-b5c7-26e1de59fab0"),
                 IdTemplate = Guid.NewGuid(),
                 Volume = 100,
                 Notes = "null",

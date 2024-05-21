@@ -32,7 +32,7 @@ interface Track {
 interface TapeProps {}
 
 const Tape: React.FC<TapeProps> = () => {
-  const subscriptionOptions = ["Все", "Подписки", "В тренде", "Для тебя"];
+  const subscriptionOptions = ["Все", "Подписки", "В тренде"];
   const [tracks, setTracks] = useState([]);
   const [filteredTracks, setFilteredTracks] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
