@@ -16,6 +16,7 @@ import {
   PlusOutlined,
   QuestionCircleOutlined,
   MoreOutlined,
+  ExportOutlined,
 } from "@ant-design/icons";
 import {
   Layout,
@@ -42,8 +43,13 @@ const { Header, Content, Footer, Sider } = Layout;
 const { Title } = Typography;
 const { Meta } = Card;
 
-const customLabels = ["Проекты", "Любимое", "Статистика"];
-const customIcons = [FormOutlined, LikeOutlined, BarChartOutlined];
+const customLabels = ["Проекты", "Опубликованные", "Избранные", "Статистика"];
+const customIcons = [
+  FormOutlined,
+  ExportOutlined,
+  LikeOutlined,
+  BarChartOutlined,
+];
 
 const itemsMenu = customLabels.map((label, index) => ({
   key: String(index + 1),
@@ -154,9 +160,12 @@ const Favorite = () => {
       navigate("/home");
     }
     if (value === "2") {
-      navigate("/favorite");
+      navigate("/publictracks");
     }
     if (value === "3") {
+      navigate("/favorite");
+    }
+    if (value === "4") {
       navigate("/statistic");
     }
   };
@@ -192,7 +201,7 @@ const Favorite = () => {
           className="sidemenu"
           theme="light"
           mode="inline"
-          defaultSelectedKeys={["2"]}
+          defaultSelectedKeys={["3"]}
           items={itemsMenu}
         />
       </Sider>
@@ -203,7 +212,7 @@ const Favorite = () => {
           }}
         >
           <Card className="creatediv" ref={ref2}>
-            <Title level={2}>Любимые музыкальные произведения</Title>
+            <Title level={2}>Избранные музыкальные произведения</Title>
           </Card>
 
           <Search

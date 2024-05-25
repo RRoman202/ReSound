@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Layout, Radio, Tooltip } from "antd";
+import {
+  Button,
+  Card,
+  Layout,
+  Radio,
+  Space,
+  Tooltip,
+  Dropdown,
+  Menu,
+  Typography,
+} from "antd";
 import { useDrop } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 import "./MainTrack.css";
@@ -76,6 +86,14 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
         idTrack +
         `&position=` +
         position
+    );
+    fetchTracks();
+    FetchTemplatesTracks();
+  };
+
+  const deleteTrack = async (idTrack: string) => {
+    const response = await axios.delete(
+      `https://localhost:7262/Tracks/trackInPlaylist?idtrack=` + idTrack
     );
     fetchTracks();
     FetchTemplatesTracks();
@@ -178,17 +196,35 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
         >
           {[...tracks].map((track, rowIndex) => (
             <React.Fragment key={rowIndex}>
-              <div
-                style={{
-                  gridRow: `${rowIndex + 1}`,
-                  gridColumn: "1",
-                  background: "lightblue",
-                  textAlign: "center",
-                  padding: "8px",
-                }}
+              <Dropdown
+                placement="topRight"
+                overlay={
+                  <Menu>
+                    <Menu.Item key="1" danger>
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => deleteTrack(track.idTrack)}
+                      >
+                        Удалить
+                      </a>
+                    </Menu.Item>
+                  </Menu>
+                }
               >
-                Дорожка {rowIndex + 1}
-              </div>
+                <div
+                  style={{
+                    gridRow: `${rowIndex + 1}`,
+                    gridColumn: "1",
+                    background: "lightblue",
+                    textAlign: "center",
+                    padding: "8px",
+                    position: "relative",
+                  }}
+                >
+                  Дорожка {rowIndex + 1}
+                </div>
+              </Dropdown>
 
               {[...Array(1)].map((_, colIndex) => {
                 const template = templatestrack.find(

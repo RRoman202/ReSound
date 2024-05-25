@@ -14,6 +14,8 @@ import Composers from "./components/Pages/Composers/Composers";
 import Profile from "./components/Pages/Profile/Profile";
 import Favorite from "./components/Pages/Home/Favorite";
 import Statistic from "./components/Pages/Home/Statistic";
+import PublicTracks from "./components/Pages/Home/PublicTracks";
+import Track from "./components/Pages/Track/Track";
 
 function App() {
   document.title = "ReSound";
@@ -62,6 +64,11 @@ function App() {
               <Route path="/composers" element={<Composers />} />
               <Route path="/user/:user" element={<Profile />} />
               <Route path="/statistic" element={<Statistic></Statistic>} />
+              <Route
+                path="/publictracks"
+                element={<PublicTracks></PublicTracks>}
+              />
+              <Route path="/track/:sequencer" element={<Track></Track>} />
             </>
           ) : (
             <>

@@ -41,6 +41,27 @@ namespace ReSound.Server.Controllers
                 .ToListAsync();
         }
 
+        
+        [HttpGet("UserPublicTracks")]
+        public async Task<IEnumerable<Sequencer>> GetTracksUser(Guid iduser)
+        {
+            var folderPath = Path.Combine(_env.WebRootPath, "tracks");
+
+            var fileNames = Directory.GetFiles(folderPath)
+                .Select(Path.GetFileName)
+                .ToList();
+
+            var fileNamesNoMp3 = new List<string>();
+
+            foreach (var file in fileNames)
+            {
+                fileNamesNoMp3.Add(file.Replace(".mp3", ""));
+            }
+            return await _context.Sequencers
+                .Where(s => s.Private == false && s.IdUser == iduser && fileNamesNoMp3.Contains(s.IdSequencer.ToString())).Include(s => s.User)
+                .ToListAsync();
+        }
+
         [HttpGet("Follower")]
         public async Task<IEnumerable<Sequencer>> GetFollowerTracks(Guid iduser)
         {
@@ -516,6 +537,17 @@ namespace ReSound.Server.Controllers
 
         }
 
+        [HttpDelete("trackInPlaylist")]
+        public async Task DeleteTrack(Guid idtrack)
+        {
+            var seqtrack = await _context.SequencersTracks.Where(x => x.IdTrack == idtrack).FirstOrDefaultAsync();
+            _context.SequencersTracks.Remove(seqtrack);
+            await _context.SaveChangesAsync();
+            var track = await _context.Tracks.FindAsync(idtrack);
+            _context.Tracks.Remove(track);
+            await _context.SaveChangesAsync();
+        }
+
         [HttpPost("track-template")]
         public async Task<TrackTemplate> PostTrackTemplate(Guid idtrack, Guid idtemplate, long position)
         {
@@ -595,6 +627,13 @@ namespace ReSound.Server.Controllers
             await _context.SaveChangesAsync();
 
             return;
+        }
+
+        [HttpGet("track")]
+        public async Task<Sequencer> GetTrack(Guid idsequencer)
+        {
+            var track = await _context.Sequencers.FindAsync(idsequencer);
+            return track;
         }
 
         

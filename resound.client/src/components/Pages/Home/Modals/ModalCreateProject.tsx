@@ -182,7 +182,9 @@ const ModalChooseSound: React.FC<SequencerModalProps> = ({
               id="private"
               name="private"
               valuePropName="checked"
+              initialValue={true}
               wrapperCol={{ offset: 2, span: 16 }}
+              hidden
             >
               <Checkbox>Приватность</Checkbox>
             </Form.Item>
