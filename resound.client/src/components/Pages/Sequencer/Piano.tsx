@@ -78,7 +78,9 @@ const Piano = observer(() => {
   const navigate = useNavigate();
   const { template } = useParams<{ template: string }>();
   const [templateData, setTemplateData] = useState<Template | null>(null);
-
+  const [loading, setLoading] = useState(true);
+  const [cols, setCols] = useState(48);
+  const [widthTime, setWidthTime] = useState(1920);
   const [loadingsBtn, setLoadingsBtn] = useState(false);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [fileNameSound, setFileNameSound] = useState("");
@@ -137,9 +139,7 @@ const Piano = observer(() => {
     }
     setLoading(false);
   }, [templateData]);
-  const [loading, setLoading] = useState(true);
-  const [cols, setCols] = useState(48);
-  const [widthTime, setWidthTime] = useState(1920);
+
   // useEffect(() => {
   //   const fetchData = async () => {
   //     setLoading(false);

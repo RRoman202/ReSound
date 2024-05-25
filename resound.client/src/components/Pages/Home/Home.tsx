@@ -52,13 +52,16 @@ const itemsMenu = customLabels.map((label, index) => ({
 
 const user = JSON.parse(localStorage.getItem("userfull")!);
 
-const menu = (
-  <Menu>
-    <Menu.Item key="1">
-      <ModalUpdateUser userlogin={user.login}></ModalUpdateUser>
-    </Menu.Item>
-  </Menu>
-);
+let menu = null;
+if (user != null) {
+  menu = (
+    <Menu>
+      <Menu.Item key="1">
+        <ModalUpdateUser userlogin={user.login}></ModalUpdateUser>
+      </Menu.Item>
+    </Menu>
+  );
+}
 
 const UserPanel = () => (
   <div

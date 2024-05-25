@@ -56,7 +56,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\sounds\Басс\" />
     <Folder Include="wwwroot\tracks\" />
     <Folder Include="wwwroot\avatars\" />
     <Folder Include="wwwroot\covers\" />
