@@ -234,16 +234,45 @@ const Favorite = () => {
               dataSource={filteredSequencers}
               renderItem={(sequencer) => (
                 <List.Item ref={ref3}>
-                  <Card className="card-project" title={sequencer.name}>
-                    <p>{sequencer.description}</p>
-                    <AudioPlayer
-                      style={{ marginTop: "10px" }}
-                      src={
-                        `https://localhost:7262/track/` + sequencer.idSequencer
-                      }
-                      autoPlay={false}
-                      controls
-                    />
+                  <Card
+                    className="card-project"
+                    title={sequencer.name}
+                    extra={
+                      <Dropdown
+                        overlay={
+                          <Menu>
+                            <Menu.Item key="1">
+                              <Link to={`/track/${sequencer.idSequencer}`}>
+                                Подробнее
+                              </Link>
+                            </Menu.Item>
+                          </Menu>
+                        }
+                      >
+                        <Button icon={<MoreOutlined></MoreOutlined>}></Button>
+                      </Dropdown>
+                    }
+                  >
+                    <Space>
+                      <img
+                        width={50}
+                        height={50}
+                        src={
+                          `https://localhost:7262/Files/cover?idsequencer=` +
+                          sequencer.idSequencer
+                        }
+                      />
+                      <div style={{ marginRight: "10px" }}>
+                        <AudioPlayer
+                          src={
+                            `https://localhost:7262/track/` +
+                            sequencer.idSequencer
+                          }
+                          autoPlay={false}
+                          controls
+                        />
+                      </div>
+                    </Space>
                   </Card>
                 </List.Item>
               )}

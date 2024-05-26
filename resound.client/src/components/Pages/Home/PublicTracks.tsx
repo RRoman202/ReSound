@@ -253,15 +253,26 @@ const PublicTracks = () => {
                       </Dropdown>
                     }
                   >
-                    <p>{sequencer.description}</p>
-                    <AudioPlayer
-                      style={{ marginTop: "10px" }}
-                      src={
-                        `https://localhost:7262/track/` + sequencer.idSequencer
-                      }
-                      autoPlay={false}
-                      controls
-                    />
+                    <Space>
+                      <img
+                        width={50}
+                        height={50}
+                        src={
+                          `https://localhost:7262/Files/cover?idsequencer=` +
+                          sequencer.idSequencer
+                        }
+                      />
+                      <div style={{ marginRight: "10px" }}>
+                        <AudioPlayer
+                          src={
+                            `https://localhost:7262/track/` +
+                            sequencer.idSequencer
+                          }
+                          autoPlay={false}
+                          controls
+                        />
+                      </div>
+                    </Space>
                   </Card>
                 </List.Item>
               )}

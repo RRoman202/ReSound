@@ -16,6 +16,7 @@ import {
   QuestionCircleOutlined,
   MoreOutlined,
   ExportOutlined,
+  FilterOutlined,
 } from "@ant-design/icons";
 import {
   Layout,
@@ -195,6 +196,22 @@ const Home = () => {
     setFilteredSequencers(filtered);
   };
 
+  const handleFilter = (key: string) => {
+    if (key == "1") {
+      setFilteredSequencers(sequencers);
+    }
+    if (key == "2") {
+      setFilteredSequencers(
+        sequencers.filter((sequencer) => sequencer.private == false)
+      );
+    }
+    if (key == "3") {
+      setFilteredSequencers(
+        sequencers.filter((sequencer) => sequencer.private == true)
+      );
+    }
+  };
+
   return (
     <Layout>
       <Sider
@@ -236,13 +253,36 @@ const Home = () => {
             ></ModalCreateProject>
           </Card>
           <Title level={4}>Мои музыкальные произведения</Title>
-          <Search
-            style={{ marginTop: 20 }}
-            placeholder="Поиск музыкальных произведений"
-            enterButton
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
+          <Space wrap>
+            <Search
+              style={{ marginTop: 20, width: "160vh" }}
+              placeholder="Поиск музыкальных произведений"
+              enterButton
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            <Dropdown
+              overlay={
+                <Menu>
+                  <Menu.Item key="1" onClick={(e) => handleFilter(e.key)}>
+                    Все
+                  </Menu.Item>
+                  <Menu.Item key="2" onClick={(e) => handleFilter(e.key)}>
+                    Публичные
+                  </Menu.Item>
+                  <Menu.Item key="3" onClick={(e) => handleFilter(e.key)}>
+                    Приватные
+                  </Menu.Item>
+                </Menu>
+              }
+            >
+              <Button
+                style={{ marginTop: 20 }}
+                icon={<FilterOutlined></FilterOutlined>}
+              ></Button>
+            </Dropdown>
+          </Space>
+
           <div>
             <List
               className="listprojects"
@@ -285,14 +325,15 @@ const Home = () => {
                                 Открыть
                               </Link>
                             </Menu.Item>
-                            <Menu.Item key="2">
+                            <Menu.Item key="2">Опубликовать</Menu.Item>
+                            <Menu.Item key="3">
                               <ModalUpdateProject
                                 setFilteredSequencers={setFilteredSequencers}
                                 setSequencers={setSequencers}
                                 idsequencer={sequencer.idSequencer}
                               ></ModalUpdateProject>
                             </Menu.Item>
-                            <Menu.Item key="3" danger>
+                            <Menu.Item key="4" danger>
                               <a
                                 target="_blank"
                                 rel="noopener noreferrer"

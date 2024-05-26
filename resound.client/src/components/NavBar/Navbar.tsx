@@ -124,7 +124,20 @@ export default function NavBar({ setIsLoggedIn, isLoggedIn }: NavBarProps) {
           {isLoggedIn ? (
             <Dropdown menu={{ items }}>
               <a onClick={(e) => e.preventDefault()}>
-                <Button type="primary" icon={<UserOutlined />}>
+                <Button
+                  type="primary"
+                  icon={
+                    <Avatar
+                      src={
+                        `https://localhost:7262/Files/avatar?iduser=` +
+                        localStorage.getItem("userid")
+                      }
+                      size={25}
+                      icon={<UserOutlined />}
+                      style={{ marginBottom: "5px" }}
+                    />
+                  }
+                >
                   {localStorage.getItem("user")}
                 </Button>
               </a>

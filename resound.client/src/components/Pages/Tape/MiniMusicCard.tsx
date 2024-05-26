@@ -252,6 +252,19 @@ const MiniMusicCard: React.FC<MusicCardProps> = ({
         onClose={onClose}
         open={openDrawer}
       >
+        <Input.TextArea
+          value={newComment}
+          onChange={handleCommentChange}
+          placeholder="Добавить комментарий..."
+          style={{ marginTop: "20px" }}
+        />
+        <Button
+          onClick={handleAddComment}
+          type="primary"
+          style={{ marginTop: "10px" }}
+        >
+          Отправить
+        </Button>
         {commentData.map((comment) => (
           <div
             style={{
@@ -288,19 +301,6 @@ const MiniMusicCard: React.FC<MusicCardProps> = ({
             </Flex>
           </div>
         ))}
-        <Input.TextArea
-          value={newComment}
-          onChange={handleCommentChange}
-          placeholder="Добавить комментарий..."
-          style={{ marginTop: "20px" }}
-        />
-        <Button
-          onClick={handleAddComment}
-          type="primary"
-          style={{ marginTop: "10px" }}
-        >
-          Отправить
-        </Button>
       </Drawer>
 
       <AudioPlayer

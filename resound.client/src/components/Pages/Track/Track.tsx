@@ -251,6 +251,19 @@ const Track = () => {
         onClose={onClose}
         open={openDrawer}
       >
+        <Input.TextArea
+          value={newComment}
+          onChange={handleCommentChange}
+          placeholder="Добавить комментарий..."
+          style={{ marginTop: "20px" }}
+        />
+        <Button
+          onClick={handleAddComment}
+          type="primary"
+          style={{ marginTop: "10px" }}
+        >
+          Отправить
+        </Button>
         {commentData.map((comment) => (
           <div
             style={{
@@ -287,19 +300,6 @@ const Track = () => {
             </Flex>
           </div>
         ))}
-        <Input.TextArea
-          value={newComment}
-          onChange={handleCommentChange}
-          placeholder="Добавить комментарий..."
-          style={{ marginTop: "20px" }}
-        />
-        <Button
-          onClick={handleAddComment}
-          type="primary"
-          style={{ marginTop: "10px" }}
-        >
-          Отправить
-        </Button>
       </Drawer>
       <Row gutter={16}>
         <Col span={8}>

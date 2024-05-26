@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useReducer, useRef } from "react";
+import React, { useEffect, useState, useRef, useReducer } from "react";
 import ModalCreateProject from "./Modals/ModalCreateProject";
 import { useNavigate, Link } from "react-router-dom";
 import changeTheme from "../../NavBar/changeTheme";
 import { hideNav, viewNav } from "../MainTrack/HiddenNavbar";
 import AudioPlayer from "react-audio-player";
 import type { MenuProps, TourProps } from "antd";
-import { Line } from "@ant-design/charts";
+import { Bar } from "@ant-design/charts";
 import {
   UploadOutlined,
   UserOutlined,
@@ -33,6 +33,7 @@ import {
   FloatButton,
   Input,
   Tour,
+  Table,
 } from "antd";
 import "./Home.css";
 import axios from "axios";
@@ -141,29 +142,25 @@ const Statistic = () => {
 
   const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [dataRating, setDataRating] = useState([]);
 
-  const [props, setProps] = useState([]);
+  const columns = [
+    {
+      title: "Название трека",
+      dataIndex: "name",
+      key: "name",
+    },
+    {
+      title: "Количество прослушиваний",
+      dataIndex: "views",
+      key: "views",
+    },
+  ];
 
   useEffect(() => {
     getSequencers();
+    getDataRating();
   }, []);
-
-  const setPropsFunc = async () => {
-    const propss = {
-      data,
-      xField: "name",
-      yField: "views",
-    };
-
-    setProps(propss);
-    console.log(sequencers);
-    console.log(props);
-    console.log(props2);
-  };
-
-  useEffect(() => {
-    setPropsFunc();
-  }, [data]);
 
   const changeMenu = async (value: string) => {
     if (value === "1") {
@@ -189,7 +186,23 @@ const Statistic = () => {
     setData(response.data);
   };
 
-  if (!data && !props) {
+  const getDataRating = async () => {
+    const response = await axios.get(
+      "https://localhost:7262/Tracks/my-popularite?iduser=" +
+        localStorage.getItem("userid")
+    );
+
+    setDataRating(response.data);
+  };
+
+  const config = {
+    data: dataRating,
+
+    xField: "name",
+    yField: "rating",
+  };
+
+  if (!data || !dataRating) {
     return <></>;
   }
 
@@ -232,7 +245,20 @@ const Statistic = () => {
           <Typography.Title level={3}>
             Количество прослушиваний у ваших треков
           </Typography.Title>
-          <Line {...props} />
+          <Table
+            dataSource={data}
+            columns={columns}
+            pagination={{ pageSize: 4 }}
+          />
+          <Typography.Title level={3}>Рейтинг ваших треков</Typography.Title>
+          <Typography.Text type="secondary">
+            По этому рейтингу определяется на какой строчке будет ваш трек во
+            вкладке "В тренде"
+          </Typography.Text>
+
+          <div style={{ height: 400 }}>
+            <Bar {...config} />
+          </div>
         </Content>
         <Tour
           open={openTour}

@@ -128,7 +128,7 @@ namespace ReSound.Server.Controllers
         [HttpGet("comment")]
         public async Task<IEnumerable<Comment>> GetCommentTrack(Guid idsequencer)
         {
-            var comments = await _context.Comments.Where(x => x.IdSequencer == idsequencer).Include(x => x.User).ToListAsync();
+            var comments = await _context.Comments.Where(x => x.IdSequencer == idsequencer).Include(x => x.User).OrderBy(x => x.Created).Reverse().ToListAsync();
             return comments;
         }
 
@@ -258,6 +258,40 @@ namespace ReSound.Server.Controllers
                 .ToList();
 
             return sortedSequencers;
+        }
+
+        [HttpGet("my-popularite")]
+        public async Task<IEnumerable<RatingStatisticDTO>> GetMyPopulariteTrack(Guid iduser)
+        {
+            var folderPath = Path.Combine(_env.WebRootPath, "tracks");
+
+            var fileNames = Directory.GetFiles(folderPath)
+                .Select(Path.GetFileName)
+                .ToList();
+
+            var fileNamesNoMp3 = new List<string>();
+
+            foreach (var file in fileNames)
+            {
+                fileNamesNoMp3.Add(file.Replace(".mp3", ""));
+            }
+
+            var sequencers = await _context.Sequencers.Where(s => s.IdUser == iduser && s.Private == false && fileNamesNoMp3.Contains(s.IdSequencer.ToString())).ToListAsync();
+
+            var populariteList = new List<RatingStatisticDTO>();
+
+            foreach (var s in sequencers)
+            {
+                populariteList.Add(new RatingStatisticDTO
+                {
+                    Name = s.Name,
+                    Rating = CalculatePopularite(s.IdSequencer)
+                });
+            }
+
+            
+
+            return populariteList;
         }
 
         [HttpGet("popularite-month")]
