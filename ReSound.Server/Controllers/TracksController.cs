@@ -132,6 +132,14 @@ namespace ReSound.Server.Controllers
             return comments;
         }
 
+        [HttpDelete("comment")]
+        public async Task DeleteComment(Guid idcomment)
+        {
+            var comment = await _context.Comments.FindAsync(idcomment);
+            _context.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
+        }
+
         [HttpGet("last-comment")]
         public async Task<IEnumerable<Comment>> GetLastCommentTrack()
         {

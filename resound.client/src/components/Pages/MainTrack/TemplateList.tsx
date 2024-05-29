@@ -1,6 +1,5 @@
 import React from "react";
 import { Button, List, Card, Slider, Dropdown, Menu } from "antd";
-import { useDrag } from "react-dnd";
 import { ItemTypes } from "./ItemTypes";
 import { useNavigate, Link } from "react-router-dom";
 import { hideNav } from "./HiddenNavbar";
@@ -53,11 +52,6 @@ const TemplateList: React.FC<TemplateListProps> = ({
   setTemplates,
   onChangeSelectTemplate,
 }) => {
-  const [, drag] = useDrag({
-    type: ItemTypes.TEMPLATE,
-    item: { name: "Template" },
-  });
-
   const [selectedTemplate, setSelectedTemplate] = useState(null);
 
   const handleSelectTemplate = async (template: Template) => {
@@ -133,7 +127,7 @@ const TemplateList: React.FC<TemplateListProps> = ({
         dataSource={templates}
         renderItem={(item) => (
           <List.Item>
-            <div ref={drag}>
+            <div>
               <Card
                 // style={{
                 //   backgroundColor: "lightblue",

@@ -1,4 +1,4 @@
-import { Modal, Button, Form, Input, Checkbox, Spin } from "antd";
+import { Modal, Button, Form, Input, Checkbox, Spin, message } from "antd";
 import { useState, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate, Link } from "react-router-dom";
@@ -25,10 +25,20 @@ const ModalChooseSound: React.FC<SequencerModalProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [file, setFile] = useState(null);
   const [form] = Form.useForm();
+
   const navigate = useNavigate();
 
   const showModal = () => {
     setIsModalOpen(true);
+  };
+
+  const [mes, contextHolder] = message.useMessage();
+
+  const error = () => {
+    mes.open({
+      type: "error",
+      content: "Заполните все необходимые поля",
+    });
   };
 
   const handleOk = () => {
@@ -43,7 +53,7 @@ const ModalChooseSound: React.FC<SequencerModalProps> = ({
         if (!values.name) {
           setIsLoading(false);
           // Display error message to the user
-          console.error("Name is required!");
+          error();
           return;
         }
 
@@ -120,6 +130,7 @@ const ModalChooseSound: React.FC<SequencerModalProps> = ({
 
   return (
     <>
+      {contextHolder}
       <Button
         type="primary"
         onClick={showModal}

@@ -12,6 +12,7 @@ import {
   Flex,
   Avatar,
   Tag,
+  Tooltip,
 } from "antd";
 import AudioPlayer from "react-audio-player";
 import axios from "axios";
@@ -27,6 +28,7 @@ import {
   HeartOutlined,
   CommentOutlined,
   UserOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import moment from "moment"; // Import moment.js
@@ -228,6 +230,13 @@ const MiniMusicCard: React.FC<MusicCardProps> = ({
     setNewComment("");
   };
 
+  const deleteComment = async (idcomment: string) => {
+    const response = await axios.delete(
+      `https://localhost:7262/Tracks/comment?idcomment=` + idcomment
+    );
+    fetchComments();
+  };
+
   if (!userData || !commentData) {
     return null;
   }
@@ -272,8 +281,21 @@ const MiniMusicCard: React.FC<MusicCardProps> = ({
               backgroundColor: "#f5f5f5",
               padding: "10px",
               borderRadius: "5px",
+              position: "relative",
             }}
           >
+            {comment.user.idUser == localStorage.getItem("userid") ? (
+              <Tooltip title="Удалить комментарий">
+                <Button
+                  style={{ position: "absolute", right: "10px" }}
+                  icon={<CloseOutlined></CloseOutlined>}
+                  size="small"
+                  onClick={() => deleteComment(comment.idComment)}
+                ></Button>
+              </Tooltip>
+            ) : (
+              <></>
+            )}
             <Avatar
               style={{ marginBottom: "5px" }}
               src={
@@ -310,12 +332,21 @@ const MiniMusicCard: React.FC<MusicCardProps> = ({
         autoPlay={false}
         controls
       />
-      <Button
-        type="primary"
-        style={{ marginLeft: "20px" }}
-        onClick={showDrawer}
-        icon={<CommentOutlined></CommentOutlined>}
-      ></Button>
+      <div style={{ marginTop: "10px" }}>
+        <Button
+          size="small"
+          type="primary"
+          onClick={showDrawer}
+          icon={<CommentOutlined></CommentOutlined>}
+        ></Button>
+        <Button
+          size="small"
+          style={{ marginLeft: "10px" }}
+          onClick={() => navigate(`/track/${idSequencer}`)}
+        >
+          Подробнее
+        </Button>
+      </div>
     </Card>
   );
 };

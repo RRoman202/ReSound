@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   Card,
   Image,
@@ -12,6 +13,8 @@ import {
   Flex,
   Avatar,
   Tag,
+  Tooltip,
+  Space,
 } from "antd";
 import AudioPlayer from "react-audio-player";
 import axios from "axios";
@@ -27,6 +30,8 @@ import {
   HeartOutlined,
   CommentOutlined,
   UserOutlined,
+  CloseOutlined,
+  StarFilled,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import moment from "moment"; // Import moment.js
@@ -45,6 +50,7 @@ interface MusicCardProps {
   idUser: number;
   idSequencer: number;
   views: number;
+  publicDate: string;
 }
 
 const MusicCard: React.FC<MusicCardProps> = ({
@@ -58,6 +64,7 @@ const MusicCard: React.FC<MusicCardProps> = ({
   idUser,
   idSequencer,
   views,
+  publicDate,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [userData, setUserData] = useState(null);
@@ -246,6 +253,13 @@ const MusicCard: React.FC<MusicCardProps> = ({
     setNewComment("");
   };
 
+  const deleteComment = async (idcomment: string) => {
+    const response = await axios.delete(
+      `https://localhost:7262/Tracks/comment?idcomment=` + idcomment
+    );
+    fetchComments();
+  };
+
   if (!userData || !commentData) {
     return null;
   }
@@ -279,8 +293,21 @@ const MusicCard: React.FC<MusicCardProps> = ({
               backgroundColor: "#f5f5f5",
               padding: "10px",
               borderRadius: "5px",
+              position: "relative",
             }}
           >
+            {comment.user.idUser == localStorage.getItem("userid") ? (
+              <Tooltip title="Удалить комментарий">
+                <Button
+                  style={{ position: "absolute", right: "10px" }}
+                  icon={<CloseOutlined></CloseOutlined>}
+                  size="small"
+                  onClick={() => deleteComment(comment.idComment)}
+                ></Button>
+              </Tooltip>
+            ) : (
+              <></>
+            )}
             <Avatar
               style={{ marginBottom: "5px" }}
               src={
@@ -375,19 +402,25 @@ const MusicCard: React.FC<MusicCardProps> = ({
             <Col></Col>
           </Row>
         </Col>
-        <Col span={6} style={{ textAlign: "end" }}>
-          <Flex gap={5} vertical>
-            <Tag color="blue">
-              <Typography.Text>Рейтинг: {rate}</Typography.Text>
-            </Tag>
-            <Tag color="blue">
-              <Typography.Text>Прослушали: {views}</Typography.Text>
-            </Tag>
-            <Tag color="blue">
-              <Typography.Text>Понравилось: {likescount}</Typography.Text>
-            </Tag>
-          </Flex>
-        </Col>
+        <Space style={{ position: "absolute", top: "20px", right: "20px" }}>
+          <Tag
+            color="blue"
+            icon={<StarFilled></StarFilled>}
+            style={{ textAlign: "center" }}
+          >
+            <Typography.Text>{rate}</Typography.Text>
+          </Tag>
+          <Button size="small">
+            <Link to={`/track/${idSequencer}`}>Подробнее</Link>
+          </Button>
+        </Space>
+        <Typography.Text
+          type="secondary"
+          style={{ position: "absolute", bottom: "20px", right: "20px" }}
+        >
+          {"Дата публикации: "}
+          {moment(publicDate).format("DD MMMM YYYY HH:mm")}
+        </Typography.Text>
       </Row>
     </Card>
   );

@@ -207,6 +207,7 @@ namespace ReSound.Server.Repositories.Sequencers
             sequencer.Name = sequencerPatchDTO.Name;
             sequencer.Description = sequencerPatchDTO.Description;
             sequencer.Private = sequencerPatchDTO.Private;
+            sequencer.Updated = DateTime.UtcNow;
             
 
             
@@ -221,6 +222,11 @@ namespace ReSound.Server.Repositories.Sequencers
 
             template.Notes = templatePatchDTO.Notes;
             template.Name = templatePatchDTO.Name;
+
+            var seq_temp = await _context.SequencersTemplates.Where(x => x.IdTemplate == template.IdTemplate).FirstOrDefaultAsync();
+            var seq = await _context.Sequencers.FindAsync(seq_temp.IdSequencer);
+
+            seq.Updated = DateTime.UtcNow;
 
             await _context.SaveChangesAsync();
 

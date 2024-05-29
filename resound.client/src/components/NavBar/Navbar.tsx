@@ -50,21 +50,32 @@ export default function NavBar({ setIsLoggedIn, isLoggedIn }: NavBarProps) {
         </a>
       ),
     },
-
     {
       key: "2",
       label: (
         <a
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => navigate("/favorite")}
+          onClick={() => navigate("/publictracks")}
         >
-          Любимое
+          Опубликованные
         </a>
       ),
     },
     {
       key: "3",
+      label: (
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => navigate("/favorite")}
+        >
+          Избранные
+        </a>
+      ),
+    },
+    {
+      key: "4",
       label: (
         <a
           target="_blank"
@@ -76,7 +87,8 @@ export default function NavBar({ setIsLoggedIn, isLoggedIn }: NavBarProps) {
       ),
     },
     {
-      key: "4",
+      key: "5",
+      danger: true,
       label: (
         <a target="_blank" rel="noopener noreferrer" onClick={handleLogout}>
           Выход

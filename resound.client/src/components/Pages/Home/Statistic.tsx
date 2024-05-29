@@ -100,46 +100,6 @@ const UserPanel = () => (
 const Statistic = () => {
   viewNav();
 
-  const ref1 = useRef(null);
-  const ref2 = useRef(null);
-  const ref3 = useRef(null);
-  const [openTour, setOpenTour] = useState<boolean>(false);
-  const steps: TourProps["steps"] = [
-    {
-      title: "Ваши данные",
-      description: "Следите за вашими проектами и их статистикой.",
-      target: () => ref1.current,
-      nextButtonProps: {
-        children: <>Дальше</>,
-      },
-      prevButtonProps: {
-        children: <>Назад</>,
-      },
-    },
-    {
-      title: "Новые шедевры",
-      description: "Создавайте свои проекты и сочиняйте музыку.",
-      target: () => ref2.current,
-      nextButtonProps: {
-        children: <>Дальше</>,
-      },
-      prevButtonProps: {
-        children: <>Назад</>,
-      },
-    },
-    {
-      title: "Продолжайте работу",
-      description: "Начните с того места откуда закончили.",
-      target: () => ref3.current,
-      nextButtonProps: {
-        children: <>Закончить</>,
-      },
-      prevButtonProps: {
-        children: <>Назад</>,
-      },
-    },
-  ];
-
   const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [dataRating, setDataRating] = useState([]);
@@ -196,7 +156,7 @@ const Statistic = () => {
   };
 
   const config = {
-    data: dataRating,
+    data: dataRating.sort((d1, d2) => d2.rating - d1.rating),
 
     xField: "name",
     yField: "rating",
@@ -220,7 +180,7 @@ const Statistic = () => {
         }}
       >
         <div className="demo-logo-vertical" />
-        <div ref={ref1}>
+        <div>
           <UserPanel />
         </div>
 
@@ -239,14 +199,14 @@ const Statistic = () => {
             padding: "20px",
           }}
         >
-          <Card className="creatediv" ref={ref2}>
+          <Card className="creatediv">
             <Title level={2}>Статистика</Title>
           </Card>
           <Typography.Title level={3}>
-            Количество прослушиваний у ваших треков
+            Количество прослушиваний ваших треков
           </Typography.Title>
           <Table
-            dataSource={data}
+            dataSource={data.sort((d1, d2) => d2.views - d1.views)}
             columns={columns}
             pagination={{ pageSize: 4 }}
           />
@@ -260,11 +220,6 @@ const Statistic = () => {
             <Bar {...config} />
           </div>
         </Content>
-        <Tour
-          open={openTour}
-          onClose={() => setOpenTour(false)}
-          steps={steps}
-        />
       </Layout>
     </Layout>
   );

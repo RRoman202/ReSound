@@ -1,4 +1,4 @@
-import { Modal, Button, Form, Input, Checkbox, Spin } from "antd";
+import { Modal, Button, Form, Input, Checkbox, Spin, message } from "antd";
 import { useState, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate, Link } from "react-router-dom";
@@ -53,6 +53,7 @@ const ModalUpdateUser: React.FC<UserModalProps> = ({ userlogin }) => {
         if (!values.login) {
           setIsLoading(false);
           console.error("Name is required!");
+          error();
           return;
         }
         if (values.photo) {
@@ -86,12 +87,22 @@ const ModalUpdateUser: React.FC<UserModalProps> = ({ userlogin }) => {
       });
   };
 
+  const [mes, contextHolder] = message.useMessage();
+
+  const error = () => {
+    mes.open({
+      type: "error",
+      content: "Заполните все необходимые поля",
+    });
+  };
+
   const handleCancel = () => {
     setIsModalOpen(false);
   };
 
   return (
     <>
+      {contextHolder}
       <a type="primary" onClick={showModal}>
         Редактировать
       </a>

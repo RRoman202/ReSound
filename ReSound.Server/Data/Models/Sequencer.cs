@@ -20,6 +20,7 @@ namespace ReSound.Server.Data.Models
         public DateTime? Created { get; set; }
 
         public DateTime? Updated { get; set; }
+        public DateTime? PublicDate { get; set; }
         
         public bool Private { get; set; }
 

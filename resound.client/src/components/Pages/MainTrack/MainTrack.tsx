@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import TemplateList from "./TemplateList";
 import AudioTrackGrid from "./TemplateGrid";
 import { hideNav, viewNav } from "./HiddenNavbar";
@@ -121,7 +119,7 @@ const MainTrack: React.FC = () => {
   }
 
   return (
-    <DndProvider backend={HTML5Backend}>
+    <div style={{ height: "100vh" }}>
       <Drawer title="Файл" placement="left" onClose={onClose} open={openDrawer}>
         <Space direction="vertical">
           {sequencerData.private ? (
@@ -141,14 +139,14 @@ const MainTrack: React.FC = () => {
           </Typography.Text>
           <Flex vertical gap="small" style={{ width: "300px" }}>
             {/* <Button type="primary" disabled>
-              Сохранить
-            </Button>
-            <Button type="primary" disabled>
-              Сохранить как
-            </Button>
-            <Button type="primary" disabled>
-              Экспорт
-            </Button> */}
+          Сохранить
+        </Button>
+        <Button type="primary" disabled>
+          Сохранить как
+        </Button>
+        <Button type="primary" disabled>
+          Экспорт
+        </Button> */}
             <Button type="primary" onClick={closePage}>
               Выйти
             </Button>
@@ -164,7 +162,13 @@ const MainTrack: React.FC = () => {
             <BpmInput></BpmInput>
           </Flex>
         </Header>
-        <div style={{ display: "flex", marginTop: "40px" }}>
+        <div
+          style={{
+            display: "flex",
+            marginTop: "40px",
+            backgroundColor: "lightgray",
+          }}
+        >
           <div style={{ flex: 1, marginLeft: "10px" }}>
             <TemplateList
               templates={templates}
@@ -174,7 +178,13 @@ const MainTrack: React.FC = () => {
               onChangeSelectTemplate={handleChangeTemplate}
             />
           </div>
-          <div style={{ flex: 2, marginLeft: "20px", marginRight: "10px" }}>
+          <div
+            style={{
+              flex: 2,
+              marginLeft: "20px",
+              marginRight: "10px",
+            }}
+          >
             <AudioTrackGrid
               idSequencer={sequencer}
               selectedTemplate={selectedTemplate}
@@ -183,7 +193,7 @@ const MainTrack: React.FC = () => {
         </div>
       </Layout>
       <BaseUrl url={url} filename={filename}></BaseUrl>
-    </DndProvider>
+    </div>
   );
 };
 

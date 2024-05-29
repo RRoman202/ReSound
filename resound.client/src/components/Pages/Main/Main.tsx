@@ -16,7 +16,8 @@ import background from "./background.png";
 import logo from "./logo.png";
 import AudioPlayer from "react-audio-player";
 import axios from "axios";
-import moment from "moment";
+import Moment from "moment";
+import "moment/dist/locale/ru";
 import "./Main.css";
 import { TrackCard } from "./TrackCard";
 
@@ -231,7 +232,13 @@ const Main = () => {
                       padding: "10px",
                     }}
                   >
-                    <Typography.Text style={{ fontSize: "20px" }}>
+                    <Typography.Text
+                      style={{
+                        fontSize: "20px",
+                        fontWeight: "bold",
+                        color: "white",
+                      }}
+                    >
                       {genre.name}: {genre.count}
                     </Typography.Text>
                   </div>
@@ -390,7 +397,10 @@ const Main = () => {
         />
       </Layout>
       <Layout style={{ backgroundColor: "#1677ff" }}>
-        <Typography.Title level={3} style={{ textAlign: "center" }}>
+        <Typography.Title
+          level={3}
+          style={{ textAlign: "center", color: "white" }}
+        >
           Отзывы
         </Typography.Title>
         <List
@@ -450,7 +460,7 @@ const Main = () => {
                   </Typography.Paragraph>
                 </div>
                 <Typography.Text style={{ fontSize: "11px" }}>
-                  {moment(comment.created).format("DD MMMM YYYY HH:mm")}
+                  {Moment(comment.created).format("DD MMMM YYYY HH:mm")}
                 </Typography.Text>
               </div>
             </List.Item>

@@ -11,6 +11,8 @@ import {
   Typography,
 } from "antd";
 import { useDrop } from "react-dnd";
+import Crunker from "crunker";
+import { createBlob, blobToArrayBuffer, arrayBufferToBlob } from "blob-util";
 import { ItemTypes } from "./ItemTypes";
 import "./MainTrack.css";
 import CanvasTimeSignature from "../../sequencer/ui/TimeSignatureBar";
@@ -36,6 +38,7 @@ import {
   swap,
   move,
 } from "react-grid-dnd";
+import localforage from "localforage";
 const { Header, Content, Footer } = Layout;
 
 interface Template {
@@ -116,7 +119,7 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
     // console.log(tracks);
     // console.log(templatestrack);
     Tone.start();
-    setIsBlocked(true);
+
     let k = 0;
 
     tracks.forEach(async (track) => {
@@ -138,13 +141,71 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
 
         PlayTracks(notes.notes, fileNameSound);
 
-        setTimeout(async () => {
-          setIsBlocked(false);
-        }, (notes.notes.length * 1000) / (Tone.Transport.bpm.value / 60) / 2);
+        setTimeout(async () => {},
+        (notes.notes.length * 1000) / (Tone.Transport.bpm.value / 60) / 2);
 
         // console.log(template);
       });
     });
+  };
+
+  const mergeBlobs = async (maxBlobs: number) => {
+    const formData = new FormData();
+    const blobs: Blob[] = [];
+    const urls: string[] = [];
+    const audioBuffers = [];
+
+    const audioContext = new AudioContext();
+
+    for (let i = 0; i < maxBlobs; i++) {
+      blobs.push(await localforage.getItem("blob" + i));
+      const url = URL.createObjectURL(await localforage.getItem("blob" + i));
+      urls.push(url);
+    }
+    for (const url of urls) {
+      const response = await fetch(url);
+      const arrayBuffer = await response.arrayBuffer();
+
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+
+      audioBuffers.push(audioBuffer);
+    }
+    const crunker = new Crunker();
+    console.log(audioBuffers);
+    const merged = crunker.mergeAudio(audioBuffers);
+    const output = crunker.export(merged, "audio/wav");
+    console.log(output);
+
+    const mergedBlob: Blob = new Blob([output.blob]);
+
+    const url = URL.createObjectURL(mergedBlob);
+
+    const anchor = document.createElement("a");
+    anchor.download = "recording.wav";
+    anchor.href = url;
+    anchor.click();
+    formData.append("audioFile", mergedBlob);
+    formData.append("idsequencer", idSequencer);
+
+    const response = await axios.post(
+      "https://localhost:7262/Users/upload-audio",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+    localforage
+      .clear()
+      .then(function () {
+        // Run this code once the database has been entirely deleted.
+        console.log("Database is now empty.");
+      })
+      .catch(function (err) {
+        // This code runs if there were any errors
+        console.log(err);
+      });
   };
 
   const publicTrack = async () => {
@@ -152,7 +213,7 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
     Tone.start();
     setIsBlocked(true);
 
-    tracks.forEach((track) => {
+    tracks.forEach(async (track, i) => {
       const trackTemplates = templatestrack.filter(
         (t) => t.idTrack === track.idTrack
       );
@@ -160,13 +221,28 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
       const playtemplates = trackTemplates.filter(
         (t) => t.positionTemplate === k
       );
+
       playtemplates.forEach(async (template) => {
         const notes = JSON.parse(template.template.notes);
         const response = await axios.get(
           `https://localhost:7262/Tracks/sound?idsound=${template.template.idSound}`
         );
+
         const fileNameSound = response.data.fileName;
-        PublicationTrack(notes.notes, fileNameSound);
+        PublicationTrack(notes.notes, fileNameSound, i);
+
+        setTimeout(async () => {
+          setIsBlocked(false);
+          localforage
+            .length()
+            .then(function (numberOfKeys) {
+              console.log(numberOfKeys);
+              mergeBlobs(numberOfKeys);
+            })
+            .catch(function (err) {
+              console.log(err);
+            });
+        }, (notes.notes.length * 1000) / (Tone.Transport.bpm.value / 60) / 2);
       });
     });
   };
@@ -274,7 +350,12 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
 
           {isBlocked ? (
             <>
-              <Button type="primary" onClick={() => publicTrack()}>
+              <Button
+                type="primary"
+                onClick={() => {
+                  publicTrack();
+                }}
+              >
                 Опубликовать
               </Button>
             </>

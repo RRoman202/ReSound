@@ -131,6 +131,10 @@ namespace ReSound.Server.Controllers
                 await audioDTO.audioFile.CopyToAsync(stream);
             }
 
+            var seq = await _context.Sequencers.FindAsync(audioDTO.IdSequencer);
+            seq.PublicDate = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
             return Ok(new { audioDTO.IdSequencer });
         }
 

@@ -13,6 +13,8 @@ import {
   Flex,
   Avatar,
   Tag,
+  Space,
+  Tooltip,
 } from "antd";
 import AudioPlayer from "react-audio-player";
 import axios from "axios";
@@ -20,6 +22,10 @@ import {
   HeartOutlined,
   CommentOutlined,
   UserOutlined,
+  StarFilled,
+  CloseOutlined,
+  PlayCircleOutlined,
+  LikeFilled,
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
@@ -77,6 +83,13 @@ const Track = () => {
     };
     fetchAllFavorites();
   }, [userData]);
+
+  const deleteComment = async (idcomment: string) => {
+    const response = await axios.delete(
+      `https://localhost:7262/Tracks/comment?idcomment=` + idcomment
+    );
+    fetchComments();
+  };
 
   const getSequencer = async () => {
     const response = await axios.get(
@@ -243,7 +256,121 @@ const Track = () => {
   }
 
   return (
-    <Card style={{ marginTop: "20px", backgroundColor: "lightblue" }}>
+    <div
+      style={{ padding: "20px", backgroundColor: "#f5f5f5", height: "100vh" }}
+    >
+      <div>
+        <Space wrap>
+          <Image
+            width={164}
+            height={164}
+            src={`https://localhost:7262/Files/cover?idsequencer=` + sequencer}
+          />
+          <Flex vertical style={{ width: "100vh", marginLeft: "20px" }}>
+            <Col span={10}>
+              {genres.map((genre) => (
+                <Tag color="blue">{genre.name}</Tag>
+              ))}
+            </Col>
+            <Typography.Title level={4}>{sequencerData.name}</Typography.Title>
+            <Typography.Link
+              type="secondary"
+              onClick={() => navigate("/user/" + userData.idUser)}
+            >
+              {userData.login}
+            </Typography.Link>
+          </Flex>
+        </Space>
+      </div>
+
+      <div style={{ marginTop: "20px" }}>
+        {isFavorite ? (
+          <Button
+            onClick={deleteFavorite}
+            type="primary"
+            shape="circle"
+            icon={<HeartOutlined />}
+          ></Button>
+        ) : (
+          <Button
+            onClick={addFavorite}
+            shape="circle"
+            icon={<HeartOutlined />}
+          ></Button>
+        )}
+        <Button
+          type="primary"
+          style={{ marginLeft: "20px" }}
+          onClick={showDrawer}
+          icon={<CommentOutlined></CommentOutlined>}
+        ></Button>
+        <Rate
+          value={mark!}
+          onChange={(e) => AddMark(e, sequencer.toString())}
+          style={{ marginLeft: "20px" }}
+        ></Rate>
+        <Tooltip title="Оценка">
+          <Tag
+            color="blue"
+            icon={<StarFilled></StarFilled>}
+            style={{ marginLeft: "20px" }}
+          >
+            <Typography.Text>{rate}</Typography.Text>
+          </Tag>
+        </Tooltip>
+        <Tooltip title="Прослушивания">
+          <Tag
+            color="blue"
+            icon={<PlayCircleOutlined />}
+            style={{ marginLeft: "5px" }}
+          >
+            <Typography.Text>{sequencerData.views}</Typography.Text>
+          </Tag>
+        </Tooltip>
+        <Tooltip title="Лайки">
+          <Tag
+            color="blue"
+            icon={<LikeFilled></LikeFilled>}
+            style={{ marginLeft: "5px" }}
+          >
+            <Typography.Text>{likescount}</Typography.Text>
+          </Tag>
+        </Tooltip>
+      </div>
+      <div
+        style={{
+          padding: "20px",
+          borderRadius: "20px",
+          backgroundColor: "white",
+          marginTop: "20px",
+        }}
+      >
+        <Typography.Title level={4}>Описание</Typography.Title>
+        <Typography.Text>{sequencerData.description}</Typography.Text>
+      </div>
+      <Flex
+        style={{
+          marginTop: "20px",
+          padding: "20px",
+          borderRadius: "20px",
+          backgroundColor: "white",
+        }}
+      >
+        <AudioPlayer
+          onEnded={() => AddViews(sequencer.toString())}
+          style={{ marginTop: "10px" }}
+          src={`https://localhost:7262/track/` + sequencer}
+          autoPlay={false}
+          controls
+        />
+        <Typography.Text
+          type="secondary"
+          style={{ marginTop: "35px", marginLeft: "20px" }}
+        >
+          {"Дата публикации: "}
+          {moment(sequencerData.publicDate).format("DD MMMM YYYY HH:mm")}
+        </Typography.Text>
+      </Flex>
       <Drawer
         title={sequencerData.name}
         extra={<p>Комментарии</p>}
@@ -271,8 +398,21 @@ const Track = () => {
               backgroundColor: "#f5f5f5",
               padding: "10px",
               borderRadius: "5px",
+              position: "relative",
             }}
           >
+            {comment.user.idUser == localStorage.getItem("userid") ? (
+              <Tooltip title="Удалить комментарий">
+                <Button
+                  style={{ position: "absolute", right: "10px" }}
+                  icon={<CloseOutlined></CloseOutlined>}
+                  size="small"
+                  onClick={() => deleteComment(comment.idComment)}
+                ></Button>
+              </Tooltip>
+            ) : (
+              <></>
+            )}
             <Avatar
               style={{ marginBottom: "5px" }}
               src={
@@ -301,87 +441,7 @@ const Track = () => {
           </div>
         ))}
       </Drawer>
-      <Row gutter={16}>
-        <Col span={8}>
-          <Image
-            width={164}
-            height={164}
-            src={`https://localhost:7262/Files/cover?idsequencer=` + sequencer}
-            style={{ marginTop: "35px" }}
-          />
-        </Col>
-        <Col span={10}>
-          {genres.map((genre) => (
-            <Tag color="blue">{genre.name}</Tag>
-          ))}
-          <Typography.Title level={4}>{name}</Typography.Title>
-
-          <Typography.Link
-            type="secondary"
-            onClick={() => navigate("/user/" + userData.idUser)}
-          >
-            {userData.login}
-          </Typography.Link>
-
-          <div style={{ display: "flex", justifyContent: "flex-start" }}>
-            <AudioPlayer
-              onEnded={() => AddViews(sequencer.toString())}
-              style={{ marginTop: "10px" }}
-              src={`https://localhost:7262/track/` + sequencer}
-              autoPlay={false}
-              controls
-            />
-          </div>
-
-          <Row justify="space-between" style={{ marginTop: "35px" }}>
-            <Col>
-              {isFavorite ? (
-                <Button
-                  onClick={deleteFavorite}
-                  type="primary"
-                  shape="circle"
-                  icon={<HeartOutlined />}
-                ></Button>
-              ) : (
-                <Button
-                  onClick={addFavorite}
-                  shape="circle"
-                  icon={<HeartOutlined />}
-                ></Button>
-              )}
-
-              <Rate
-                value={mark!}
-                onChange={(e) => AddMark(e, sequencer.toString())}
-                style={{ marginLeft: "20px" }}
-              ></Rate>
-              <Button
-                type="primary"
-                style={{ marginLeft: "20px" }}
-                onClick={showDrawer}
-                icon={<CommentOutlined></CommentOutlined>}
-              ></Button>
-            </Col>
-            <Col></Col>
-          </Row>
-        </Col>
-        <Col span={6} style={{ textAlign: "end" }}>
-          <Flex gap={5} vertical>
-            <Tag color="blue">
-              <Typography.Text>Рейтинг: {rate}</Typography.Text>
-            </Tag>
-            <Tag color="blue">
-              <Typography.Text>
-                Прослушали: {sequencerData.views}
-              </Typography.Text>
-            </Tag>
-            <Tag color="blue">
-              <Typography.Text>Понравилось: {likescount}</Typography.Text>
-            </Tag>
-          </Flex>
-        </Col>
-      </Row>
-    </Card>
+    </div>
   );
 };
 

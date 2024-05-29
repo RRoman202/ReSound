@@ -1,28 +1,34 @@
 import * as Tone from "tone";
-// import { sampler } from "../../../player/playSound";
+import { sampler } from "../../../player/playSound";
 
 import GetNotes from "../../../player/Notes";
 import axios from "axios";
-export function PublicationTrack(m: boolean[][], fileNameSound: string) {
+import { url } from "inspector";
+import localforage from "localforage";
+export function PublicationTrack(
+  m: boolean[][],
+  fileNameSound: string,
+  num: number
+) {
   const notes: string[] = GetNotes();
   let notesplay: { [key: number]: string[] } = {};
   const recorder = new Tone.Recorder();
 
-  const uploadAudio = async (blob: Blob, idsequencer: string) => {
-    const formData = new FormData();
-    formData.append("audioFile", blob);
-    formData.append("idsequencer", idsequencer);
-    console.log(blob);
-    const response = await axios.post(
-      "https://localhost:7262/Users/upload-audio",
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-  };
+  // const uploadAudio = async (blob: Blob, idsequencer: string) => {
+  //   const formData = new FormData();
+  //   formData.append("audioFile", blob);
+  //   formData.append("idsequencer", idsequencer);
+  //   console.log(blob);
+  //   const response = await axios.post(
+  //     "https://localhost:7262/Users/upload-audio",
+  //     formData,
+  //     {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     }
+  //   );
+  // };
 
   const sampler = new Tone.Sampler({
     urls: {
@@ -31,6 +37,7 @@ export function PublicationTrack(m: boolean[][], fileNameSound: string) {
     release: 1,
     baseUrl: "https://localhost:7262/audio/",
   }).toDestination();
+  // sampler.add("C4", fileNameSound);
   sampler.connect(recorder);
   let index = 0;
   function GetNotesPlay() {
@@ -57,6 +64,7 @@ export function PublicationTrack(m: boolean[][], fileNameSound: string) {
     GetNotesPlay();
     index = (index + 1) % m[0].length;
   }
+
   GetNotesPlay();
   recorder.start();
 
@@ -69,14 +77,18 @@ export function PublicationTrack(m: boolean[][], fileNameSound: string) {
     Tone.Transport.stop();
 
     const blob = new Blob([recording], { type: "audio/mpeg" });
-    const url = URL.createObjectURL(blob);
+    console.log(num);
+    const newblob: string = "blob" + num;
+    await localforage.setItem(newblob, blob);
 
-    const anchor = document.createElement("a");
-    anchor.download = "recording.mp3";
-    anchor.href = url;
-    anchor.click();
-    if (localStorage.getItem("sequencerid")) {
-      uploadAudio(blob, localStorage.getItem("sequencerid")!);
-    }
+    // const url = URL.createObjectURL(blob);
+
+    // const anchor = document.createElement("a");
+    // anchor.download = "recording.mp3";
+    // anchor.href = url;
+    // anchor.click();
+    // if (localStorage.getItem("sequencerid")) {
+    //   uploadAudio(blob, localStorage.getItem("sequencerid")!);
+    // }
   }, (m[0].length * 1000) / (Tone.Transport.bpm.value / 60) / 2);
 }

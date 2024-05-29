@@ -8,11 +8,15 @@ import {
   Button,
   Input,
   Pagination,
+  Dropdown,
+  Menu,
+  Space,
 } from "antd";
 
 import { CloseOutlined } from "@ant-design/icons";
 import MusicCard from "./MusicCard";
 import MiniMusicCard from "./MiniMusicCard";
+import moment from "moment";
 import "./Tape.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -86,6 +90,21 @@ const Tape: React.FC<TapeProps> = () => {
     );
     setTracks(response.data);
     setFilteredTracks(response.data);
+  };
+
+  const handleSort = (key: string) => {
+    if (key == "1") {
+      let sorted = tracks.sort((s1, s2) =>
+        moment(s2.publicDate).diff(moment(s1.publicDate))
+      );
+      setFilteredTracks(sorted.filter((s1) => s1));
+    }
+    if (key == "2") {
+      let sorted = tracks.sort((s1, s2) =>
+        moment(s1.publicDate).diff(moment(s2.publicDate))
+      );
+      setFilteredTracks(sorted.filter((s1) => s1));
+    }
   };
 
   const genres = [
@@ -170,12 +189,29 @@ const Tape: React.FC<TapeProps> = () => {
                 </Flex>
               }
             >
-              <Search
-                placeholder="Поиск музыкальных произведений"
-                enterButton
-                value={searchTerm}
-                onChange={handleSearchChange}
-              />
+              <Space wrap>
+                <Search
+                  style={{ marginTop: 20, width: "135.5vh" }}
+                  placeholder="Поиск музыкальных произведений"
+                  enterButton
+                  value={searchTerm}
+                  onChange={handleSearchChange}
+                />
+                <Dropdown
+                  overlay={
+                    <Menu>
+                      <Menu.Item key="1" onClick={(e) => handleSort(e.key)}>
+                        Сначало новые
+                      </Menu.Item>
+                      <Menu.Item key="2" onClick={(e) => handleSort(e.key)}>
+                        Сначало старые
+                      </Menu.Item>
+                    </Menu>
+                  }
+                >
+                  <Button style={{ marginTop: 20 }}>Сортировка</Button>
+                </Dropdown>
+              </Space>
               {paginatedFilteredTracks.map((track) => (
                 <MusicCard key={track.name} {...track} />
               ))}

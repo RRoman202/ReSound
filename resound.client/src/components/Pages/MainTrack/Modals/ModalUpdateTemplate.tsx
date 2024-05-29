@@ -1,4 +1,4 @@
-import { Modal, Button, Form, Input, Checkbox, Spin } from "antd";
+import { Modal, Button, Form, Input, Checkbox, Spin, message } from "antd";
 import { useState, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate, Link } from "react-router-dom";
@@ -33,6 +33,7 @@ const ModalUpdateTemplate: React.FC<Sequencer> = ({
         if (!values.name) {
           setIsLoading(false);
           console.error("Name is required!");
+          error();
           return;
         }
 
@@ -92,12 +93,22 @@ const ModalUpdateTemplate: React.FC<Sequencer> = ({
     fetchTemplate();
   }, [idtemplate]);
 
+  const [mes, contextHolder] = message.useMessage();
+
+  const error = () => {
+    mes.open({
+      type: "error",
+      content: "Заполните все необходимые поля",
+    });
+  };
+
   if (!templateData) {
     return;
   }
 
   return (
     <>
+      {contextHolder}
       <a type="primary" onClick={showModal}>
         Редактировать
       </a>

@@ -1,4 +1,4 @@
-import { Modal, Button, Form, Input, Checkbox, Spin } from "antd";
+import { Modal, Button, Form, Input, Checkbox, Spin, message } from "antd";
 import { useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import { useNavigate, Link } from "react-router-dom";
@@ -34,6 +34,7 @@ const ModalCreateTemplate: React.FC<Sequencer> = ({
           setIsLoading(false);
           // Display error message to the user
           console.error("Name is required!");
+          error();
           return;
         }
 
@@ -81,8 +82,18 @@ const ModalCreateTemplate: React.FC<Sequencer> = ({
     setTemplates(response.data);
   };
 
+  const [mes, contextHolder] = message.useMessage();
+
+  const error = () => {
+    mes.open({
+      type: "error",
+      content: "Заполните все необходимые поля",
+    });
+  };
+
   return (
     <>
+      {contextHolder}
       <Button type="primary" onClick={showModal}>
         Создать шаблон
       </Button>

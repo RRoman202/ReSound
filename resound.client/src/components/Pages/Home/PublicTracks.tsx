@@ -5,6 +5,7 @@ import changeTheme from "../../NavBar/changeTheme";
 import { hideNav, viewNav } from "../MainTrack/HiddenNavbar";
 import AudioPlayer from "react-audio-player";
 import type { MenuProps, TourProps } from "antd";
+import moment from "moment";
 import {
   UploadOutlined,
   UserOutlined,
@@ -98,46 +99,6 @@ const UserPanel = () => (
 const PublicTracks = () => {
   viewNav();
 
-  const ref1 = useRef(null);
-  const ref2 = useRef(null);
-  const ref3 = useRef(null);
-  const [openTour, setOpenTour] = useState<boolean>(false);
-  const steps: TourProps["steps"] = [
-    {
-      title: "Ваши данные",
-      description: "Следите за вашими проектами и их статистикой.",
-      target: () => ref1.current,
-      nextButtonProps: {
-        children: <>Дальше</>,
-      },
-      prevButtonProps: {
-        children: <>Назад</>,
-      },
-    },
-    {
-      title: "Новые шедевры",
-      description: "Создавайте свои проекты и сочиняйте музыку.",
-      target: () => ref2.current,
-      nextButtonProps: {
-        children: <>Дальше</>,
-      },
-      prevButtonProps: {
-        children: <>Назад</>,
-      },
-    },
-    {
-      title: "Продолжайте работу",
-      description: "Начните с того места откуда закончили.",
-      target: () => ref3.current,
-      nextButtonProps: {
-        children: <>Закончить</>,
-      },
-      prevButtonProps: {
-        children: <>Назад</>,
-      },
-    },
-  ];
-
   const navigate = useNavigate();
   const [sequencers, setSequencers] = useState([]);
   const [filteredSequencers, setFilteredSequencers] = useState([]);
@@ -170,6 +131,21 @@ const PublicTracks = () => {
     }
   };
 
+  const handleSort = (key: string) => {
+    if (key == "1") {
+      let sorted = sequencers.sort((s1, s2) =>
+        moment(s2.publicDate).diff(moment(s1.publicDate))
+      );
+      setFilteredSequencers(sorted.filter((s1) => s1));
+    }
+    if (key == "2") {
+      let sorted = sequencers.sort((s1, s2) =>
+        moment(s1.publicDate).diff(moment(s2.publicDate))
+      );
+      setFilteredSequencers(sorted.filter((s1) => s1));
+    }
+  };
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     const filtered = sequencers.filter((sequencer) =>
@@ -192,7 +168,7 @@ const PublicTracks = () => {
         }}
       >
         <div className="demo-logo-vertical" />
-        <div ref={ref1}>
+        <div>
           <UserPanel />
         </div>
 
@@ -211,17 +187,33 @@ const PublicTracks = () => {
             padding: "20px",
           }}
         >
-          <Card className="creatediv" ref={ref2}>
+          <Card className="creatediv">
             <Title level={2}>Мои опубликованные треки</Title>
           </Card>
+          <Space wrap>
+            <Search
+              style={{ marginTop: 20, width: "167.5vh" }}
+              placeholder="Поиск музыкальных произведений"
+              enterButton
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            <Dropdown
+              overlay={
+                <Menu>
+                  <Menu.Item key="1" onClick={(e) => handleSort(e.key)}>
+                    Сначало новые
+                  </Menu.Item>
+                  <Menu.Item key="2" onClick={(e) => handleSort(e.key)}>
+                    Сначало старые
+                  </Menu.Item>
+                </Menu>
+              }
+            >
+              <Button style={{ marginTop: 20 }}>Сортировка</Button>
+            </Dropdown>
+          </Space>
 
-          <Search
-            style={{ marginTop: 20 }}
-            placeholder="Поиск музыкальных произведений"
-            enterButton
-            value={searchTerm}
-            onChange={handleSearchChange}
-          />
           <div>
             <List
               className="listprojects"
@@ -233,7 +225,7 @@ const PublicTracks = () => {
               }}
               dataSource={filteredSequencers}
               renderItem={(sequencer) => (
-                <List.Item ref={ref3}>
+                <List.Item>
                   <Card
                     className="card-project"
                     title={sequencer.name}
@@ -273,24 +265,19 @@ const PublicTracks = () => {
                         />
                       </div>
                     </Space>
+                    <Typography.Text type="secondary">
+                      {"Дата публикации: "}
+                      {moment(sequencer.publicDate).format(
+                        "DD MMMM YYYY HH:mm"
+                      )}
+                    </Typography.Text>
                   </Card>
                 </List.Item>
               )}
             />
           </div>
         </Content>
-        <Tour
-          open={openTour}
-          onClose={() => setOpenTour(false)}
-          steps={steps}
-        />
       </Layout>
-      <FloatButton
-        onClick={() => setOpenTour(true)}
-        icon={<QuestionCircleOutlined />}
-        type="primary"
-        style={{ right: 94 }}
-      />
     </Layout>
   );
 };
