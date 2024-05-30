@@ -299,8 +299,8 @@ const Piano = observer(() => {
                 </Radio.Button>
               </Radio.Group> */}
 
-              <SoundTwoTone className="soundicon" />
-              <VolumeSlider></VolumeSlider>
+              {/* <SoundTwoTone className="soundicon" />
+              <VolumeSlider></VolumeSlider> */}
             </Flex>
           </Flex>
         </Header>

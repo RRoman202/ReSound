@@ -41,6 +41,29 @@ namespace ReSound.Server.Controllers
                 .ToListAsync();
         }
 
+        [HttpGet("checkcover")]
+        public async Task<Sequencer> CheckCover(Guid idsequencer)
+        {
+            var seq = await _context.Sequencers.FindAsync(idsequencer);
+            var folderPath = Path.Combine(_env.WebRootPath, "covers");
+
+            var fileNames = Directory.GetFiles(folderPath)
+                .Select(Path.GetFileName)
+                .ToList();
+
+            var fileNamesNoPng = new List<string>();
+
+            foreach (var file in fileNames)
+            {
+                fileNamesNoPng.Add(file.Replace(".png", ""));
+            }
+            if (fileNamesNoPng.Contains(seq.IdSequencer.ToString()))
+            {
+                return seq;
+            }
+            return null;
+        }
+
         
         [HttpGet("UserPublicTracks")]
         public async Task<IEnumerable<Sequencer>> GetTracksUser(Guid iduser)

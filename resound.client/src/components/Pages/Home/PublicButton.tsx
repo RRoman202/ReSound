@@ -4,7 +4,7 @@ import localforage from "localforage";
 import Crunker from "crunker";
 import * as Tone from "tone";
 import { PublicationTrack } from "../MainTrack/PublicationTrack";
-import { Button, Spin } from "antd";
+import { Button, Spin, message } from "antd";
 
 interface PublicProps {
   idSequencer: string;
@@ -14,6 +14,7 @@ interface PublicProps {
 const PublicButton: React.FC<PublicProps> = ({ idSequencer, setLoading }) => {
   const [tracks, setTracks] = useState([]);
   const [templatestrack, setTemplatestrack] = useState([]);
+  const [checkCover, setCheckCover] = useState(null);
 
   const fetchTracks = async () => {
     const response = await axios.get(
@@ -29,6 +30,12 @@ const PublicButton: React.FC<PublicProps> = ({ idSequencer, setLoading }) => {
     );
     setTemplatestrack(response.data);
     fetchTracks();
+  };
+  const fetchCheckCover = async () => {
+    const response = await axios.get(
+      `https://localhost:7262/Tracks/checkcover?idsequencer=` + idSequencer
+    );
+    setCheckCover(response.data);
   };
   const mergeBlobs = async (maxBlobs: number) => {
     const formData = new FormData();
@@ -59,12 +66,12 @@ const PublicButton: React.FC<PublicProps> = ({ idSequencer, setLoading }) => {
 
     const mergedBlob: Blob = new Blob([output.blob]);
 
-    const url = URL.createObjectURL(mergedBlob);
+    // const url = URL.createObjectURL(mergedBlob);
 
-    const anchor = document.createElement("a");
-    anchor.download = "recording.wav";
-    anchor.href = url;
-    anchor.click();
+    // const anchor = document.createElement("a");
+    // anchor.download = "recording.wav";
+    // anchor.href = url;
+    // anchor.click();
     formData.append("audioFile", mergedBlob);
     formData.append("idsequencer", idSequencer);
 
@@ -125,19 +132,36 @@ const PublicButton: React.FC<PublicProps> = ({ idSequencer, setLoading }) => {
       });
     });
   };
+  const [mes, contextHolder] = message.useMessage();
+
+  const error = () => {
+    mes.open({
+      type: "error",
+      content: "Перед публикацией загрузите обложку",
+    });
+  };
 
   useEffect(() => {
     fetchTracks();
     FetchTemplatesTracks();
+    fetchCheckCover();
   }, []);
   return (
-    <div
-      onClick={() => {
-        publicTrack();
-      }}
-    >
-      Опубликовать
-    </div>
+    <>
+      {contextHolder}
+      <div
+        onClick={() => {
+          if (checkCover) {
+            console.log(checkCover);
+            publicTrack();
+          } else {
+            error();
+          }
+        }}
+      >
+        Опубликовать
+      </div>
+    </>
   );
 };
 

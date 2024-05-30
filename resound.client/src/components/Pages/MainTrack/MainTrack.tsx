@@ -35,6 +35,7 @@ import {
 } from "@ant-design/icons";
 
 import "./MainTrack.css";
+import SaveBtn from "./SaveBtn";
 
 const { Header, Content, Footer } = Layout;
 
@@ -54,6 +55,7 @@ const MainTrack: React.FC = () => {
 
   const [sequencerData, setSequencerData] = useState<Sequencer | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   console.log(sequencerData);
   const [templates, setTemplates] = useState([]);
@@ -119,81 +121,87 @@ const MainTrack: React.FC = () => {
   }
 
   return (
-    <div style={{ height: "100vh" }}>
-      <Drawer title="Файл" placement="left" onClose={onClose} open={openDrawer}>
-        <Space direction="vertical">
-          {sequencerData.private ? (
-            <>
-              <Tag color="blue">Приватный</Tag>
-            </>
-          ) : (
-            <>
-              <Tag color="blue">Публичный</Tag>
-            </>
-          )}
-
-          <h2>{sequencerData.name}</h2>
-          <Typography.Text>
-            Дата создания:{" "}
-            {moment(sequencerData.created).format("DD MMMM YYYY HH:mm")}
-          </Typography.Text>
-          <Flex vertical gap="small" style={{ width: "300px" }}>
-            {/* <Button type="primary" disabled>
-          Сохранить
-        </Button>
-        <Button type="primary" disabled>
-          Сохранить как
-        </Button>
-        <Button type="primary" disabled>
-          Экспорт
-        </Button> */}
-            <Button type="primary" onClick={closePage}>
-              Выйти
-            </Button>
-          </Flex>
-        </Space>
-      </Drawer>
-      <Layout className="MainLayout">
-        <Header className="header">
-          <Flex gap="middle">
-            <Button type="primary" onClick={showDrawer}>
-              Файл
-            </Button>
-            <BpmInput></BpmInput>
-          </Flex>
-        </Header>
-        <div
-          style={{
-            display: "flex",
-            marginTop: "40px",
-            backgroundColor: "lightgray",
-          }}
-        >
-          <div style={{ flex: 1, marginLeft: "10px" }}>
-            <TemplateList
-              templates={templates}
-              onCreateTemplate={handleCreateTemplate}
-              idsequencer={sequencerData.idSequencer}
-              setTemplates={setTemplates}
-              onChangeSelectTemplate={handleChangeTemplate}
-            />
-          </div>
-          <div
-            style={{
-              flex: 2,
-              marginLeft: "20px",
-              marginRight: "10px",
-            }}
+    <>
+      {loading ? (
+        <Spin size="large" fullscreen></Spin>
+      ) : (
+        <div style={{ height: "100vh" }}>
+          <Drawer
+            title="Файл"
+            placement="left"
+            onClose={onClose}
+            open={openDrawer}
           >
-            <AudioTrackGrid
-              idSequencer={sequencer}
-              selectedTemplate={selectedTemplate}
-            />
-          </div>
+            <Space direction="vertical">
+              {sequencerData.private ? (
+                <>
+                  <Tag color="blue">Приватный</Tag>
+                </>
+              ) : (
+                <>
+                  <Tag color="blue">Публичный</Tag>
+                </>
+              )}
+
+              <h2>{sequencerData.name}</h2>
+              <Typography.Text>
+                Дата создания:{" "}
+                {moment(sequencerData.created).format("DD MMMM YYYY HH:mm")}
+              </Typography.Text>
+              <Flex vertical gap="small" style={{ width: "300px" }}>
+                <SaveBtn
+                  idSequencer={sequencerData.idSequencer}
+                  setLoading={setLoading}
+                ></SaveBtn>
+                <Button type="primary" onClick={closePage}>
+                  Выйти
+                </Button>
+              </Flex>
+            </Space>
+          </Drawer>
+          <Layout className="MainLayout">
+            <Header className="header">
+              <Flex gap="middle">
+                <Button type="primary" onClick={showDrawer}>
+                  Файл
+                </Button>
+                <BpmInput></BpmInput>
+              </Flex>
+            </Header>
+            <div
+              style={{
+                display: "flex",
+                marginTop: "40px",
+                backgroundColor: "lightgray",
+              }}
+            >
+              <div style={{ flex: 1, marginLeft: "10px" }}>
+                <TemplateList
+                  templates={templates}
+                  onCreateTemplate={handleCreateTemplate}
+                  idsequencer={sequencerData.idSequencer}
+                  setTemplates={setTemplates}
+                  onChangeSelectTemplate={handleChangeTemplate}
+                />
+              </div>
+              <div
+                style={{
+                  flex: 2,
+                  marginLeft: "20px",
+                  marginRight: "10px",
+                }}
+              >
+                <AudioTrackGrid
+                  idSequencer={sequencer}
+                  selectedTemplate={selectedTemplate}
+                />
+              </div>
+            </div>
+          </Layout>
+          <BaseUrl url={url} filename={filename}></BaseUrl>
         </div>
-      </Layout>
-      <BaseUrl url={url} filename={filename}></BaseUrl>
-    </div>
+      )}
+    </>
   );
 };
 

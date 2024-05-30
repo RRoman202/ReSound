@@ -178,12 +178,12 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
 
     const mergedBlob: Blob = new Blob([output.blob]);
 
-    const url = URL.createObjectURL(mergedBlob);
+    // const url = URL.createObjectURL(mergedBlob);
 
-    const anchor = document.createElement("a");
-    anchor.download = "recording.wav";
-    anchor.href = url;
-    anchor.click();
+    // const anchor = document.createElement("a");
+    // anchor.download = "recording.wav";
+    // anchor.href = url;
+    // anchor.click();
     formData.append("audioFile", mergedBlob);
     formData.append("idsequencer", idSequencer);
 
@@ -348,7 +348,7 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
             Добавить дорожку
           </Button>
 
-          {isBlocked ? (
+          {/* {isBlocked ? (
             <>
               <Button
                 type="primary"
@@ -365,7 +365,7 @@ const AudioTrackGrid: React.FC<TemplateListProps> = ({
                 Опубликовать
               </Button>
             </>
-          )}
+          )} */}
         </div>
       </Layout>
       <Footer className="footer-main">

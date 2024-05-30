@@ -51,11 +51,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="wwwroot\sounds\Piano.mp3" />
     <None Include="wwwroot\sounds\Пианино\Piano.mp3" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\sounds\Ударные\" />
     <Folder Include="wwwroot\tracks\" />
     <Folder Include="wwwroot\avatars\" />
     <Folder Include="wwwroot\covers\" />

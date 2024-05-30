@@ -187,8 +187,8 @@ const TemplateList: React.FC<TemplateListProps> = ({
                 {item.name}
               </Card>
             </div>
-            <SoundTwoTone className="soundMainIcon" />
-            <Slider defaultValue={30} style={{ width: "100px" }} />
+            {/* <SoundTwoTone className="soundMainIcon" />
+            <Slider defaultValue={30} style={{ width: "100px" }} /> */}
           </List.Item>
         )}
       />
