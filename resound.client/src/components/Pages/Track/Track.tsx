@@ -30,6 +30,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import "moment/locale/ru";
+import "./Track.css";
 
 const { Search } = Input;
 
@@ -264,12 +265,15 @@ const Track = () => {
           <Image
             width={164}
             height={164}
+            style={{ objectFit: "cover" }}
             src={`https://localhost:7262/Files/cover?idsequencer=` + sequencer}
           />
           <Flex vertical style={{ width: "100vh", marginLeft: "20px" }}>
             <Col span={10}>
               {genres.map((genre) => (
-                <Tag color="blue">{genre.name}</Tag>
+                <Tag style={{ fontSize: "15px" }} color="blue">
+                  {genre.name}
+                </Tag>
               ))}
             </Col>
             <Typography.Title level={4}>{sequencerData.name}</Typography.Title>

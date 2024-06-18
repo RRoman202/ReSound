@@ -121,7 +121,10 @@ const Composers: React.FC<ComposersProps> = () => {
               size="large"
             />
 
-            <Card title="Пользователи" bordered={false}>
+            <Card
+              title=<p style={{ fontSize: "20px" }}>Пользователи</p>
+              bordered={false}
+            >
               <Search
                 placeholder="Поиск пользователей"
                 enterButton
@@ -142,7 +145,9 @@ const Composers: React.FC<ComposersProps> = () => {
           </Col>
           <Col span={6} style={{ marginTop: "20px" }}>
             <Card
-              title="Популярные пользователи за месяц"
+              title=<p style={{ fontSize: "16px" }}>
+                Популярные пользователи за месяц
+              </p>
               bordered={false}
               style={{ marginTop: "20px" }}
             >

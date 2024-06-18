@@ -114,18 +114,7 @@ const Main = () => {
             backgroundColor: "#1677ff",
             height: "700px",
           }}
-        >
-          {/* <img
-            src={background}
-            style={{
-              // width: "200vh",
-              height: "700px",
-              filter: "blur(5px)",
-              pointerEvents: "none",
-              backgroundColor: "black",
-            }}
-          ></img> */}
-        </div>
+        ></div>
         <h1
           style={{
             fontSize: "50px",
@@ -147,13 +136,6 @@ const Main = () => {
             pointerEvents: "none",
           }}
         ></img>
-
-        {/* <Button
-          type="primary"
-          style={{ width: "300px", height: "50px", fontSize: "25px" }}
-        >
-          Начать
-        </Button> */}
       </Layout>
       <Layout
         style={{ position: "relative", marginTop: "100px", height: "1000px" }}

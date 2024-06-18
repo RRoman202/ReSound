@@ -167,6 +167,20 @@ const MainTrack: React.FC = () => {
                 </Button>
                 <BpmInput></BpmInput>
               </Flex>
+              <Typography.Text
+                style={{
+                  position: "absolute",
+                  right: "0",
+                  padding: "20px",
+                  fontSize: "15px",
+                  fontWeight: "bold",
+                }}
+              >
+                Проект:{" "}
+                <Tag color="blue" style={{ fontSize: "15px" }}>
+                  {sequencerData.name}
+                </Tag>
+              </Typography.Text>
             </Header>
             <div
               style={{

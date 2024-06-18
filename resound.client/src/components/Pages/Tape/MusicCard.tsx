@@ -17,6 +17,7 @@ import {
   Space,
 } from "antd";
 import AudioPlayer from "react-audio-player";
+import "./Tape.css";
 import axios from "axios";
 import {
   CaretUpOutlined,
@@ -344,12 +345,14 @@ const MusicCard: React.FC<MusicCardProps> = ({
             src={
               `https://localhost:7262/Files/cover?idsequencer=` + idSequencer
             }
-            style={{ marginTop: "35px" }}
+            style={{ marginBottom: "35px", objectFit: "cover" }}
           />
         </Col>
         <Col span={10}>
           {genres.map((genre) => (
-            <Tag color="blue">{genre.name}</Tag>
+            <Tag style={{ fontSize: "15px" }} color="blue">
+              {genre.name}
+            </Tag>
           ))}
           <Typography.Title level={4}>{name}</Typography.Title>
 

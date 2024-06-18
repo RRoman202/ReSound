@@ -114,9 +114,16 @@ export default function NavBar({ setIsLoggedIn, isLoggedIn }: NavBarProps) {
               <NavLink to="/composers" className="navbar-link">
                 Пользователи
               </NavLink>
+              <NavLink to="/about" className="navbar-link">
+                О нас
+              </NavLink>
             </>
           ) : (
-            <></>
+            <>
+              <NavLink to="/about" className="navbar-link">
+                О нас
+              </NavLink>
+            </>
           )}
         </div>
       </div>

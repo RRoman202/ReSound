@@ -249,6 +249,7 @@ const Favorite = () => {
                       <img
                         width={50}
                         height={50}
+                        style={{ objectFit: "cover" }}
                         src={
                           `https://localhost:7262/Files/cover?idsequencer=` +
                           sequencer.idSequencer

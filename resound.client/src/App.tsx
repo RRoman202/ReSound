@@ -16,6 +16,7 @@ import Favorite from "./components/Pages/Home/Favorite";
 import Statistic from "./components/Pages/Home/Statistic";
 import PublicTracks from "./components/Pages/Home/PublicTracks";
 import Track from "./components/Pages/Track/Track";
+import { About } from "./components/Pages/About/About";
 
 function App() {
   document.title = "ReSound";
@@ -69,10 +70,12 @@ function App() {
                 element={<PublicTracks></PublicTracks>}
               />
               <Route path="/track/:sequencer" element={<Track></Track>} />
+              <Route path="/about" element={<About></About>} />
             </>
           ) : (
             <>
               <Route path="/" element={<Main />} />
+              <Route path="/about" element={<About></About>} />
             </>
           )}
         </Routes>

@@ -67,9 +67,6 @@ const RegisterModal: React.FC<AuthModalProps> = ({ setIsLoggedIn }) => {
       setIsLoggedIn(true);
 
       await getUser(token);
-    } else {
-      const errorResponse = await resultLogin.text();
-      error(errorResponse);
     }
     setSpinning(false);
   };

@@ -20,6 +20,7 @@ import moment from "moment";
 import "./Tape.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Typography from "antd/es/typography/Typography";
 
 const { Header, Content, Footer } = Layout;
 const { Search } = Input;
@@ -173,7 +174,7 @@ const Tape: React.FC<TapeProps> = () => {
             />
 
             <Card
-              title="Треки"
+              title=<p style={{ fontSize: "20px" }}>Треки</p>
               bordered={false}
               extra={
                 <Flex>
@@ -229,6 +230,7 @@ const Tape: React.FC<TapeProps> = () => {
               <Flex gap="small">
                 <Button
                   shape="round"
+                  style={{ backgroundColor: "#1677ff", color: "white" }}
                   onClick={() =>
                     changeGenres("aaeaa8ab-ff7e-4b03-abe5-ced849477a64")
                   }
@@ -236,6 +238,7 @@ const Tape: React.FC<TapeProps> = () => {
                   Рок
                 </Button>
                 <Button
+                  style={{ backgroundColor: "#1677ff", color: "white" }}
                   shape="round"
                   onClick={() =>
                     changeGenres("a26454e5-c24c-45be-b13b-b35bc9bf20e6")
@@ -244,6 +247,7 @@ const Tape: React.FC<TapeProps> = () => {
                   Поп
                 </Button>
                 <Button
+                  style={{ backgroundColor: "#1677ff", color: "white" }}
                   shape="round"
                   onClick={() =>
                     changeGenres("6edcca69-38d5-4585-a656-dae75b10ed66")
@@ -252,6 +256,7 @@ const Tape: React.FC<TapeProps> = () => {
                   Хип-хоп
                 </Button>
                 <Button
+                  style={{ backgroundColor: "#1677ff", color: "white" }}
                   shape="round"
                   onClick={() =>
                     changeGenres("dee04dc9-44d5-4fec-9420-76da44f1ba22")
@@ -262,6 +267,7 @@ const Tape: React.FC<TapeProps> = () => {
               </Flex>
               <Flex gap="small">
                 <Button
+                  style={{ backgroundColor: "#1677ff", color: "white" }}
                   shape="round"
                   onClick={() =>
                     changeGenres("1896b605-ec30-4934-9f0c-02fde1b82b1d")
@@ -270,6 +276,7 @@ const Tape: React.FC<TapeProps> = () => {
                   Электронная
                 </Button>
                 <Button
+                  style={{ backgroundColor: "#1677ff", color: "white" }}
                   shape="round"
                   onClick={() =>
                     changeGenres("150805fd-a799-4c0d-86bd-d9615d6ff61b")
@@ -280,6 +287,7 @@ const Tape: React.FC<TapeProps> = () => {
               </Flex>
               <Flex gap="small">
                 <Button
+                  style={{ backgroundColor: "#1677ff", color: "white" }}
                   shape="round"
                   onClick={() =>
                     changeGenres("05143832-c84d-4182-be93-d1e3d8c99763")
@@ -288,6 +296,7 @@ const Tape: React.FC<TapeProps> = () => {
                   Блюз
                 </Button>
                 <Button
+                  style={{ backgroundColor: "#1677ff", color: "white" }}
                   shape="round"
                   onClick={() =>
                     changeGenres("812fca01-1f40-4b8d-8891-23678a8610b9")
@@ -296,6 +305,7 @@ const Tape: React.FC<TapeProps> = () => {
                   Металл
                 </Button>
                 <Button
+                  style={{ backgroundColor: "#1677ff", color: "white" }}
                   shape="round"
                   onClick={() =>
                     changeGenres("3e7def6f-73a7-4f88-a778-b3de8af695b1")
